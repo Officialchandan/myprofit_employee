@@ -315,7 +315,7 @@ class _AddFootwearState extends State<AddFootwear> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               UpdateVendorDetail(
-                                                  id: widget.id,
+                                                  id: loginData[index].id,
                                                   title: widget.title,
                                                   shopename:
                                                       loginData[index].name,

@@ -15,8 +15,8 @@ import 'package:myprofit_employee/model/getvenordbyid_response.dart';
 import 'package:myprofit_employee/model/login_response.dart';
 import 'package:myprofit_employee/model/logout_response.dart';
 import 'package:myprofit_employee/model/otp_response.dart';
+import 'package:myprofit_employee/model/updatevendordetail_response.dart';
 import 'package:myprofit_employee/provider/server_error.dart';
-
 import 'package:myprofit_employee/utils/sharedpref.dart';
 
 BaseOptions baseOptions = BaseOptions(
@@ -57,8 +57,7 @@ class ApiProvider {
   Future<OtpVerificationResponse> verifyOtp(mobile, otp) async {
     log("chl gyi ${mobile + otp}");
     try {
-      Response res = await dio.post('$baseUrl/user/verifyOTP',
-          data: {"mobile": mobile, "otp": otp});
+      Response res = await dio.post('$baseUrl/user/verifyOTP', data: {"mobile": mobile, "otp": otp});
       log("chl gyi 2${res}");
 
       return OtpVerificationResponse.fromJson(res.toString());
@@ -124,8 +123,36 @@ class ApiProvider {
     }
   }
 
-  Future<AddVendorResponse> addVendor(vendor, shopname, ownername, ownermobile,
-      address, ownersign, subcat) async {
+  Future<UpdateVendorResponse> updatedetails(id, shopname, ownername, mobile, address,cat) async {
+     log("chl gyi }");
+     log("chl gyi $id");
+     var token = await SharedPref.getStringPreference('token');
+    try {
+      log("chl gyi }");
+      Response res = await dio.post('$baseUrl/updateVendorForm',
+          data: {"id": id, "shop_name": shopname, "owner_name": ownername, "owner_mobile": mobile, "address": address,"sub_cat_id":cat},
+             options: Options(
+            headers: {"Authorization": "Bearer ${token}"},
+          ));
+     
+      log("chl gyi 2${res}");
+
+      return UpdateVendorResponse.fromJson(res.toString());
+    } catch (error, stacktrace) {
+      log("chl gyi catkk}");
+      String message = "";
+      if (error is DioError) {
+        ServerError e = ServerError.withError(error: error);
+        message = e.getErrorMessage();
+      } else {
+        message = "Something Went wrong";
+      }
+      print("Exception occurred: $message stackTrace: $error");
+      return UpdateVendorResponse(success: false, message: message);
+    }
+  }
+
+  Future<AddVendorResponse> addVendor(vendor, shopname, ownername, ownermobile, address, ownersign, subcat) async {
     //log("chl gyi ${mobile + otp}");
     try {
       Map<String, dynamic> addvendor = HashMap<String, dynamic>();
@@ -134,8 +161,8 @@ class ApiProvider {
       addvendor["owner_name"] = ownername;
       addvendor["owner_mobile"] = ownermobile;
       addvendor["address"] = address;
-      addvendor["owner_sign"] = await MultipartFile.fromBytes(ownersign,
-          filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+      addvendor["owner_sign"] =
+          await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
       addvendor["sub_cat_id"] = subcat;
       FormData requestData = FormData.fromMap(addvendor);
       var token = await SharedPref.getStringPreference('token');

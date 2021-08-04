@@ -2,27 +2,25 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
-import 'package:myprofit_employee/model/adddriver_response.dart';
-import 'package:myprofit_employee/model/addvendor_form.dart';
 import 'package:myprofit_employee/model/categories_respnse.dart';
+import 'package:myprofit_employee/model/updatevendordetail_response.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
 import 'package:myprofit_employee/src/ui/add_footwear/add_footwear.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:myprofit_employee/src/ui/home/home.dart';
 import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/utils/imageconverter.dart';
 import 'package:myprofit_employee/utils/network.dart';
 import 'package:myprofit_employee/utils/validator.dart';
-
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 class UpdateVendorDetail extends StatefulWidget {
@@ -46,14 +44,8 @@ class UpdateVendorDetail extends StatefulWidget {
       : super(key: key);
 
   @override
-  _UpdateVendorDetailState createState() => _UpdateVendorDetailState(
-      this.id,
-      this.title,
-      this.shopename,
-      this.ownername,
-      this.mobile,
-      this.address,
-      this.image);
+  _UpdateVendorDetailState createState() =>
+      _UpdateVendorDetailState(this.id, this.title, this.shopename, this.ownername, this.mobile, this.address, this.image);
 }
 
 //select-category
@@ -65,8 +57,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   File? image;
   Uint8List? data;
 
-  _UpdateVendorDetailState(int id, String title, String shopename,
-      String ownername, String mobile, String address, String image);
+  _UpdateVendorDetailState(int id, String title, String shopename, String ownername, String mobile, String address, String image);
 
   getCategories() async {
     result = await ApiProvider().getCategoriess();
@@ -101,44 +92,30 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
       if (_shopname.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter ShopName");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter ShopName");
       } else if (_ownername.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter OwnerName");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OwnerName");
       } else if (_mobile.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter OwnerMobileNumber");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OwnerMobileNumber");
       } else if (_address.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Shopaddress");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Shopaddress");
       } else {
-        final AddVendorResponse loginData = await ApiProvider().addVendor(
-            "${widget.id}",
-            _shopname.text,
-            _ownername.text,
-            _mobile.text,
-            _address.text,
-            data,
-            arr);
-        log("ooooo ${loginData}");
+        final UpdateVendorResponse loginData = await ApiProvider().updatedetails(
+          "${widget.id}",
+          _shopname.text,
+          _ownername.text,
+          _mobile.text,
+          _address.text,
+          "arr"
+        );
+        log("ooooo ${loginData.message}");
         if (loginData.success == true) {
           // pref.setBool("login", true);
           // pref.setString("token", loginData.token);
           // pref.setBool("sucees", loginData.success);
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AddFootwear(title: widget.title, id: widget.id)),
+              MaterialPageRoute(builder: (context) => Home(onTab: (){})),
               (Route<dynamic> route) => false);
           // Navigator.push(
           //     context,
@@ -149,18 +126,13 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: loginData.success == false
-                ? "Otp was incoorect"
-                : "thanks for login ",
+            msg: loginData.success == false ? "Otp was incoorect" : "thanks for login ",
             // timeInSecForIos: 3
           );
         }
       }
     } else {
-      Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on the internet");
+      Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
     }
   }
 
@@ -192,10 +164,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                             child: Align(
                               child: Text('Terms & Conditions',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600)),
+                                  style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
                               alignment: Alignment.center,
                             ),
                           ),
@@ -205,8 +174,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                             child: Padding(
                               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               child: GestureDetector(
-                                child: Image.asset('images/bg-cross.png',
-                                    width: 20),
+                                child: Image.asset('images/bg-cross.png', width: 20),
                                 onTap: () {
                                   Navigator.pop(context);
                                 },
@@ -222,10 +190,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                           child: SingleChildScrollView(
                             child: Text(
                               'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley.',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400),
+                              style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400),
                             ),
                           ),
                         ),
@@ -235,15 +200,9 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                           // height: 300,
                           // width: devicewidth,
                           decoration: BoxDecoration(
-                              border: Border.all(width: 1),
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white54),
+                              border: Border.all(width: 1), borderRadius: BorderRadius.circular(20), color: Colors.white54),
                           child: Column(children: [
-                            Text('Signature',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
+                            Text('Signature', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
                             Container(
                               height: 180,
                               width: 300,
@@ -267,10 +226,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                             ),
                             child: Text(
                               "Done",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
+                              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                           ),
                           onTap: () async {
@@ -287,10 +243,8 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
 
   //terms-conditions-dialog
   Future<void> _handleSaveButtonPressed() async {
-    final ui.Image imageData =
-        await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
-    final ByteData? bytes =
-        await imageData.toByteData(format: ui.ImageByteFormat.png);
+    final ui.Image imageData = await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
+    final ByteData? bytes = await imageData.toByteData(format: ui.ImageByteFormat.png);
     if (bytes != null) {
       data = bytes.buffer.asUint8List();
       log("data   ${data}");
@@ -353,8 +307,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                           Positioned(
                             right: MediaQuery.of(context).size.width / 80,
                             child: GestureDetector(
-                              child:
-                                  Image.asset('images/bg-cross.png', width: 20),
+                              child: Image.asset('images/bg-cross.png', width: 20),
                               onTap: () {
                                 Navigator.pop(context);
                               },
@@ -367,20 +320,12 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                         textAlign: TextAlign.center,
                         text: TextSpan(
                             text: 'Shukriya sir! Humari',
-                            style: TextStyle(
-                                color: Color.fromRGBO(48, 48, 48, 1),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600),
+                            style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600),
                             children: [
                               TextSpan(
                                   text: ' Myprofit ',
-                                  style: TextStyle(
-                                      color: Color.fromRGBO(102, 87, 244, 1),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600)),
-                              TextSpan(
-                                  text:
-                                      'team jald hi aapke sampark mai aaegi!'),
+                                  style: TextStyle(color: Color.fromRGBO(102, 87, 244, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                              TextSpan(text: 'team jald hi aapke sampark mai aaegi!'),
                             ]),
                       ),
                       SizedBox(height: 12),
@@ -404,10 +349,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                           },
                           child: Text(
                             "GO",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
+                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
@@ -466,8 +408,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               );
             },
           ),
-          title: Text('Update ${widget.title} Details',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+          title: Text('Update ${widget.title} Details', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -475,25 +416,17 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Shop Name',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+              Text('Shop Name', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 //  _shopname.text = widget.shopename,
                 controller: _shopname,
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -501,24 +434,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Owners name',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+              Text('Owners name', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 controller: _ownername,
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -527,10 +452,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               ),
               SizedBox(height: 15),
               Text('Mobile Number ',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 controller: _mobile,
@@ -541,15 +463,11 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 maxLength: 10,
                 decoration: InputDecoration(
                   counterText: "",
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -557,24 +475,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Address',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+              Text('Address', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 controller: _address,
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -584,9 +494,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               SizedBox(height: 15),
               AutoSizeText(
                 'Sub Categories (If exists)',
-                style: TextStyle(
-                    color: Color.fromRGBO(48, 48, 48, 1),
-                    fontWeight: FontWeight.w600),
+                style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontWeight: FontWeight.w600),
                 maxFontSize: 15,
                 minFontSize: 10,
               ),
@@ -617,10 +525,8 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                           //       return
 
                           Container(
-                              child: MultiSelectBottomSheetField<
-                                  CategoriesResponseData?>(
-                                buttonIcon: Icon(Icons.keyboard_arrow_down,
-                                    color: Color.fromRGBO(85, 85, 85, 1)),
+                              child: MultiSelectBottomSheetField<CategoriesResponseData?>(
+                                buttonIcon: Icon(Icons.keyboard_arrow_down, color: Color.fromRGBO(85, 85, 85, 1)),
                                 decoration: BoxDecoration(
                                   color: Color.fromRGBO(242, 242, 242, 1),
                                   borderRadius: BorderRadius.circular(10),
@@ -629,43 +535,24 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                                 initialChildSize: 0.7,
                                 maxChildSize: 0.95,
                                 title: Text('Sub categories',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600)),
+                                    style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600)),
                                 buttonText: Text(placeholderText,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(85, 85, 85, 1),
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600)),
-                                searchTextStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600),
+                                    style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600)),
+                                searchTextStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600),
                                 cancelText: Text('Cancel',
-                                    style: TextStyle(
-                                        color: Color(0xff6657f4),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600)),
-                                confirmText: Text('Ok',
-                                    style: TextStyle(
-                                        color: Color(0xff6657f4),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600)),
+                                    style: TextStyle(color: Color(0xff6657f4), fontSize: 14, fontWeight: FontWeight.w600)),
+                                confirmText:
+                                    Text('Ok', style: TextStyle(color: Color(0xff6657f4), fontSize: 14, fontWeight: FontWeight.w600)),
                                 items: result!.data!
-                                    .map((category) =>
-                                        MultiSelectItem<CategoriesResponseData>(
-                                            category, category.categoryName))
+                                    .map((category) => MultiSelectItem<CategoriesResponseData>(category, category.categoryName))
                                     .toList(),
                                 searchable: true,
                                 validator: (values) {
                                   if (values == null || values.isEmpty) {
                                     return "Required";
                                   }
-                                  List<String> names = values
-                                      .map((e) => e!.categoryName)
-                                      .toList();
+                                  List<String> names = values.map((e) => e!.categoryName).toList();
                                   if (names.contains("Frog")) {
                                     return "Frogs are weird!";
                                   }
@@ -677,16 +564,11 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                                     placeholderText = "Dhaba";
                                     for (int i = 0; i < values.length; i++) {
                                       if (i == values.length - 1) {
-                                        placeholderText = placeholderText +
-                                            values[i]!.categoryName;
+                                        placeholderText = placeholderText + values[i]!.categoryName;
                                         arr = arr + values[i]!.id.toString();
                                       } else {
-                                        placeholderText = placeholderText +
-                                            values[i]!.categoryName +
-                                            ", ";
-                                        arr = arr +
-                                            values[i]!.id.toString() +
-                                            ",";
+                                        placeholderText = placeholderText + values[i]!.categoryName + ", ";
+                                        arr = arr + values[i]!.id.toString() + ",";
                                       }
                                     }
                                   });
@@ -792,10 +674,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                     },
                     child: Text(
                       "SUBMIT",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -819,33 +698,21 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                   selectImage(1, imageType);
                   Navigator.pop(context);
                 },
-                child: Text('Camera',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600)),
+                child: Text('Camera', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
               CupertinoActionSheetAction(
                 onPressed: () {
                   selectImage(2, imageType);
                   Navigator.pop(context);
                 },
-                child: Text('Gallery',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600)),
+                child: Text('Gallery', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
             ],
             cancelButton: CupertinoActionSheetAction(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel',
-                  style: TextStyle(
-                      color: Color(0xfff92d28),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600)),
+              child: Text('Cancel', style: TextStyle(color: Color(0xfff92d28), fontSize: 16, fontWeight: FontWeight.w600)),
             ),
           );
         });
