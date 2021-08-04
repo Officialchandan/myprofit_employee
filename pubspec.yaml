@@ -59,7 +59,7 @@ dependencies:
 
   #image view
   cached_network_image:
-dev_dependencies:
+dev_dependencies: 
   flutter_test:
     sdk: flutter
 
