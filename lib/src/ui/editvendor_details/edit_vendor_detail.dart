@@ -14,6 +14,7 @@ import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_fiel
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:myprofit_employee/model/categories_respnse.dart';
+import 'package:myprofit_employee/model/getvenordbyid_response.dart';
 import 'package:myprofit_employee/model/updatevendordetail_response.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
 import 'package:myprofit_employee/src/ui/add_footwear/add_footwear.dart';
@@ -24,28 +25,20 @@ import 'package:myprofit_employee/utils/validator.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 class UpdateVendorDetail extends StatefulWidget {
-  final int id;
+  final GetVendorByIdResponseData vendordata;
   final String title;
-  final String shopename;
-  final String ownername;
-  final String mobile;
-  final String address;
-  final String image;
+  final int id;
 
-  const UpdateVendorDetail(
-      {Key? key,
-      required this.id,
-      required this.title,
-      required this.shopename,
-      required this.ownername,
-      required this.mobile,
-      required this.address,
-      required this.image})
-      : super(key: key);
+  const UpdateVendorDetail({
+    Key? key,
+    required this.vendordata,
+    required this.title,
+    required this.id,
+  }) : super(key: key);
 
   @override
   _UpdateVendorDetailState createState() =>
-      _UpdateVendorDetailState(this.id, this.title, this.shopename, this.ownername, this.mobile, this.address, this.image);
+      _UpdateVendorDetailState(this.vendordata, this.title, this.id);
 }
 
 //select-category
@@ -56,12 +49,21 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   CategoriesResponse? result;
   File? image;
   Uint8List? data;
+  var subcat;
 
-  _UpdateVendorDetailState(int id, String title, String shopename, String ownername, String mobile, String address, String image);
+  _UpdateVendorDetailState(var data, String title, int id);
 
   getCategories() async {
     result = await ApiProvider().getCategoriess();
     print(result);
+    // CategoriesResponseData? data;
+    List<SubCategory> subcat = widget.vendordata.subCategory;
+
+    subcat.forEach((subcat) {
+      result!.data!.removeWhere((e) => e.id.toString() == subcat.catId);
+    });
+    result!.data!.removeWhere((e) => e.id.toString() == widget.id.toString());
+
     setState(() {});
     // return result!.data!;
   }
@@ -92,47 +94,97 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
       if (_shopname.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter ShopName");
-      } else if (_ownername.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OwnerName");
-      } else if (_mobile.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OwnerMobileNumber");
-      } else if (_address.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Shopaddress");
-      } else {
-        final UpdateVendorResponse loginData = await ApiProvider().updatedetails(
-          "${widget.id}",
-          _shopname.text,
-          _ownername.text,
-          _mobile.text,
-          _address.text,
-          "arr"
-        );
-        log("ooooo ${loginData.message}");
-        if (loginData.success == true) {
-          // pref.setBool("login", true);
-          // pref.setString("token", loginData.token);
-          // pref.setBool("sucees", loginData.success);
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Home(onTab: (){})),
-              (Route<dynamic> route) => false);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => thankYouDialog(),
-          //     ));
-        } else {
-          Fluttertoast.showToast(
+        Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: loginData.success == false ? "Otp was incoorect" : "thanks for login ",
-            // timeInSecForIos: 3
-          );
+            msg: "Please Enter ShopName");
+      } else if (_ownername.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter OwnerName");
+      } else if (_mobile.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter OwnerMobileNumber");
+      } else if (_mobile.text.length != 10) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Valid Mobile Number");
+      } else if (_address.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Shopaddress");
+      } 
+      else if (subcatlist.isNotEmpty) {
+        for (int i = 0; i < subcatlist.length; i++) {
+          if (subcatlist[i].subController.text.isEmpty) {
+            Fluttertoast.showToast(
+                backgroundColor: ColorPrimary,
+                textColor: Colors.white,
+                msg: "Please Enter SubCategories comission");
+          } else {
+            for (int i = 0; i < subcatlist.length; i++) {
+              if (i == subcatlist.length - 1) {
+                subCatergorycomission = subCatergorycomission +
+                    double.parse(subcatlist[i].subController.text.trim())
+                        .toStringAsPrecision(2);
+              } else {
+                subCatergorycomission = subCatergorycomission +
+                    double.parse(subcatlist[i].subController.text.trim())
+                        .toStringAsPrecision(2) +
+                    ",";
+              }
+            }
+            final UpdateVendorResponse loginData = await ApiProvider()
+                .updatedetails(
+                    "${widget.vendordata.id}",
+                    _shopname.text,
+                    _ownername.text,
+                    _mobile.text,
+                    _address.text,
+                    subCatergory,
+                    subCatergorycomission);
+            log("ooooo ${loginData.message}");
+            if (loginData.success == true) {
+              // pref.setBool("login", true);
+              // pref.setString("token", loginData.token);
+              // pref.setBool("sucees", loginData.success);
+              log("${widget.vendordata.id}");
+              log("${widget.title}");
+              log("${widget.id}");
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        AddFootwear(title: widget.title, id: widget.id)),
+              );
+            } else {
+              Fluttertoast.showToast(
+                backgroundColor: ColorPrimary,
+                textColor: Colors.white,
+                msg: loginData.success == false
+                    ? "unable to update"
+                    : "thanks for login ",
+                // timeInSecForIos: 3
+              );
+            }
+         }
         }
+      } else {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "unable to update");
       }
     } else {
-      Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
+      Fluttertoast.showToast(
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on the internet");
     }
   }
 
@@ -164,7 +216,10 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                             child: Align(
                               child: Text('Terms & Conditions',
-                                  style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600)),
                               alignment: Alignment.center,
                             ),
                           ),
@@ -174,7 +229,8 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                             child: Padding(
                               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               child: GestureDetector(
-                                child: Image.asset('images/bg-cross.png', width: 20),
+                                child: Image.asset('images/bg-cross.png',
+                                    width: 20),
                                 onTap: () {
                                   Navigator.pop(context);
                                 },
@@ -190,7 +246,10 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                           child: SingleChildScrollView(
                             child: Text(
                               'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley.',
-                              style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400),
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
                             ),
                           ),
                         ),
@@ -200,9 +259,15 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                           // height: 300,
                           // width: devicewidth,
                           decoration: BoxDecoration(
-                              border: Border.all(width: 1), borderRadius: BorderRadius.circular(20), color: Colors.white54),
+                              border: Border.all(width: 1),
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white54),
                           child: Column(children: [
-                            Text('Signature', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
+                            Text('Signature',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600)),
                             Container(
                               height: 180,
                               width: 300,
@@ -226,7 +291,10 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                             ),
                             child: Text(
                               "Done",
-                              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
                           onTap: () async {
@@ -243,8 +311,10 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
 
   //terms-conditions-dialog
   Future<void> _handleSaveButtonPressed() async {
-    final ui.Image imageData = await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
-    final ByteData? bytes = await imageData.toByteData(format: ui.ImageByteFormat.png);
+    final ui.Image imageData =
+        await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
+    final ByteData? bytes =
+        await imageData.toByteData(format: ui.ImageByteFormat.png);
     if (bytes != null) {
       data = bytes.buffer.asUint8List();
       log("data   ${data}");
@@ -257,116 +327,14 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   }
 
   //thank-you-dialog
-  thankYouDialog() {
-    return showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return Dialog(
-            backgroundColor: Colors.transparent,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width - 95,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: Colors.white12,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(7),
-                      topRight: Radius.circular(7),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width - 87,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: Colors.white30,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(7),
-                      topRight: Radius.circular(7),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 220,
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: Column(
-                    children: [
-                      Stack(
-                        children: [
-                          Align(
-                            child: Image.asset('images/flower.png', width: 120),
-                            alignment: Alignment.center,
-                          ),
-                          Positioned(
-                            right: MediaQuery.of(context).size.width / 80,
-                            child: GestureDetector(
-                              child: Image.asset('images/bg-cross.png', width: 20),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12),
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                            text: 'Shukriya sir! Humari',
-                            style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600),
-                            children: [
-                              TextSpan(
-                                  text: ' Myprofit ',
-                                  style: TextStyle(color: Color.fromRGBO(102, 87, 244, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-                              TextSpan(text: 'team jald hi aapke sampark mai aaegi!'),
-                            ]),
-                      ),
-                      SizedBox(height: 12),
-                      ButtonTheme(
-                        minWidth: 180,
-                        // ignore: deprecated_member_use
-                        child: RaisedButton(
-                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                          color: Color.fromRGBO(102, 87, 244, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Home(
-                                          onTab: () {},
-                                        )),
-                                (Route<dynamic> route) => false);
-                          },
-                          child: Text(
-                            "GO",
-                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
+
   //thank-you-dialog
 
   //select-category
   var placeholderText = "Select sub categories";
 
-  String arr = "";
+  String subCatergory = "";
+  String subCatergorycomission = "";
 
   //List<Animal> _selectedAnimals = [];
   // List<Category> _selectedCategory2 = [];
@@ -374,16 +342,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
 
   //List<Animal> _selectedCategory4 = [];
   final _multiSelectKey = GlobalKey<FormFieldState>();
-
+  List<SubCat> subcatlist = [];
   @override
   void initState() {
     super.initState();
-    _shopname.text = widget.shopename;
+    _shopname.text = widget.vendordata.name;
     getCategories();
-    _ownername.text = widget.ownername;
-    _mobile.text = widget.mobile;
+    _ownername.text = widget.vendordata.ownerName;
+    _mobile.text = widget.vendordata.ownerMobile;
 
-    _address.text = widget.address;
+    _address.text = widget.vendordata.address;
   }
 
   //select-category
@@ -408,7 +376,8 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               );
             },
           ),
-          title: Text('Update ${widget.title} Details', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+          title: Text('Update ${widget.title} Details',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -416,17 +385,31 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Shop Name', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Shop Name',
+                  style: TextStyle(
+                      color: Color.fromRGBO(48, 48, 48, 1),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 //  _shopname.text = widget.shopename,
                 controller: _shopname,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),
+                ],
+                maxLength: 25,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  counterText: "",
+                  contentPadding:
+                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(
+                      color: Color.fromRGBO(85, 85, 85, 1),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -434,16 +417,30 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Owners name', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Owners name',
+                  style: TextStyle(
+                      color: Color.fromRGBO(48, 48, 48, 1),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),
+                ],
+                maxLength: 25,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: _ownername,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  counterText: "",
+                  contentPadding:
+                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(
+                      color: Color.fromRGBO(85, 85, 85, 1),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -452,7 +449,10 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               ),
               SizedBox(height: 15),
               Text('Mobile Number ',
-                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                  style: TextStyle(
+                      color: Color.fromRGBO(48, 48, 48, 1),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 controller: _mobile,
@@ -463,11 +463,15 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 maxLength: 10,
                 decoration: InputDecoration(
                   counterText: "",
-                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding:
+                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(
+                      color: Color.fromRGBO(85, 85, 85, 1),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -475,16 +479,24 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Address', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Address',
+                  style: TextStyle(
+                      color: Color.fromRGBO(48, 48, 48, 1),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 controller: _address,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding:
+                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(
+                      color: Color.fromRGBO(85, 85, 85, 1),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -494,169 +506,147 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               SizedBox(height: 15),
               AutoSizeText(
                 'Sub Categories (If exists)',
-                style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    color: Color.fromRGBO(48, 48, 48, 1),
+                    fontWeight: FontWeight.w600),
                 maxFontSize: 15,
                 minFontSize: 10,
               ),
               SizedBox(height: 15),
+              SizedBox(height: 10),
               Container(
-                height: 50,
-                width: devicewidth - 30,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    SizedBox(height: 10),
-                    Container(
-                      child: result == null
-                          ? Center(child: CircularProgressIndicator())
-                          :
-                          //  FutureBuilder<List<CategoriesResponseData>>(
-                          //     future: getCategories(),
-                          //     builder: (context, snapshot) {
-                          //       if (snapshot.connectionState ==
-                          //           ConnectionState.waiting) {
-                          //         return Center(child: CircularProgressIndicator());
-                          //       }
-                          //       if (snapshot.hasError) {
-                          //         return Center(
-                          //           child: Text("Data Not Found"),
-                          //         );
-                          //       }
-                          //       return
+                child: result == null
+                    ? Center(child: CircularProgressIndicator())
+                    : Container(
+                        // width: devicewidth - 30,
+                        child: MultiSelectBottomSheetField<
+                            CategoriesResponseData?>(
+                          buttonIcon: Icon(Icons.keyboard_arrow_down,
+                              color: Color.fromRGBO(85, 85, 85, 1)),
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(242, 242, 242, 1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          key: _multiSelectKey,
+                          initialChildSize: 0.7,
+                          maxChildSize: 0.95,
+                          title: Text('Sub categories',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600)),
+                          buttonText: Text(placeholderText,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: Color.fromRGBO(85, 85, 85, 1),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600)),
+                          searchTextStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600),
+                          cancelText: Text('Cancel',
+                              style: TextStyle(
+                                  color: Color(0xff6657f4),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600)),
+                          confirmText: Text('Ok',
+                              style: TextStyle(
+                                  color: Color(0xff6657f4),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600)),
+                          items: result!.data!
+                              .map((category) =>
+                                  MultiSelectItem<CategoriesResponseData>(
+                                      category, category.categoryName))
+                              .toList(),
+                          initialValue:
+                              subcatlist.map((e) => e.subCat).toList(),
+                          searchable: true,
 
-                          Container(
-                              child: MultiSelectBottomSheetField<CategoriesResponseData?>(
-                                buttonIcon: Icon(Icons.keyboard_arrow_down, color: Color.fromRGBO(85, 85, 85, 1)),
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(242, 242, 242, 1),
+                          validator: (values) {
+                            if (values == null || values.isEmpty) {
+                              return "";
+                            }
+                            List<String> names =
+                                values.map((e) => e!.categoryName).toList();
+
+                            if (names.contains("Frog")) {
+                              return "Frogs are weird!";
+                            }
+                            return null;
+                          },
+                          onConfirm: (values) {
+                            // SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            SystemChannels.textInput
+                                .invokeMethod('TextInput.hide');
+                            setState(() {
+                              _selectedCategory3 = values;
+                              placeholderText = "";
+                              subcatlist.clear();
+                              if (values.length == 0) {
+                                placeholderText = "please select category";
+                              } else {
+                                for (int i = 0; i < values.length; i++) {
+                                  if (i == values.length - 1) {
+                                    placeholderText = "please select category";
+                                    subCatergory =
+                                        subCatergory + values[i]!.id.toString();
+                                  } else {
+                                    placeholderText = "please select category";
+                                    subCatergory = subCatergory +
+                                        values[i]!.id.toString() +
+                                        ",";
+                                  }
+                                  subcatlist.add(SubCat(values[i]!));
+                                }
+                              }
+                            });
+                            _multiSelectKey.currentState!.validate();
+                          },
+                          chipDisplay: MultiSelectChipDisplay(
+                            onTap: (item) {
+                              setState(() {
+                                _selectedCategory3.remove(item);
+                                log("dddd ${item}");
+                              });
+                              _multiSelectKey.currentState!.validate();
+                            },
+                          )..disabled = true,
+                          //  );
+                          // }
+                        ),
+                      ),
+              ),
+              Column(
+                  children: List.generate(
+                      subcatlist.length,
+                      (index) => Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              maxLength: 4,
+                              controller: subcatlist[index].subController,
+                              decoration: InputDecoration(
+                                counterText: "",
+                                contentPadding: EdgeInsets.only(
+                                    left: 14.0, bottom: 8.0, top: 8.0),
+                                filled: true,
+                                fillColor: Color.fromRGBO(242, 242, 242, 1),
+                                hintText:
+                                    'Please Enter ${subcatlist[index].subCat.categoryName} Commision',
+                                hintStyle: TextStyle(
+                                    color: Color.fromRGBO(85, 85, 85, 1),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600),
+                                border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
                                 ),
-                                key: _multiSelectKey,
-                                initialChildSize: 0.7,
-                                maxChildSize: 0.95,
-                                title: Text('Sub categories',
-                                    style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600)),
-                                buttonText: Text(placeholderText,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600)),
-                                searchTextStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600),
-                                cancelText: Text('Cancel',
-                                    style: TextStyle(color: Color(0xff6657f4), fontSize: 14, fontWeight: FontWeight.w600)),
-                                confirmText:
-                                    Text('Ok', style: TextStyle(color: Color(0xff6657f4), fontSize: 14, fontWeight: FontWeight.w600)),
-                                items: result!.data!
-                                    .map((category) => MultiSelectItem<CategoriesResponseData>(category, category.categoryName))
-                                    .toList(),
-                                searchable: true,
-                                validator: (values) {
-                                  if (values == null || values.isEmpty) {
-                                    return "Required";
-                                  }
-                                  List<String> names = values.map((e) => e!.categoryName).toList();
-                                  if (names.contains("Frog")) {
-                                    return "Frogs are weird!";
-                                  }
-                                  return null;
-                                },
-                                onConfirm: (values) {
-                                  setState(() {
-                                    _selectedCategory3 = values;
-                                    placeholderText = "Dhaba";
-                                    for (int i = 0; i < values.length; i++) {
-                                      if (i == values.length - 1) {
-                                        placeholderText = placeholderText + values[i]!.categoryName;
-                                        arr = arr + values[i]!.id.toString();
-                                      } else {
-                                        placeholderText = placeholderText + values[i]!.categoryName + ", ";
-                                        arr = arr + values[i]!.id.toString() + ",";
-                                      }
-                                    }
-                                  });
-                                  _multiSelectKey.currentState!.validate();
-                                },
-                                chipDisplay: MultiSelectChipDisplay(
-                                  onTap: (item) {
-                                    setState(() {
-                                      _selectedCategory3.remove(item);
-                                      log("dddd ${item}");
-                                    });
-                                    _multiSelectKey.currentState!.validate();
-                                  },
-                                )..disabled = true,
-                                //  );
-                                // }
                               ),
                             ),
-                    ),
-                  ],
-                ),
-              ),
-
+                          ))),
               SizedBox(height: 15),
-              // Text('Photo of the place where MyProfit board is to be placed',
-              //     style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-              // SizedBox(height: 10),
-              // InkWell(
-              //   child: ClipRRect(
-              //     borderRadius: BorderRadius.circular(10),
-              //     child: myProfitBoardImage != null
-              //         ? Image(image: FileImage(myProfitBoardImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-              //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
-              //   ),
-              //   onTap: () {
-              //     showBottomSheet(5, context);
-              //   },
-              // ),
-              // SizedBox(height: 15),
-              // Text('Documents for validation of Shop', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-              // SizedBox(height: 10),
-              // InkWell(
-              //   child: ClipRRect(
-              //     borderRadius: BorderRadius.circular(10),
-              //     child: validationShopImage != null
-              //         ? Image(image: FileImage(validationShopImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-              //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
-              //   ),
-              //   onTap: () {
-              //     showBottomSheet(6, context);
-              //   },
-              // ),
-              // Container(
-              //   transform: Matrix4.translationValues(-10, 0, 0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.start,
-              //     children: [
-              //       Checkbox(
-              //         value: this.valuesecond,
-              //         onChanged: (bool? value) {
-              //           setState(() {
-              //             this.valuesecond = value!;
-              //           });
-              //         },
-              //       ),
-              //       Row(
-              //         children: [
-              //           Text('Accept all ',
-              //               style: TextStyle(
-              //                   color: Color(0xff303030),
-              //                   fontSize: 15,
-              //                   fontWeight: FontWeight.w600)),
-              //           InkWell(
-              //             child: Text('Terms & Conditions',
-              //                 style: TextStyle(
-              //                     color: Color(0xff6657f4),
-              //                     fontSize: 15,
-              //                     fontWeight: FontWeight.w600,
-              //                     decoration: TextDecoration.underline)),
-              //             onTap: () {
-              //               termsConditionsDialog();
-              //             },
-              //           ),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // ),
               SizedBox(height: 15),
               Align(
                 alignment: Alignment.center,
@@ -674,7 +664,10 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                     },
                     child: Text(
                       "SUBMIT",
-                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -698,21 +691,33 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                   selectImage(1, imageType);
                   Navigator.pop(context);
                 },
-                child: Text('Camera', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
+                child: Text('Camera',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600)),
               ),
               CupertinoActionSheetAction(
                 onPressed: () {
                   selectImage(2, imageType);
                   Navigator.pop(context);
                 },
-                child: Text('Gallery', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
+                child: Text('Gallery',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600)),
               ),
             ],
             cancelButton: CupertinoActionSheetAction(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel', style: TextStyle(color: Color(0xfff92d28), fontSize: 16, fontWeight: FontWeight.w600)),
+              child: Text('Cancel',
+                  style: TextStyle(
+                      color: Color(0xfff92d28),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600)),
             ),
           );
         });
@@ -740,4 +745,11 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
     setState(() {});
   }
 //image-picker
+}
+
+class SubCat {
+  TextEditingController subController = TextEditingController();
+
+  CategoriesResponseData subCat;
+  SubCat(this.subCat);
 }

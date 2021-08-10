@@ -51,7 +51,7 @@ class _DhabasDayState extends State<DhabasDay> {
             );
           },
         ),
-        title: Text('Dhabas Day',
+        title: Text('Vendors Day',
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
         centerTitle: true,
       ),
@@ -77,7 +77,7 @@ class _DhabasDayState extends State<DhabasDay> {
                           //     onChanged: (check) => saleAmountBloc
                           //         .add(CheckBoxEvent(checked: check!))),
                           Text(
-                            "Dhabas Day report",
+                            "vendors Day report",
                             style: GoogleFonts.openSans(
                               fontSize: 23,
                               fontWeight: FontWeight.w700,
@@ -124,7 +124,7 @@ class _DhabasDayState extends State<DhabasDay> {
                                             child: Align(
                                               alignment: Alignment.centerLeft,
                                               child: AutoSizeText(
-                                                  "  No of Dhabas",
+                                                  "  No of Vendors",
                                                   style: GoogleFonts.openSans(
                                                       fontSize: 18.0,
                                                       color: Colors.white)),
@@ -187,7 +187,7 @@ class _DhabasDayState extends State<DhabasDay> {
                               borderColor: Colors.grey.shade500,
 
                               title: ChartTitle(
-                                  text: "Dhabas Day Count ",
+                                  text: "Vendors Day Count ",
                                   textStyle: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.shade600)),
@@ -221,7 +221,7 @@ class _DhabasDayState extends State<DhabasDay> {
                                 //numberFormat: NumberFormat.currency(),
                                 title: AxisTitle(
                                     alignment: ChartAlignment.center,
-                                    text: "Dhabas Day Count",
+                                    text: "Vendors Day Count",
                                     textStyle: TextStyle(
                                         fontSize: 11,
                                         color: Colors.grey.shade600)),

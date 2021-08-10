@@ -144,13 +144,14 @@ class _DriversWeeklyState extends State<DriversWeekly> {
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: AutoSizeText(
-                                              '  ${snapshot.data!.startWeek}to ${snapshot.data!.endWeek}',
+                                              '  ${snapshot.data!.startWeek}to${snapshot.data!.endWeek}',
                                               style: GoogleFonts.openSans(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 14.0,
                                                   color: Colors.black),
                                               maxFontSize: 14,
                                               minFontSize: 12,
+                                              maxLines: 1,
                                             ),
                                           ))
                                     ]),

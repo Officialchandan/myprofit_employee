@@ -1,8 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.myprofit.myprofit_employee">
+
+  <uses-permission android:name="android.permission.INTERNET"/>
+
+
    <application
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/netwrok_security"
         android:label="Employee"
         android:icon="@mipmap/ic_launcher">
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -37,5 +44,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data android:name="io.flutter.network-policy"
+           android:usesCleartextTraffic="true"
+           android:resource="@xml/netwrok_security"/>
     </application>
 </manifest>

@@ -64,7 +64,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "(|) No of Dhabas",
+                  "(|) No of Vendors",
                   style: GoogleFonts.openSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

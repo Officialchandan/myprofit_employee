@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myprofit_employee/model/categories_respnse.dart';
+import 'package:myprofit_employee/model/getvenordbyid_response.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
 import 'package:myprofit_employee/src/ui/add_dhaba/add_dhaba.dart';
 import 'package:myprofit_employee/src/ui/add_footwear/add_footwear.dart';
 import 'package:myprofit_employee/src/ui/login/login.dart';
+import 'package:myprofit_employee/src/ui/vendor_form/vendor_form.dart';
 import 'package:myprofit_employee/utils/colors.dart';
 import 'package:myprofit_employee/utils/network.dart';
 
@@ -28,11 +30,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   CategoriesResponse? result;
-  Future<List<CategoriesResponseData>> getCategories() async {
-    result = await ApiProvider().getCategoriess();
-    print(result);
-    return result!.data!;
-  }
 
   // var categoryList = [
   //   'Dhaba',
@@ -46,8 +43,8 @@ class _HomeState extends State<Home> {
   //   'Stationary',
   //   'Chemist'
   //];
-
-  List<CategoriesResponseData> searchList = [];
+  bool _tap = true;
+  List<CategoriesResponseData> categorieslist = [];
   var setAddFormRoute = [
     AddDhaba(),
   ];
@@ -56,34 +53,46 @@ class _HomeState extends State<Home> {
 
   String searchText = "";
   bool searching = false;
+  int? id;
 
-  final subject = PublishSubject<String>();
-
+  final PublishSubject<List<CategoriesResponseData>> subject = PublishSubject();
+  List<GetVendorByIdResponseData> loginData = [];
   @override
   void initState() {
     super.initState();
-    subject.stream
-        .debounceTime(Duration(milliseconds: 50))
-        .listen((searchText) {
-      this.searchText = searchText;
-      if (searchText.isNotEmpty) {
-        print("searchText -->$searchText");
-        searchList.clear();
-        log("ram ${result!.data!}");
-        for (int i = 0; i < result!.data!.length; i++) {
-          if (result!.data![i].categoryName
-              .toLowerCase()
-              .contains(searchText.toLowerCase())) {
-            print("Container -->$searchText");
-            searchList.add(result!.data![i]);
-            log("ram ${result!.data![i].categoryName}");
-          }
-        }
-      } else {
-        searchList.clear();
-      }
-      setState(() {});
-    });
+    getCategories();
+    // getVendorId(id);
+    // subject.stream
+    //     .debounceTime(Duration(milliseconds: 50))
+    //     .listen((searchText) async {
+    //   this.searchText = searchText;
+    //   if (await Network.isConnected()) {
+    //     if (searchText.isNotEmpty) {
+    //       print("searchText -->$searchText");
+    //       searchList.clear();
+    //       log("ram ${result!.data!}");
+    //       for (int i = 0; i < result!.data!.length; i++) {
+    //         if (result!.data![i].categoryName
+    //             .toLowerCase()
+    //             .contains(searchText.toLowerCase())) {
+    //           print("Container -->$searchText");
+    //           searchList.add(result!.data![i]);
+    //           log("ram ${result!.data![i].categoryName}");
+    //         } else {
+    //           print("Container -->data not found");
+    //         }
+    //       }
+    //     } else {
+    //       Fluttertoast.showToast(msg: "msg", backgroundColor: ColorPrimary);
+    //       print("Container -->data not found2");
+    //       searchList.clear();
+    //     }
+    //   } else {
+    //     Fluttertoast.showToast(
+    //         msg: "Please check Your Internet", backgroundColor: ColorPrimary);
+    //   }
+    //   // setState(() {});
+    // });
   }
 
   route() {
@@ -95,6 +104,67 @@ class _HomeState extends State<Home> {
   void dispose() {
     super.dispose();
     subject.close();
+  }
+
+  getVendorId(id, title) async {
+    if (await Network.isConnected()) {
+      SystemChannels.textInput.invokeMethod("TextInput.hide");
+      print("kai kroge +");
+      GetVendorByIdResponse getVendor = await ApiProvider().getVendorId(id);
+      if (getVendor.success) {
+        loginData = getVendor.data!;
+
+        if (id == 1) {
+          //Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddDhaba()),
+          );
+        } else {
+          //Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AddFootwear(title: title, id: id)),
+          );
+        }
+      } else {
+        if (id == 1) {
+        } else {
+          //Navigator.pop(context);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => VendorForm(title: title, id: id)));
+        }
+      }
+
+      // SharedPref.setStringPreference(SharedPref.USERSTATUS, loginData.status);
+
+    } else {
+      Fluttertoast.showToast(
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on  internet");
+    }
+    return loginData;
+    _tap = true;
+  }
+
+  getCategories() async {
+    if (await Network.isConnected()) {
+      result = await ApiProvider().getCategoriess();
+      print(result);
+      if (result!.success) {
+        categorieslist = result!.data!;
+        id = categorieslist[1].id;
+        subject.add(result!.data!);
+      } else {
+        // Fluttertoast.showToast(msg: "msg1");
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Please turn on  internet");
+    }
   }
 
   @override
@@ -120,6 +190,7 @@ class _HomeState extends State<Home> {
           title: searching
               ? TextFormField(
                   controller: _searchController,
+                  autofocus: true,
                   decoration: InputDecoration(
                     isCollapsed: true,
                     contentPadding: EdgeInsets.fromLTRB(10, 8, 5, 8),
@@ -136,7 +207,27 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   onChanged: (text) {
-                    subject.add(text);
+                    List<CategoriesResponseData> searchList = [];
+                    if (text.isNotEmpty) {
+                      print("searchText -->$text");
+
+                      log("ram ${result!.data!}");
+                      for (int i = 0; i < result!.data!.length; i++) {
+                        if (result!.data![i].categoryName
+                            .toLowerCase()
+                            .contains(text.toLowerCase())) {
+                          print("Container -->$text");
+                          searchList.add(result!.data![i]);
+                          log("ram ${result!.data![i].categoryName}");
+                        } else {
+                          print("Container -->data not found");
+                        }
+                      }
+
+                      subject.add(searchList);
+                    } else {
+                      subject.add(categorieslist);
+                    }
                   },
                 )
               : Text('Home',
@@ -148,8 +239,9 @@ class _HomeState extends State<Home> {
                     icon: const Icon(Icons.close),
                     iconSize: 25,
                     onPressed: () {
-                      searching = false;
                       _searchController.clear();
+                      subject.add(categorieslist);
+                      searching = false;
                       setState(() {});
                     },
                   )
@@ -163,35 +255,26 @@ class _HomeState extends State<Home> {
                   ),
           ],
         ),
-        body: FutureBuilder<List<CategoriesResponseData>>(
-            future: getCategories(),
+        body: StreamBuilder<List<CategoriesResponseData>>(
+            stream: subject.stream,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               }
+
               if (snapshot.hasError) {
                 return Center(
-                  child: Text("Data Not Found"),
+                  child: Text("Data Not Found "),
                 );
               }
-              return categoryListWidget();
+              return categoryListWidget(snapshot.data!);
             }),
       ),
     );
   }
 
-  Widget categoryListWidget() {
-    List<CategoriesResponseData> category = [];
-    log("k ${searchList}");
-    if (searchList.isEmpty) {
-      print("searching -->$searching");
-      category = result!.data!;
-    } else {
-      category = searchList;
-    }
-    bool someObjects = false;
+  Widget categoryListWidget(List<CategoriesResponseData> category) {
     return ListView.builder(
-        // reverse: true,
         itemCount: category.length,
         itemBuilder: (context, index) {
           return Container(
@@ -242,29 +325,12 @@ class _HomeState extends State<Home> {
                     borderRadius: BorderRadius.circular(7),
                   ),
                   onPressed: () async {
-                    if (await Network.isConnected()) {
-                      SystemChannels.textInput.invokeMethod("TextInput.hide");
-                      print("kai kroge +");
-                      //  getCategories();
-                      if (category[index].id == 1) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AddDhaba()),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddFootwear(
-                                  title: "${category[index].categoryName}",
-                                  id: category[index].id)),
-                        );
-                      }
-                    } else {
-                      Fluttertoast.showToast(
-                          backgroundColor: ColorPrimary,
-                          textColor: Colors.white,
-                          msg: "Please turn on  internet");
+                    FocusScope.of(context).unfocus();
+                    //int id;
+                    if (_tap == true) {
+                      _tap = false;
+                      getVendorId(
+                          category[index].id, category[index].categoryName);
                     }
                   },
                   child: Text(

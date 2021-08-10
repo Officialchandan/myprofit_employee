@@ -52,7 +52,7 @@ class _DhabasMonthlyState extends State<DhabasMonthly> {
             );
           },
         ),
-        title: Text('Dhabas Monthly',
+        title: Text('Vendors Monthly',
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
         centerTitle: true,
       ),
@@ -78,7 +78,7 @@ class _DhabasMonthlyState extends State<DhabasMonthly> {
                           //     onChanged: (check) => saleAmountBloc
                           //         .add(CheckBoxEvent(checked: check!))),
                           Text(
-                            "Dhabas Monthly report",
+                            "Vendors Monthly report",
                             style: GoogleFonts.openSans(
                               fontSize: 23,
                               fontWeight: FontWeight.w700,
@@ -125,7 +125,7 @@ class _DhabasMonthlyState extends State<DhabasMonthly> {
                                             child: Align(
                                               alignment: Alignment.centerLeft,
                                               child: AutoSizeText(
-                                                  "  No of Dhabas",
+                                                  "  No of Vendors",
                                                   style: GoogleFonts.openSans(
                                                       fontSize: 18.0,
                                                       color: Colors.white)),
@@ -188,7 +188,7 @@ class _DhabasMonthlyState extends State<DhabasMonthly> {
                               borderColor: Colors.grey.shade500,
 
                               title: ChartTitle(
-                                  text: "Dhabas Monthly Count ",
+                                  text: "Vendors Monthly Count ",
                                   textStyle: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.shade600)),
@@ -222,7 +222,7 @@ class _DhabasMonthlyState extends State<DhabasMonthly> {
                                 //numberFormat: NumberFormat.currency(),
                                 title: AxisTitle(
                                     alignment: ChartAlignment.center,
-                                    text: "Dhabas Monthly Count",
+                                    text: "Vendors Monthly Count",
                                     textStyle: TextStyle(
                                         fontSize: 11,
                                         color: Colors.grey.shade600)),

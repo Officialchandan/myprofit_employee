@@ -38,25 +38,29 @@ class AddVendorResponseData {
   AddVendorResponseData({
     required this.vendorId,
     required this.uniqueId,
-    required this.vendorType,
+    required this.categoryType,
     required this.addedBy,
     required this.shopName,
+    required this.shopCommission,
     required this.ownerName,
     required this.ownerSign,
     required this.address,
-    required this.subCatId,
+    this.latitude,
+    this.longitude,
     required this.ownerMobile,
   });
 
   int vendorId;
   String uniqueId;
-  String vendorType;
+  String categoryType;
   int addedBy;
   String shopName;
+  String shopCommission;
   String ownerName;
   String ownerSign;
   String address;
-  String subCatId;
+  dynamic latitude;
+  dynamic longitude;
   String ownerMobile;
 
   factory AddVendorResponseData.fromJson(String str) =>
@@ -68,26 +72,30 @@ class AddVendorResponseData {
       AddVendorResponseData(
         vendorId: json["vendor_id"],
         uniqueId: json["unique_id"],
-        vendorType: json["vendor_type"],
+        categoryType: json["category_type"],
         addedBy: json["added_by"],
         shopName: json["shop_name"],
+        shopCommission: json["shop_commission"],
         ownerName: json["owner_name"],
         ownerSign: json["owner_sign"],
         address: json["address"],
-        subCatId: json["sub_cat_id"],
+        latitude: json["latitude"],
+        longitude: json["longitude"],
         ownerMobile: json["owner_mobile"],
       );
 
   Map<String, dynamic> toMap() => {
         "vendor_id": vendorId,
         "unique_id": uniqueId,
-        "vendor_type": vendorType,
+        "category_type": categoryType,
         "added_by": addedBy,
         "shop_name": shopName,
+        "shop_commission": shopCommission,
         "owner_name": ownerName,
         "owner_sign": ownerSign,
         "address": address,
-        "sub_cat_id": subCatId,
+        "latitude": latitude,
+        "longitude": longitude,
         "owner_mobile": ownerMobile,
       };
 }

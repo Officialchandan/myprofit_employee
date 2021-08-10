@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class Validator {
@@ -20,11 +19,22 @@ class Validator {
   }
 
   //mobile-validator
+  static String? validatename(String value, BuildContext context) {
+    String patttern = r'([a-zA-Z])';
+    RegExp regExp = new RegExp(patttern);
+    if (value.length == 0) {
+      return "please enter  Name";
+    } else if (!regExp.hasMatch(value)) {
+      return "please enter Valid Name";
+    }
+    return null;
+  }
+
   static String? validateMobile(String value, BuildContext context) {
     String patttern = r'(^[0-9]*$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
-      return"please enter mobile number";
+      return "please enter mobile number";
     } else if (value.length != 10) {
       return "Mobile number must 10 digits";
     } else if (!regExp.hasMatch(value)) {
@@ -38,7 +48,7 @@ class Validator {
     String patttern = r'(^[0-9]*$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
-      return"Please enter employee";
+      return "Please enter employee";
     } else if (!regExp.hasMatch(value)) {
       return "Employee must be digits";
     }
@@ -50,7 +60,7 @@ class Validator {
     String patttern = r'(^[0-9]*$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
-      return"Please enter price";
+      return "Please enter price";
     } else if (!regExp.hasMatch(value)) {
       return "Price must be digits";
     }
@@ -62,7 +72,7 @@ class Validator {
     String patttern = r'(^[0-9]*$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
-      return"Please enter aadhar number";
+      return "Please enter aadhar number";
     } else if (!regExp.hasMatch(value)) {
       return "Aadhar number must be digits";
     }
@@ -74,7 +84,7 @@ class Validator {
     String patttern = r'(^[0-9]*$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
-      return"Please enter daily truck traffic";
+      return "Please enter daily truck traffic";
     } else if (!regExp.hasMatch(value)) {
       return "Daily truck traffic must be digits";
     }
@@ -86,7 +96,7 @@ class Validator {
     String patttern = r'(^[0-9]*$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
-      return"Please enter distance from bank";
+      return "Please enter distance from bank";
     } else if (!regExp.hasMatch(value)) {
       return "Distance from bank must be digits";
     }
@@ -98,7 +108,7 @@ class Validator {
     String patttern = r'(^[0-9]*$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
-      return"Please enter seating capacity";
+      return "Please enter seating capacity";
     } else if (!regExp.hasMatch(value)) {
       return "Seating capacity must be digits";
     }

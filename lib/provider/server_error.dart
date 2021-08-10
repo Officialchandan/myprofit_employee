@@ -56,24 +56,28 @@ class ServerError implements Exception {
   }
 
   void logout() async {
+    double devicewidth = 300;
+
     showDialog(
+      barrierDismissible: false,
         context: navigationService.navigatorKey.currentContext!,
         builder: (context) => AlertDialog(
-              content:
-                  Text("Your session has been expired! Please login again"),
-              contentPadding: EdgeInsets.all(15),
-              actions: [
-                TextButton(
-                    onPressed: () async {
-                      SharedPref.clearSharedPreference(context);
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => Login()),
-                          (route) => false);
-                    },
-                    child: Text("Ok"))
-              ],
-            ));
+          
+          content:
+              Text("Your session has been expired! Please login again"),
+          contentPadding: EdgeInsets.all(15),
+          actions: [
+            TextButton(
+                onPressed: () async {
+                  SharedPref.clearSharedPreference(context);
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => Login()),
+                      (route) => false);
+                },
+                child: Text("Ok"))
+          ],
+        ));
 
     // EasyLoading.showError("Your session has been expired! Please login again",);
   }

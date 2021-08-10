@@ -97,7 +97,7 @@ class _LoginState extends State<Login> {
                   filled: true,
 
                   // fillColor: Colors.black,
-                  hintText: "Enter otp",
+                  hintText: "Enter OTP",
                   hintStyle: GoogleFonts.openSans(
                     fontWeight: FontWeight.w600,
                   ),
@@ -170,32 +170,17 @@ class _LoginState extends State<Login> {
             msg: "Please enter MobileNumber");
       } else {
         final loginData = await ApiProvider().login(mobile);
-        // SharedPref.setStringPreference(SharedPref.USERSTATUS, loginData.status);
+        // SharedPref.setStringPrefe  rence(SharedPref.USERSTATUS, loginData.status);
         print("kai kroge +${loginData.message}");
 
         if (loginData.success == true) {
           _displayDialog(context, mobileController.text);
-        }
-        // else if (loginData.status == "Registered") {
-        //   Fluttertoast.showToast(
-        //     backgroundColor: ColorPrimary,
-        //     textColor: Colors.white,
-        //     msg: loginData.status == "Registered"
-        //         ? "Please enter valid mobile number"
-        //         : "please enter otp now ",
-
-        //     // timeInSecForIos: 3
-        //   );
-        // } else if (loginData.status == "Unregistered") {
-        //   Navigator.push(context,
-        //       MaterialPageRoute(builder: (context) => RegistrationScreen()));
-        // }
-        else {
+        } else {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: loginData.success == false
-                ? "Please enter vaild mobile number"
+                ? "Please enter valid mobile number"
                 : "Thanks for Login",
 
             // timeInSecForIos: 3
@@ -219,7 +204,7 @@ class _LoginState extends State<Login> {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please Enter otp");
+            msg: "Please Enter OTP");
       } else {
         final OtpVerificationResponse loginData =
             await ApiProvider().verifyOtp(mobile, otp);
@@ -247,7 +232,7 @@ class _LoginState extends State<Login> {
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: loginData.success == false
-                ? "Otp was incoorect"
+                ? "OTP is incorrect"
                 : "thanks for login ",
             // timeInSecForIos: 3
           );

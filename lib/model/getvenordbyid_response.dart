@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 class GetVendorByIdResponse {
   GetVendorByIdResponse({
     required this.success,
@@ -25,40 +27,42 @@ class GetVendorByIdResponse {
         success: json["success"],
         message: json["message"],
         data: List<GetVendorByIdResponseData>.from(
-            json["data"].map((x) => GetVendorByIdResponseData.fromMap(x))),
+                json["data"].map((x) => GetVendorByIdResponseData.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
         "success": success,
         "message": message,
-        "data": List<dynamic>.from(data!.map((x) => x.toMap())),
+        "data":  List<dynamic>.from(data!.map((x) => x.toMap())),
       };
 }
 
 class GetVendorByIdResponseData {
   GetVendorByIdResponseData({
     required this.id,
-    required this.vendorType,
-    required this.subCatId,
+    required this.categoryType,
+    required this.name,
+    required this.commission,
+    required this.address,
     required this.lat,
     required this.lng,
-    required this.name,
-    required this.address,
     required this.ownerName,
     required this.ownerMobile,
     required this.ownerSign,
+    required this.subCategory,
   });
 
   int id;
-  int vendorType;
-  String subCatId;
-  String lat;
-  String lng;
+  int categoryType;
   String name;
+  String commission;
   String address;
+  dynamic lat;
+  dynamic lng;
   String ownerName;
   String ownerMobile;
   String ownerSign;
+  List<SubCategory> subCategory;
 
   factory GetVendorByIdResponseData.fromJson(String str) =>
       GetVendorByIdResponseData.fromMap(json.decode(str));
@@ -68,27 +72,59 @@ class GetVendorByIdResponseData {
   factory GetVendorByIdResponseData.fromMap(Map<String, dynamic> json) =>
       GetVendorByIdResponseData(
         id: json["id"],
-        vendorType: json["vendor_type"],
-        subCatId: json["sub_cat_id"] == null ? "" : json["sub_cat_id"],
-        lat: json["lat"] == null ? "" : json["lat"],
-        lng: json["lng"] == null ? "" : json["lng"],
+        categoryType: json["category_type"],
         name: json["name"],
-        address: json["address"] == null ? "" : json["address"],
-        ownerName: json["owner_name"] == null ? "" : json["owner_name"],
-        ownerMobile: json["owner_mobile"] == null ? "" : json["owner_mobile"],
-        ownerSign: json["owner_sign"] == null ? "" : json["owner_sign"],
-      );
+        commission: json["commission"],
+        address: json["address"],
+        lat: json["lat"],
+        lng: json["lng"],
+        ownerName: json["owner_name"],
+        ownerMobile: json["owner_mobile"],
+        ownerSign: json["owner_sign"],
+        subCategory: List<SubCategory>.from(json["sub_category"].map((x) => SubCategory.fromMap(x))),
+ );
 
   Map<String, dynamic> toMap() => {
         "id": id,
-        "vendor_type": vendorType,
-        "sub_cat_id": subCatId == null ? null : subCatId,
-        "lat": lat == null ? null : lat,
-        "lng": lng == null ? null : lng,
+        "category_type": categoryType,
         "name": name,
-        "address": address == null ? null : address,
-        "owner_name": ownerName == null ? null : ownerName,
-        "owner_mobile": ownerMobile == null ? null : ownerMobile,
-        "owner_sign": ownerSign == null ? null : ownerSign,
+        "commission": commission,
+        "address": address,
+        "lat": lat,
+        "lng": lng,
+        "owner_name": ownerName,
+        "owner_mobile": ownerMobile,
+        "owner_sign": ownerSign,
+        "sub_category": List<dynamic>.from(subCategory.map((x) => x.toMap())),
+      };
+}
+
+class SubCategory {
+  SubCategory({
+    required this.catId,
+    required this.commission,
+    required this.commissionStatus,
+  });
+
+  String catId;
+  String commission;
+  int commissionStatus;
+TextEditingController subController = TextEditingController();
+
+  factory SubCategory.fromJson(String str) =>
+      SubCategory.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory SubCategory.fromMap(Map<String, dynamic> json) => SubCategory(
+        catId: json["cat_id"],
+        commission: json["commission"],
+        commissionStatus: json["commission_status"] ,
+      );
+
+  Map<String, dynamic> toMap() => {
+        "cat_id": catId,
+        "commission": commission,
+        "commission_status": commissionStatus,
       };
 }

@@ -56,6 +56,17 @@ class _VendorFormState extends State<VendorForm> {
   getCategories() async {
     result = await ApiProvider().getCategoriess();
     print(result);
+    CategoriesResponseData? data;
+    result!.data!.forEach((element) {
+      if (element.id == widget.id) {
+        data = element;
+        // result!.data!.remove(element);
+        // subcatlist.add(SubCat(element));
+      }
+    });
+    if (data != null) {
+      result!.data!.remove(data);
+    }
     setState(() {});
     // return result!.data!;
   }
@@ -66,7 +77,7 @@ class _VendorFormState extends State<VendorForm> {
   File? myProfitBoardImage;
   File? validationShopImage;
   //image-picker
-
+  List<double> sub = [];
   //checkbox
   bool valuefirst = false;
   bool valuesecond = false;
@@ -76,9 +87,10 @@ class _VendorFormState extends State<VendorForm> {
   TextEditingController _ownername = TextEditingController();
 
   TextEditingController _mobile = TextEditingController();
+  TextEditingController _comission = TextEditingController();
 
   TextEditingController _address = TextEditingController();
-
+  List<SubCat> subcatlist = [];
 //api calling
   addVendors() async {
     if (await Network.isConnected()) {
@@ -88,63 +100,93 @@ class _VendorFormState extends State<VendorForm> {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please Enter ShopName");
+            msg: "Please Enter Shop Name");
+      } else if (_comission.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Comission");
       } else if (_ownername.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please Enter OwnerName");
+            msg: "Please Enter Owner Name");
       } else if (_mobile.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please Enter OwnerMobileNumber");
+            msg: "Please Enter Owner Mobile Number");
+      } else if (_mobile.text.length != 10) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Valid Mobile Number");
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please Enter Shopaddress");
-      } else if (valuesecond == false) {
+            msg: "Please Enter Shop address");
+      } 
+      else if (subcatlist.isNotEmpty) {
+        for (int i = 0; i < subcatlist.length; i++) {
+          if (subcatlist[i].subController.text.isEmpty) {
+            Fluttertoast.showToast(
+                backgroundColor: ColorPrimary,
+                textColor: Colors.white,
+                msg: "Please Enter SubCategories comission");
+          }
+          else if (valuesecond == false) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please Select term and Condition");
       } else {
+        for (int i = 0; i < subcatlist.length; i++) {
+          if (i == subcatlist.length - 1) {
+            comiisionarray = comiisionarray +
+                double.parse(subcatlist[i].subController.text.trim())
+                    .toStringAsPrecision(2);
+          } else {
+            comiisionarray = comiisionarray +
+                double.parse(subcatlist[i].subController.text.trim())
+                    .toStringAsPrecision(2) +
+                ",";
+          }
+        }
         final AddVendorResponse loginData = await ApiProvider().addVendor(
             "${widget.id}",
             _shopname.text,
             _ownername.text,
+            _comission.text,
             _mobile.text,
             _address.text,
             data,
-            arr);
+            arr,
+            comiisionarray);
         log("ooooo ${loginData}");
+        log("ooooo ${comiisionarray}");
+        log("ooooo ${arr}");
         if (loginData.success == true) {
-          // pref.setBool("login", true);
-          // pref.setString("token", loginData.token);
-          // pref.setBool("sucees", loginData.success);
+        
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                   builder: (context) =>
                       AddFootwear(title: widget.title, id: widget.id)),
               (Route<dynamic> route) => false);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => thankYouDialog(),
-          //     ));
         } else {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: loginData.success == false
-                ? "Otp was incoorect"
+                ? "Please select Terms and condition"
                 : "thanks for login ",
             // timeInSecForIos: 3
           );
         }
       }
+        }
+      } 
     } else {
       Fluttertoast.showToast(
           backgroundColor: ColorPrimary,
@@ -155,6 +197,7 @@ class _VendorFormState extends State<VendorForm> {
 
   //terms-conditions-dialog
   termsConditionsDialog() {
+    // _signaturePadKey.currentWidget.
     return showDialog(
         barrierDismissible: false,
         context: context,
@@ -228,11 +271,26 @@ class _VendorFormState extends State<VendorForm> {
                               borderRadius: BorderRadius.circular(20),
                               color: Colors.white54),
                           child: Column(children: [
-                            Text('Signature',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text('Signature',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _signaturePadKey.currentState!.clear();
+                                    },
+                                    child: Text('Clear',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
+                                ]),
                             Container(
                               height: 180,
                               width: 300,
@@ -414,7 +472,8 @@ class _VendorFormState extends State<VendorForm> {
   var placeholderText = "Select sub categories";
 
   String arr = "";
-
+  String comiisionarray = "";
+  String commission = "";
   //List<Animal> _selectedAnimals = [];
   // List<Category> _selectedCategory2 = [];
   List<CategoriesResponseData?> _selectedCategory3 = [];
@@ -434,363 +493,480 @@ class _VendorFormState extends State<VendorForm> {
   Widget build(BuildContext context) {
     devicewidth = MediaQuery.of(context).size.width;
     deviceheight = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(102, 87, 244, 1),
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                iconSize: 20,
-                onPressed: () {
-                  Navigator.pop(context);
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context);
+        return Future.value(false);
+      },
+      child: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return IconButton(
+                    icon: const Icon(Icons.arrow_back_ios),
+                    iconSize: 20,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  );
                 },
-              );
-            },
-          ),
-          title: Text('${widget.title} Form',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
-          centerTitle: true,
-        ),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(16, 14, 16, 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Shop Name',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: _shopname,
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
-                  hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
+              ),
+              title: Text('${widget.title} Form',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+              centerTitle: true,
+            ),
+            body: SingleChildScrollView(
+              padding: EdgeInsets.fromLTRB(16, 14, 16, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Shop Name',
+                      style: TextStyle(
+                          color: Color.fromRGBO(48, 48, 48, 1),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600)),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: _shopname,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),
+                    ],
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    //autovalidate: true,
+                    maxLength: 25,
+                    // keyboardType: TextInputType.streetAddress,
+                    decoration: InputDecoration(
+                      counterText: "",
+                      contentPadding:
+                          EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                      filled: true,
+                      fillColor: Color.fromRGBO(242, 242, 242, 1),
+                      hintText: 'Enter here',
+                      hintStyle: TextStyle(
+                          color: Color.fromRGBO(85, 85, 85, 1),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 15),
-              Text('Owners name',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: _ownername,
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
-                  hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
+
+                  SizedBox(height: 15),
+                  Text(' comission on ${widget.title}',
+                      style: TextStyle(
+                          color: Color.fromRGBO(48, 48, 48, 1),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600)),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: _comission,
+                    keyboardType: TextInputType.number,
+                    // inputFormatters: [
+                    //   FilteringTextInputFormatter.allow(RegExp(r'[[0-9]]')),
+                    // ],
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    //autovalidate: true,
+                    maxLength: 25,
+                    // keyboardType: TextInputType.streetAddress,
+                    decoration: InputDecoration(
+                      counterText: "",
+                      contentPadding:
+                          EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                      filled: true,
+                      fillColor: Color.fromRGBO(242, 242, 242, 1),
+                      hintText: 'Enter Comission of ${widget.title}',
+                      hintStyle: TextStyle(
+                          color: Color.fromRGBO(85, 85, 85, 1),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 15),
-              Text('Mobile Number ',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: _mobile,
-                keyboardType: TextInputType.number,
-                validator: (numb) => Validator.validateMobile(numb!, context),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                maxLength: 10,
-                decoration: InputDecoration(
-                  counterText: "",
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
-                  hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
+                  SizedBox(
+                    height: 15,
                   ),
-                ),
-              ),
-              SizedBox(height: 15),
-              Text('Address',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: _address,
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
-                  hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
+                  Text('Owners name',
+                      style: TextStyle(
+                          color: Color.fromRGBO(48, 48, 48, 1),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600)),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: _ownername,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),
+                    ],
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    //autovalidate: true,
+                    maxLength: 25,
+                    decoration: InputDecoration(
+                      counterText: "",
+                      contentPadding:
+                          EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                      filled: true,
+                      fillColor: Color.fromRGBO(242, 242, 242, 1),
+                      hintText: 'Enter here',
+                      hintStyle: TextStyle(
+                          color: Color.fromRGBO(85, 85, 85, 1),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 15),
-              AutoSizeText(
-                'Sub Categories (If exists)',
-                style: TextStyle(
-                    color: Color.fromRGBO(48, 48, 48, 1),
-                    fontWeight: FontWeight.w600),
-                maxFontSize: 15,
-                minFontSize: 10,
-              ),
-              SizedBox(height: 15),
-              Container(
-                height: 50,
-                width: devicewidth,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    SizedBox(height: 10),
-                    Container(
+                  SizedBox(height: 15),
+                  Text('Mobile Number ',
+                      style: TextStyle(
+                          color: Color.fromRGBO(48, 48, 48, 1),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600)),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: _mobile,
+                    keyboardType: TextInputType.number,
+                    validator: (numb) =>
+                        Validator.validateMobile(numb!, context),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    maxLength: 10,
+                    decoration: InputDecoration(
+                      counterText: "",
+                      contentPadding:
+                          EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                      filled: true,
+                      fillColor: Color.fromRGBO(242, 242, 242, 1),
+                      hintText: 'Enter here',
+                      hintStyle: TextStyle(
+                          color: Color.fromRGBO(85, 85, 85, 1),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15),
+
+                  Text('Address',
+                      style: TextStyle(
+                          color: Color.fromRGBO(48, 48, 48, 1),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600)),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: _address,
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                      filled: true,
+                      fillColor: Color.fromRGBO(242, 242, 242, 1),
+                      hintText: 'Enter here',
+                      hintStyle: TextStyle(
+                          color: Color.fromRGBO(85, 85, 85, 1),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  AutoSizeText(
+                    'Sub Categories (If exists)',
+                    style: TextStyle(
+                        color: Color.fromRGBO(48, 48, 48, 1),
+                        fontWeight: FontWeight.w600),
+                    maxFontSize: 15,
+                    minFontSize: 10,
+                  ),
+                  SizedBox(height: 15),
+
+                  GestureDetector(
+                    onTap: () {
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+                      if (!currentFocus.hasPrimaryFocus) {
+                        currentFocus.unfocus();
+                      }
+                    },
+                    child: Container(
                       child: result == null
                           ? Center(child: CircularProgressIndicator())
-                          :
-                          //  FutureBuilder<List<CategoriesResponseData>>(
-                          //     future: getCategories(),
-                          //     builder: (context, snapshot) {
-                          //       if (snapshot.connectionState ==
-                          //           ConnectionState.waiting) {
-                          //         return Center(child: CircularProgressIndicator());
-                          //       }
-                          //       if (snapshot.hasError) {
-                          //         return Center(
-                          //           child: Text("Data Not Found"),
-                          //         );
-                          //       }
-                          //       return
+                          : GestureDetector(
+                              onTap: () {
+                                FocusScopeNode currentFocus =
+                                    FocusScope.of(context);
+                                if (!currentFocus.hasPrimaryFocus) {
+                                  currentFocus.unfocus();
+                                }
+                              },
+                              child: Container(
+                                // width: devicewidth - 30,
+                                child: MultiSelectBottomSheetField<
+                                    CategoriesResponseData?>(
+                                  buttonIcon: Icon(Icons.keyboard_arrow_down,
+                                      color: Color.fromRGBO(85, 85, 85, 1)),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(242, 242, 242, 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  key: _multiSelectKey,
+                                  initialChildSize: 0.7,
+                                  maxChildSize: 0.95,
+                                  title: Text('Sub categories',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600)),
+                                  buttonText: Text(placeholderText,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(85, 85, 85, 1),
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600)),
+                                  searchTextStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                  cancelText: Text('Cancel',
+                                      style: TextStyle(
+                                          color: Color(0xff6657f4),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600)),
+                                  confirmText: Text('Ok',
+                                      style: TextStyle(
+                                          color: Color(0xff6657f4),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600)),
+                                  items: result!.data!
+                                      .map((category) => MultiSelectItem<
+                                              CategoriesResponseData>(
+                                          category, category.categoryName))
+                                      .toList(),
+                                  searchable: true,
+                                  initialValue:
+                                      subcatlist.map((e) => e.subCat).toList(),
 
-                          Container(
-                              width: devicewidth - 30,
-                              child: MultiSelectBottomSheetField<
-                                  CategoriesResponseData?>(
-                                buttonIcon: Icon(Icons.keyboard_arrow_down,
-                                    color: Color.fromRGBO(85, 85, 85, 1)),
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(242, 242, 242, 1),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                key: _multiSelectKey,
-                                initialChildSize: 0.7,
-                                maxChildSize: 0.95,
-                                title: Text('Sub categories',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600)),
-                                buttonText: Text(placeholderText,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(85, 85, 85, 1),
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600)),
-                                searchTextStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600),
-                                cancelText: Text('Cancel',
-                                    style: TextStyle(
-                                        color: Color(0xff6657f4),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600)),
-                                confirmText: Text('Ok',
-                                    style: TextStyle(
-                                        color: Color(0xff6657f4),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600)),
-                                items: result!.data!
-                                    .map((category) =>
-                                        MultiSelectItem<CategoriesResponseData>(
-                                            category, category.categoryName))
-                                    .toList(),
-                                searchable: true,
-                                validator: (values) {
-                                  if (values == null || values.isEmpty) {
-                                    return "Required";
-                                  }
-                                  List<String> names = values
-                                      .map((e) => e!.categoryName)
-                                      .toList();
-                                  if (names.contains("Frog")) {
-                                    return "Frogs are weird!";
-                                  }
-                                  return null;
-                                },
-                                onConfirm: (values) {
-                                  setState(() {
-                                    _selectedCategory3 = values;
-                                    placeholderText = "Dhaba";
-                                    for (int i = 0; i < values.length; i++) {
-                                      if (i == values.length - 1) {
-                                        placeholderText = placeholderText +
-                                            values[i]!.categoryName;
-                                        arr = arr + values[i]!.id.toString();
-                                      } else {
-                                        placeholderText = placeholderText +
-                                            values[i]!.categoryName +
-                                            ", ";
-                                        arr = arr +
-                                            values[i]!.id.toString() +
-                                            ",";
-                                      }
+                                  validator: (values) {
+                                    if (values == null || values.isEmpty) {
+                                      return "";
                                     }
-                                  });
-                                  _multiSelectKey.currentState!.validate();
-                                },
-                                chipDisplay: MultiSelectChipDisplay(
-                                  onTap: (item) {
+                                    List<String> names = values
+                                        .map((e) => e!.categoryName)
+                                        .toList();
+
+                                    if (names.contains("Frog")) {
+                                      return "Frogs are weird!";
+                                    }
+                                    return null;
+                                  },
+                                  onConfirm: (values) {
+                                    // SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                    // SystemChannels.textInput
+                                    //     .invokeMethod('TextInput.hide');
+                                    FocusScopeNode currentFocus =
+                                        FocusScope.of(context);
+                                    if (!currentFocus.hasPrimaryFocus) {
+                                      currentFocus.unfocus();
+                                    }
                                     setState(() {
-                                      _selectedCategory3.remove(item);
-                                      log("dddd ${item}");
+                                      _selectedCategory3 = values;
+                                      placeholderText = "";
+                                      subcatlist.clear();
+                                      if (values.length == 0) {
+                                        placeholderText =
+                                            "please select category";
+                                      } else {
+                                        for (int i = 0;
+                                            i < values.length;
+                                            i++) {
+                                          if (i == values.length - 1) {
+                                            placeholderText =
+                                                "please select category";
+                                            arr =
+                                                arr + values[i]!.id.toString();
+                                          } else {
+                                            // placeholderText = placeholderText +
+                                            //     values[i]!.categoryName +
+                                            //     ", ";
+                                            arr = arr +
+                                                (values[i]!.id.toString()) +
+                                                ",";
+                                          }
+                                          subcatlist.add(SubCat(values[i]!));
+                                        }
+                                      }
                                     });
                                     _multiSelectKey.currentState!.validate();
                                   },
-                                )..disabled = true,
-                                //  );
-                                // }
+                                  chipDisplay: MultiSelectChipDisplay(
+                                    onTap: (item) {
+                                      FocusScopeNode currentFocus =
+                                          FocusScope.of(context);
+                                      if (!currentFocus.hasPrimaryFocus) {
+                                        currentFocus.unfocus();
+                                      }
+                                      setState(() {
+                                        _selectedCategory3.remove(item);
+                                        log("dddd ${item}");
+                                      });
+                                      _multiSelectKey.currentState!.validate();
+                                    },
+                                  )..disabled = true,
+                                  //  );
+                                  // }
+                                ),
                               ),
                             ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                  Column(
+                      children: List.generate(subcatlist.length, (index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        maxLength: 4,
+                        controller: subcatlist[index].subController,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          contentPadding: EdgeInsets.only(
+                              left: 14.0, bottom: 8.0, top: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintText:
+                              'Please Enter ${subcatlist[index].subCat.categoryName} Commision',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    );
+                  })),
 
-              SizedBox(height: 15),
-              // Text('Photo of the place where MyProfit board is to be placed',
-              //     style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-              // SizedBox(height: 10),
-              // InkWell(
-              //   child: ClipRRect(
-              //     borderRadius: BorderRadius.circular(10),
-              //     child: myProfitBoardImage != null
-              //         ? Image(image: FileImage(myProfitBoardImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-              //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
-              //   ),
-              //   onTap: () {
-              //     showBottomSheet(5, context);
-              //   },
-              // ),
-              // SizedBox(height: 15),
-              // Text('Documents for validation of Shop', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-              // SizedBox(height: 10),
-              // InkWell(
-              //   child: ClipRRect(
-              //     borderRadius: BorderRadius.circular(10),
-              //     child: validationShopImage != null
-              //         ? Image(image: FileImage(validationShopImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-              //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
-              //   ),
-              //   onTap: () {
-              //     showBottomSheet(6, context);
-              //   },
-              // ),
-              Container(
-                transform: Matrix4.translationValues(-10, 0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Checkbox(
-                      value: this.valuesecond,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          this.valuesecond = value!;
-                        });
-                      },
-                    ),
-                    Row(
+                  SizedBox(height: 15),
+                  // Text('Photo of the place where MyProfit board is to be placed',
+                  //     style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                  // SizedBox(height: 10),
+                  // InkWell(
+                  //   child: ClipRRect(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     child: myProfitBoardImage != null
+                  //         ? Image(image: FileImage(myProfitBoardImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
+                  //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                  //   ),
+                  //   onTap: () {
+                  //     showBottomSheet(5, context);
+                  //   },
+                  // ),
+                  // SizedBox(height: 15),
+                  // Text('Documents for validation of Shop', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                  // SizedBox(height: 10),
+                  // InkWell(
+                  //   child: ClipRRect(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     child: validationShopImage != null
+                  //         ? Image(image: FileImage(validationShopImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
+                  //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                  //   ),
+                  //   onTap: () {
+                  //     showBottomSheet(6, context);
+                  //   },
+                  // ),
+                  Container(
+                    transform: Matrix4.translationValues(-10, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Accept all ',
-                            style: TextStyle(
-                                color: Color(0xff303030),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600)),
-                        InkWell(
-                          child: Text('Terms & Conditions',
-                              style: TextStyle(
-                                  color: Color(0xff6657f4),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  decoration: TextDecoration.underline)),
-                          onTap: () {
-                            termsConditionsDialog();
+                        Checkbox(
+                          value: this.valuesecond,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              this.valuesecond = value!;
+                            });
                           },
+                        ),
+                        Row(
+                          children: [
+                            Text('Accept all ',
+                                style: TextStyle(
+                                    color: Color(0xff303030),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600)),
+                            InkWell(
+                              child: Text('Terms & Conditions',
+                                  style: TextStyle(
+                                      color: Color(0xff6657f4),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.underline)),
+                              onTap: () {
+                                termsConditionsDialog();
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 15),
-              Align(
-                alignment: Alignment.center,
-                child: ButtonTheme(
-                  minWidth: 200,
-                  // ignore: deprecated_member_use
-                  child: RaisedButton(
-                    padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                    color: Color.fromRGBO(102, 87, 244, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    onPressed: () {
-                      addVendors();
-                    },
-                    child: Text(
-                      "SUBMIT",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 15),
+                  Align(
+                    alignment: Alignment.center,
+                    child: ButtonTheme(
+                      minWidth: 200,
+                      // ignore: deprecated_member_use
+                      child: RaisedButton(
+                        padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                        color: Color.fromRGBO(102, 87, 244, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        onPressed: () {
+                          addVendors();
+                        },
+                        child: Text(
+                          "SUBMIT",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
+//192.168.10.62
   //image-picker
   showBottomSheet(int imageType, BuildContext context) {
     showCupertinoModalPopup(
@@ -857,4 +1033,12 @@ class _VendorFormState extends State<VendorForm> {
     setState(() {});
   }
 //image-picker
+}
+
+class SubCat {
+  TextEditingController subController = TextEditingController();
+  // String hinttext = "";
+  // String text = "";
+  CategoriesResponseData subCat;
+  SubCat(this.subCat);
 }

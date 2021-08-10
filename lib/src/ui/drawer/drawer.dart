@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myprofit_employee/model/logout_response.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
+import 'package:myprofit_employee/src/ui/bottom_navigation/bottom_navigation.dart';
 import 'package:myprofit_employee/src/ui/changelanguage/change_language.dart';
 import 'package:flutter/material.dart';
 import 'package:myprofit_employee/src/ui/home/home.dart';
@@ -42,7 +43,7 @@ class _AppDrawerState extends State<AppDrawer> {
               MaterialButton(
                 child: Text("Cancel",
                     style: TextStyle(
-                        color: Color(0xfff4511e), fontWeight: FontWeight.w600)),
+                        color: ColorTextPrimary, fontWeight: FontWeight.w600)),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -50,8 +51,7 @@ class _AppDrawerState extends State<AppDrawer> {
               MaterialButton(
                 child: Text("Logout",
                     style: TextStyle(
-                        color: Color.fromRGBO(102, 87, 244, 1),
-                        fontWeight: FontWeight.w600)),
+                        color: Color(0xfff4511e), fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   log("ndndnd");
                   LogOutResponse logoutData = await ApiProvider().logout();
@@ -70,7 +70,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     Fluttertoast.showToast(
                         backgroundColor: ColorPrimary,
                         textColor: Colors.white,
-                        msg: "LogOut Successfully"
+                        msg: "Logout Successfully"
                         // timeInSecForIos: 3
                         );
                   } else {
@@ -123,7 +123,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Home(onTab: () {})),
+                            builder: (context) => BottomNavigation()),
                         ModalRoute.withName("/"));
                   },
                 ),
@@ -229,7 +229,7 @@ class _AppDrawerState extends State<AppDrawer> {
                           fontSize: 15,
                           fontWeight: FontWeight.w600)),
                   onTap: () {
-                    // Navigator.pop(context);
+                    Navigator.pop(context);
                     logoutDialog();
                     // logoutDialog();
                   },

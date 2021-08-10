@@ -52,7 +52,7 @@ class _DhabasWeeklyState extends State<DhabasWeekly> {
             );
           },
         ),
-        title: Text('Dhabas Weekly',
+        title: Text('Vendors Weekly',
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
         centerTitle: true,
       ),
@@ -78,7 +78,7 @@ class _DhabasWeeklyState extends State<DhabasWeekly> {
                           //     onChanged: (check) => saleAmountBloc
                           //         .add(CheckBoxEvent(checked: check!))),
                           Text(
-                            "Dhabas Weekly report",
+                            "Vendors Weekly report",
                             style: GoogleFonts.openSans(
                               fontSize: 23,
                               fontWeight: FontWeight.w700,
@@ -125,7 +125,7 @@ class _DhabasWeeklyState extends State<DhabasWeekly> {
                                             child: Align(
                                               alignment: Alignment.centerLeft,
                                               child: AutoSizeText(
-                                                  "  No of Dhabas",
+                                                  "  No of Vendors",
                                                   style: GoogleFonts.openSans(
                                                       fontSize: 18.0,
                                                       color: Colors.white)),
@@ -145,13 +145,14 @@ class _DhabasWeeklyState extends State<DhabasWeekly> {
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: AutoSizeText(
-                                              '  ${snapshot.data!.startWeek}to ${snapshot.data!.endWeek}',
+                                              '  ${snapshot.data!.startWeek}to${snapshot.data!.endWeek}',
                                               style: GoogleFonts.openSans(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 14.0,
                                                   color: Colors.black),
                                               maxFontSize: 14,
                                               minFontSize: 12,
+                                              maxLines: 1,
                                             ),
                                           ))
                                     ]),
@@ -188,7 +189,7 @@ class _DhabasWeeklyState extends State<DhabasWeekly> {
                               borderColor: Colors.grey.shade500,
 
                               title: ChartTitle(
-                                  text: "Dhabas Weekly Count ",
+                                  text: "Vendors Weekly Count ",
                                   textStyle: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.shade600)),
@@ -222,7 +223,7 @@ class _DhabasWeeklyState extends State<DhabasWeekly> {
                                 //numberFormat: NumberFormat.currency(),
                                 title: AxisTitle(
                                     alignment: ChartAlignment.center,
-                                    text: "Dhabas Weekly Count",
+                                    text: "Vendors Weekly Count",
                                     textStyle: TextStyle(
                                         fontSize: 11,
                                         color: Colors.grey.shade600)),

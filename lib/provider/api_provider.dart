@@ -57,7 +57,8 @@ class ApiProvider {
   Future<OtpVerificationResponse> verifyOtp(mobile, otp) async {
     log("chl gyi ${mobile + otp}");
     try {
-      Response res = await dio.post('$baseUrl/user/verifyOTP', data: {"mobile": mobile, "otp": otp});
+      Response res = await dio.post('$baseUrl/user/verifyOTP',
+          data: {"mobile": mobile, "otp": otp});
       log("chl gyi 2${res}");
 
       return OtpVerificationResponse.fromJson(res.toString());
@@ -105,7 +106,7 @@ class ApiProvider {
       Response res = await dio.post('$baseUrl/getVendorByType',
           data: ({"vendor_type": id}),
           options: Options(
-            headers: {"Authorization": "Bearer ${token}"},
+            headers: {"Authorization": "Bearer $token"},
           ));
       log("sss${res.data}");
 
@@ -123,18 +124,27 @@ class ApiProvider {
     }
   }
 
-  Future<UpdateVendorResponse> updatedetails(id, shopname, ownername, mobile, address,cat) async {
-     log("chl gyi }");
-     log("chl gyi $id");
-     var token = await SharedPref.getStringPreference('token');
+  Future<UpdateVendorResponse> updatedetails(
+      id, shopname, ownername, mobile, address, cat, subcat) async {
+    log("chl gyi }");
+    log("chl gyi $id");
+    var token = await SharedPref.getStringPreference('token');
     try {
       log("chl gyi }");
       Response res = await dio.post('$baseUrl/updateVendorForm',
-          data: {"id": id, "shop_name": shopname, "owner_name": ownername, "owner_mobile": mobile, "address": address,"sub_cat_id":cat},
-             options: Options(
+          data: {
+            "id": id,
+            "shop_name": shopname,
+            "owner_name": ownername,
+            "owner_mobile": mobile,
+            "address": address,
+            "sub_cat_id": cat,
+            "sub_cat_commission": subcat,
+          },
+          options: Options(
             headers: {"Authorization": "Bearer ${token}"},
           ));
-     
+
       log("chl gyi 2${res}");
 
       return UpdateVendorResponse.fromJson(res.toString());
@@ -152,18 +162,21 @@ class ApiProvider {
     }
   }
 
-  Future<AddVendorResponse> addVendor(vendor, shopname, ownername, ownermobile, address, ownersign, subcat) async {
+  Future<AddVendorResponse> addVendor(vendor, shopname, ownername, commission,
+      ownermobile, address, ownersign, subcat, subcatcommission) async {
     //log("chl gyi ${mobile + otp}");
     try {
       Map<String, dynamic> addvendor = HashMap<String, dynamic>();
-      addvendor["vendor_type"] = vendor;
+      addvendor["category_type"] = vendor;
       addvendor["shop_name"] = shopname;
       addvendor["owner_name"] = ownername;
+      addvendor["vendor_commission"] = commission;
       addvendor["owner_mobile"] = ownermobile;
       addvendor["address"] = address;
-      addvendor["owner_sign"] =
-          await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+      addvendor["owner_sign"] = await MultipartFile.fromBytes(ownersign,
+          filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
       addvendor["sub_cat_id"] = subcat;
+      addvendor["sub_cat_commission"] = subcatcommission;
       FormData requestData = FormData.fromMap(addvendor);
       var token = await SharedPref.getStringPreference('token');
       Response res = await dio.post('$baseUrl/addVendorForm',
