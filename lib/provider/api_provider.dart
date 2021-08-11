@@ -371,7 +371,7 @@ class ApiProvider {
         '$baseUrl/getCategories',
         options: Options(headers: {"Authorization": "Bearer ${token}"}),
       );
-      log("d");
+      log("====${res.data}");
 
       //return fromJson(res.toString());
       return CategoriesResponse.fromJson(res.toString());

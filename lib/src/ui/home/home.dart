@@ -290,7 +290,7 @@ class _HomeState extends State<Home> {
                 imageUrl: "${category[index].image}",
                 imageBuilder: (context, imageProvider) {
                   return Container(
-                    padding: EdgeInsets.all(589),
+                    padding: EdgeInsets.all(5),
                     height: 30,
                     width: 30,
                     decoration: BoxDecoration(
