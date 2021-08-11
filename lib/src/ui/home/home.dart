@@ -289,12 +289,21 @@ class _HomeState extends State<Home> {
               leading: CachedNetworkImage(
                 imageUrl: "${category[index].image}",
                 imageBuilder: (context, imageProvider) {
-                  return Image(
-                      image: imageProvider,
-                      //color: ColorPrimary,
-                      height: 25,
-                      //colorBlendMode: BlendMode.clear,
-                      fit: BoxFit.contain);
+                  return Container(
+                    padding: EdgeInsets.all(589),
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: Image(
+                        image: imageProvider,
+                        //color: ColorPrimary,
+                        height: 20,
+                        width: 20,
+                        //colorBlendMode: BlendMode.clear,
+                        fit: BoxFit.contain),
+                  );
                 },
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     Icon(
