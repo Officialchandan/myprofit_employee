@@ -82,7 +82,7 @@ class _VendorFormState extends State<VendorForm> {
   bool valuefirst = false;
   bool valuesecond = false;
   //checkbox
-
+  int lat = 0, lng = 0;
   TextEditingController _shopname = TextEditingController();
   TextEditingController _ownername = TextEditingController();
 
@@ -126,16 +126,16 @@ class _VendorFormState extends State<VendorForm> {
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please Enter Shop address");
-      } 
-      else if (subcatlist.isNotEmpty) {
-        for (int i = 0; i < subcatlist.length; i++) {
-          if (subcatlist[i].subController.text.isEmpty) {
-            Fluttertoast.showToast(
-                backgroundColor: ColorPrimary,
-                textColor: Colors.white,
-                msg: "Please Enter SubCategories comission");
-          }
-          else if (valuesecond == false) {
+      }
+      // else if (subcatlist.isNotEmpty) {
+      //   for (int i = 0; i < subcatlist.length; i++) {
+      //     if (subcatlist[i].subController.text.isEmpty) {
+      //       Fluttertoast.showToast(
+      //           backgroundColor: ColorPrimary,
+      //           textColor: Colors.white,
+      //           msg: "Please Enter SubCategories comission");
+      //     }
+      else if (valuesecond == false) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
@@ -160,6 +160,8 @@ class _VendorFormState extends State<VendorForm> {
             _comission.text,
             _mobile.text,
             _address.text,
+            lat,
+            lng,
             data,
             arr,
             comiisionarray);
@@ -167,7 +169,6 @@ class _VendorFormState extends State<VendorForm> {
         log("ooooo ${comiisionarray}");
         log("ooooo ${arr}");
         if (loginData.success == true) {
-        
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -185,8 +186,8 @@ class _VendorFormState extends State<VendorForm> {
           );
         }
       }
-        }
-      } 
+      //   }
+      // }
     } else {
       Fluttertoast.showToast(
           backgroundColor: ColorPrimary,

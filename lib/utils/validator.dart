@@ -20,7 +20,7 @@ class Validator {
 
   //mobile-validator
   static String? validatename(String value, BuildContext context) {
-    String patttern = r'([a-zA-Z])';
+    String patttern = r'([a-zA-Z ])';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
       return "please enter  Name";

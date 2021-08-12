@@ -38,7 +38,8 @@ class _BottomNavigationState extends State<BottomNavigation>
       selectedTab = _tabController.index;
     });
   }
-logoutDialog() {
+
+  logoutDialog() {
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -70,7 +71,7 @@ logoutDialog() {
                         color: Color(0xfff4511e), fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   log("ndndnd");
-                 
+
                   if (await Network.isConnected()) {
                     SystemChannels.textInput.invokeMethod("TextInput.hide");
                     print("kai kroge +");
@@ -102,25 +103,28 @@ logoutDialog() {
           );
         });
   }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (_tabController.index == 0) {
-          if (Navigator.canPop(context)) {
-            Navigator.pop(context);
-          } else {
-
-            SystemNavigator.pop();
-            return Future.value(true);
-          }
-        } else {
+        if (Navigator.canPop(context) && _tabController.index != 0) {
+          Navigator.pop(context);
+        } else if (_tabController.index != 0) {
           // Navigator.pop(context);
           //   _tabController.index == 3 ?
           //   Fluttertoast.showToast(msg: "HI")
           //   :
-          Navigator.canPop(context);
+          //   if (Navigator.canPop(context)) {
+          //   Navigator.pop(context);
+          // } else {
+          //   SystemNavigator.pop();
+          //   return Future.value(true);
+          // }
+
           _tabController.animateTo(0);
+        } else {
+          SystemNavigator.pop();
         }
         return Future.value(false);
 

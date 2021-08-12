@@ -163,7 +163,7 @@ class ApiProvider {
   }
 
   Future<AddVendorResponse> addVendor(vendor, shopname, ownername, commission,
-      ownermobile, address, ownersign, subcat, subcatcommission) async {
+      ownermobile, address,lat,lng ,ownersign, subcat, subcatcommission) async {
     //log("chl gyi ${mobile + otp}");
     try {
       Map<String, dynamic> addvendor = HashMap<String, dynamic>();
@@ -173,6 +173,8 @@ class ApiProvider {
       addvendor["vendor_commission"] = commission;
       addvendor["owner_mobile"] = ownermobile;
       addvendor["address"] = address;
+      addvendor["lat"] = lat;
+      addvendor["lng"] = lng;
       addvendor["owner_sign"] = await MultipartFile.fromBytes(ownersign,
           filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
       addvendor["sub_cat_id"] = subcat;

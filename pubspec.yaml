@@ -44,6 +44,8 @@ dependencies:
   # use for auto size of text
   auto_size_text: ^3.0.0-nullsafety.0
 
+  #location
+  location:
   #api integration
   dio:
   http: 

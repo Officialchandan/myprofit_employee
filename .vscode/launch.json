@@ -1,0 +1,19 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "myprofit_employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "myprofit_employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        }
+    ]
+}

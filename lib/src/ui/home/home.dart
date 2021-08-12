@@ -61,6 +61,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     getCategories();
+    _tap = true;
     // getVendorId(id);
     // subject.stream
     //     .debounceTime(Duration(milliseconds: 50))
@@ -147,8 +148,8 @@ class _HomeState extends State<Home> {
           textColor: Colors.white,
           msg: "Please turn on  internet");
     }
-    return loginData;
     _tap = true;
+    return loginData;
   }
 
   getCategories() async {
