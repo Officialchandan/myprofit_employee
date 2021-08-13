@@ -50,7 +50,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   File? image;
   Uint8List? data;
   var subcat;
-
+ UpdateVendorResponse? loginData ;
   _UpdateVendorDetailState(var data, String title, int id);
 
   getCategories() async {

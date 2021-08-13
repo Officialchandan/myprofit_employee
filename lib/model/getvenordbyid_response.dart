@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 class GetVendorByIdResponse {
   GetVendorByIdResponse({
     required this.success,
@@ -27,13 +25,13 @@ class GetVendorByIdResponse {
         success: json["success"],
         message: json["message"],
         data: List<GetVendorByIdResponseData>.from(
-                json["data"].map((x) => GetVendorByIdResponseData.fromMap(x))),
+            json["data"].map((x) => GetVendorByIdResponseData.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
         "success": success,
         "message": message,
-        "data":  List<dynamic>.from(data!.map((x) => x.toMap())),
+        "data": List<dynamic>.from(data!.map((x) => x.toMap())),
       };
 }
 
@@ -57,8 +55,8 @@ class GetVendorByIdResponseData {
   String name;
   String commission;
   String address;
-  dynamic lat;
-  dynamic lng;
+  String lat;
+  String lng;
   String ownerName;
   String ownerMobile;
   String ownerSign;
@@ -78,11 +76,13 @@ class GetVendorByIdResponseData {
         address: json["address"],
         lat: json["lat"],
         lng: json["lng"],
-        ownerName: json["owner_name"],
-        ownerMobile: json["owner_mobile"],
+        ownerName: json["owner_name"] == null ? "null" : json["owner_name"],
+        ownerMobile:
+            json["owner_mobile"] == null ? "0098" : json["owner_mobile"],
         ownerSign: json["owner_sign"],
-        subCategory: List<SubCategory>.from(json["sub_category"].map((x) => SubCategory.fromMap(x))),
- );
+        subCategory: List<SubCategory>.from(
+            json["sub_category"].map((x) => SubCategory.fromMap(x))),
+      );
 
   Map<String, dynamic> toMap() => {
         "id": id,
@@ -109,7 +109,6 @@ class SubCategory {
   String catId;
   String commission;
   int commissionStatus;
-TextEditingController subController = TextEditingController();
 
   factory SubCategory.fromJson(String str) =>
       SubCategory.fromMap(json.decode(str));
@@ -119,7 +118,7 @@ TextEditingController subController = TextEditingController();
   factory SubCategory.fromMap(Map<String, dynamic> json) => SubCategory(
         catId: json["cat_id"],
         commission: json["commission"],
-        commissionStatus: json["commission_status"] ,
+        commissionStatus: json["commission_status"],
       );
 
   Map<String, dynamic> toMap() => {

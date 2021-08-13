@@ -125,7 +125,7 @@ class ApiProvider {
   }
 
   Future<UpdateVendorResponse> updatedetails(
-      id, shopname, ownername, mobile, address, cat, subcat) async {
+      id, shopname, ownername, mobile, address, [cat, subcat]) async {
     log("chl gyi }");
     log("chl gyi $id");
     var token = await SharedPref.getStringPreference('token');

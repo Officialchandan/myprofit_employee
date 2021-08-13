@@ -49,7 +49,7 @@ class _SplashState extends State<Splash> {
               alignment: Alignment.topLeft,
               child: Image.asset('images/splash-top.png', width: 130),
             ),
-            Image.asset('images/logo.png', width: 120),
+            Image.asset('images/logo.png', width: 150),
             Image.asset('images/splash-bottom.png', width: double.infinity),
           ],
         ),

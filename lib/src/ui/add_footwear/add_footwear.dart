@@ -34,9 +34,17 @@ class _AddFootwearState extends State<AddFootwear> {
   ];
   var datas = [];
   _AddFootwearState(String title, int id);
+  final PublishSubject<List<GetVendorByIdResponseData>> subject =
+      PublishSubject();
 
   // GetVendorByIdResponse? loginData;
   List<GetVendorByIdResponseData> loginData = [];
+  @override
+  void dispose() {
+    super.dispose();
+    subject.close();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -48,8 +56,6 @@ class _AddFootwearState extends State<AddFootwear> {
 
   String searchText = "";
   bool searching = false;
-  final PublishSubject<List<GetVendorByIdResponseData>> subject =
-      PublishSubject();
 
   Future<List<GetVendorByIdResponseData>> getVendorId(id) async {
     if (await Network.isConnected()) {
@@ -58,6 +64,7 @@ class _AddFootwearState extends State<AddFootwear> {
       GetVendorByIdResponse getVendor = await ApiProvider().getVendorId(id);
       if (getVendor.success) {
         loginData = getVendor.data!;
+        subject.add(loginData);
         log("ggg ${loginData}");
         //  setState(() {});
       }
@@ -88,8 +95,8 @@ class _AddFootwearState extends State<AddFootwear> {
         return Future.value(false);
       },
       child: SafeArea(
-          child: FutureBuilder<List<GetVendorByIdResponseData>>(
-              future: getVendorId(widget.id),
+          child: StreamBuilder<List<GetVendorByIdResponseData>>(
+              stream: subject.stream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
@@ -195,6 +202,7 @@ class _AddFootwearState extends State<AddFootwear> {
                         //height: 400,
                         children: [
                           // loginData.isEmpty
+
                           //     ? GestureDetector(
                           //         child: Center(
                           //           child: Stack(
@@ -252,54 +260,54 @@ class _AddFootwearState extends State<AddFootwear> {
                           //         },
                           //       )
                           // :
-                          //           TextFormField(
-                          //   controller: _searchController,
-                          //   autofocus: false,
-                          //   decoration: InputDecoration(
-                          //     isCollapsed: true,
-                          //     contentPadding: EdgeInsets.fromLTRB(10, 8, 5, 8),
-                          //     filled: true,
-                          //     fillColor: Colors.white,
-                          //     hintText: 'Search Category',
-                          //     hintStyle: TextStyle(
-                          //         color: Color.fromRGBO(85, 85, 85, 1),
-                          //         fontSize: 12,
-                          //         fontWeight: FontWeight.w600),
-                          //     border: OutlineInputBorder(
-                          //       borderRadius: BorderRadius.circular(7),
-                          //       borderSide: BorderSide.none,
-                          //     ),
-                          //   ),
-                          //   onChanged: (text) {
-                          //     List<GetVendorByIdResponseData> searchList = [];
-                          //     if (text.isNotEmpty) {
-                          //       print("searchText -->$text");
 
-                          //       log("ram ${loginData}");
-                          //       for (int i = 0; i < loginData
-                          //       .length; i++) {
-                          //         if (loginData[i].name
-                          //             .toLowerCase()
-                          //             .contains(text.toLowerCase())) {
-                          //           print("Container -->$text");
-                          //           searchList.add(loginData[i]);
-                          //           log("ram ${loginData[i].name}");
-                          //         } else {
-                          //           print("Container -->data not found");
-                          //         }
-                          //       }
+                          TextFormField(
+                            controller: _searchController,
+                            autofocus: false,
+                            decoration: InputDecoration(
+                              isCollapsed: true,
+                              contentPadding: EdgeInsets.fromLTRB(10, 8, 5, 8),
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText: 'Search Category',
+                              hintStyle: TextStyle(
+                                  color: Color.fromRGBO(85, 85, 85, 1),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(7),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            onChanged: (text) {
+                              List<GetVendorByIdResponseData> searchList = [];
+                              if (text.isNotEmpty) {
+                                print("searchText -->$text");
 
-                          //       subject.add(searchList);
-                          //     } else {
-                          //       subject.add(categorieslist);
-                          //     }
-                          //   },
-                          // ),
+                                log("ram ${loginData}");
+                                for (int i = 0; i < loginData.length; i++) {
+                                  if (loginData[i]
+                                      .name
+                                      .toLowerCase()
+                                      .contains(text.toLowerCase())) {
+                                    print("Container -->$text");
+                                    searchList.add(loginData[i]);
+                                    log("ram ${loginData[i].name}");
+                                  } else {
+                                    print("Container -->data not found");
+                                  }
+                                }
+
+                                subject.add(searchList);
+                              } else {
+                                subject.add(categorieslist);
+                              }
+                            },
+                          ),
 
                           Expanded(
                             flex: 1,
-                            child:
-                             ListView.builder(
+                            child: ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: loginData.length,
                                 itemBuilder: (BuildContext context, int index) {
