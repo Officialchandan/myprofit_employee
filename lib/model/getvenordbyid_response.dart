@@ -74,11 +74,11 @@ class GetVendorByIdResponseData {
         name: json["name"],
         commission: json["commission"],
         address: json["address"],
-        lat: json["lat"],
-        lng: json["lng"],
-        ownerName: json["owner_name"] == null ? "null" : json["owner_name"],
+        lat: json["lat"].toString(),
+        lng: json["lng"].toString(),
+        ownerName: json["owner_name"] == null ? "demo name" : json["owner_name"],
         ownerMobile:
-            json["owner_mobile"] == null ? "0098" : json["owner_mobile"],
+            json["owner_mobile"] == null ? "0000000000" : json["owner_mobile"],
         ownerSign: json["owner_sign"],
         subCategory: List<SubCategory>.from(
             json["sub_category"].map((x) => SubCategory.fromMap(x))),

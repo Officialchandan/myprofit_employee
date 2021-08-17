@@ -108,7 +108,7 @@ class ApiProvider {
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ));
-      log("sss${res.data}");
+      log("sss${res.data.toString()}");
 
       return GetVendorByIdResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -125,7 +125,8 @@ class ApiProvider {
   }
 
   Future<UpdateVendorResponse> updatedetails(
-      id, shopname, ownername, mobile, address, [cat, subcat]) async {
+      id, shopname, ownername, mobile, address,
+      [cat, subcat]) async {
     log("chl gyi }");
     log("chl gyi $id");
     var token = await SharedPref.getStringPreference('token');
@@ -144,6 +145,7 @@ class ApiProvider {
           options: Options(
             headers: {"Authorization": "Bearer ${token}"},
           ));
+      log("${res.requestOptions.data}");
 
       log("chl gyi 2${res}");
 
@@ -162,8 +164,22 @@ class ApiProvider {
     }
   }
 
-  Future<AddVendorResponse> addVendor(vendor, shopname, ownername, commission,
-      ownermobile, address,lat,lng ,ownersign, subcat, subcatcommission) async {
+  Future<AddVendorResponse> addVendor(
+      vendor,
+      shopname,
+      ownername,
+      commission,
+      ownermobile,
+      address,
+      landmark,
+      city,
+      state,
+      pin,
+       lat,
+      lng,
+      ownersign,
+      subcat,
+      subcatcommission) async {
     //log("chl gyi ${mobile + otp}");
     try {
       Map<String, dynamic> addvendor = HashMap<String, dynamic>();
@@ -173,6 +189,10 @@ class ApiProvider {
       addvendor["vendor_commission"] = commission;
       addvendor["owner_mobile"] = ownermobile;
       addvendor["address"] = address;
+      addvendor["landmark"] = landmark;
+      addvendor["city"] = city;
+      addvendor["state"] = state;
+      addvendor["pin"] = pin;
       addvendor["lat"] = lat;
       addvendor["lng"] = lng;
       addvendor["owner_sign"] = await MultipartFile.fromBytes(ownersign,
@@ -186,7 +206,7 @@ class ApiProvider {
           options: Options(
             headers: {"Authorization": "Bearer ${token}"},
           ));
-      log("chl gyi 2${res}");
+      log("chl gyi 2===========>$res");
 
       return AddVendorResponse.fromJson(res.toString());
     } catch (error, stacktrace) {

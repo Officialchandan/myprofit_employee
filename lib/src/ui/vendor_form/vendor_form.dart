@@ -93,6 +93,11 @@ class _VendorFormState extends State<VendorForm> {
   TextEditingController _comission = TextEditingController();
 
   TextEditingController _address = TextEditingController();
+  TextEditingController _landmark = TextEditingController();
+  TextEditingController _city = TextEditingController();
+  TextEditingController _pincode = TextEditingController();
+
+  TextEditingController _state = TextEditingController();
   List<SubCat> subcatlist = [];
 //api calling
   addVendors() async {
@@ -129,6 +134,21 @@ class _VendorFormState extends State<VendorForm> {
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please Enter Shop address");
+      } else if (_city.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter pincode");
+      } else if (_city.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter shop City");
+      } else if (_state.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter shop State");
       } else if (valuesecond == false) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
@@ -139,29 +159,70 @@ class _VendorFormState extends State<VendorForm> {
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please do signature in terms and condition");
-      }
-      //signaturePadKey!.currentState!.toPathList().length
-      // else if (subcatlist.isNotEmpty) {
-      //   for (int i = 0; i < subcatlist.length; i++) {
-      //     if (subcatlist[i].subController.text.isEmpty) {
-      //       Fluttertoast.showToast(
-      //           backgroundColor: ColorPrimary,
-      //           textColor: Colors.white,
-      //           msg: "Please Enter SubCategories comission");
-      //     }
-      else {
+      } else if (subcatlist.isNotEmpty) {
+        String savelist = "";
+
         for (int i = 0; i < subcatlist.length; i++) {
-          if (i == subcatlist.length - 1) {
-            comiisionarray = comiisionarray +
-                double.parse(subcatlist[i].subController.text.trim())
-                    .toStringAsPrecision(2);
+          if (subcatlist[i].subController.text.isEmpty) {
+            Fluttertoast.showToast(
+                backgroundColor: ColorPrimary,
+                textColor: Colors.white,
+                msg: "Please Enter SubCategories comission");
+            savelist = "";
+            break;
           } else {
-            comiisionarray = comiisionarray +
-                double.parse(subcatlist[i].subController.text.trim())
-                    .toStringAsPrecision(2) +
-                ",";
+            if (i == subcatlist.length - 1) {
+              savelist = savelist +
+                  double.parse(subcatlist[i].subController.text.trim())
+                      .toStringAsPrecision(2);
+            } else {
+              savelist = savelist +
+                  double.parse(subcatlist[i].subController.text.trim())
+                      .toStringAsPrecision(2) +
+                  ",";
+            }
           }
         }
+
+        if (savelist.isNotEmpty) {
+          final AddVendorResponse loginData = await ApiProvider().addVendor(
+              "${widget.id}",
+              _shopname.text,
+              _ownername.text,
+              _comission.text,
+              _mobile.text,
+              _address.text,
+               _landmark.text,
+            _city.text,
+            _state.text,
+            _pincode.text,
+              lat,
+              lng,
+              data,
+              arr,
+              comiisionarray);
+          log("ooooo ${loginData}");
+          log("ooooo ${comiisionarray}");
+          log("ooooo ${arr}");
+          if (loginData.success == true) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        AddFootwear(title: widget.title, id: widget.id)),
+                (Route<dynamic> route) => false);
+          } else {
+            Fluttertoast.showToast(
+              backgroundColor: ColorPrimary,
+              textColor: Colors.white,
+              msg: loginData.success == false
+                  ? "unable to update"
+                  : "thanks for login ",
+              // timeInSecForIos: 3
+            );
+          }
+        }
+      } else {
         final AddVendorResponse loginData = await ApiProvider().addVendor(
             "${widget.id}",
             _shopname.text,
@@ -169,6 +230,10 @@ class _VendorFormState extends State<VendorForm> {
             _comission.text,
             _mobile.text,
             _address.text,
+            _landmark.text,
+            _city.text,
+            _state.text,
+            _pincode.text,
             lat,
             lng,
             data,
@@ -184,17 +249,80 @@ class _VendorFormState extends State<VendorForm> {
                   builder: (context) =>
                       AddFootwear(title: widget.title, id: widget.id)),
               (Route<dynamic> route) => false);
+          Fluttertoast.showToast(
+              backgroundColor: ColorPrimary,
+              textColor: Colors.white,
+              msg: "updated sucsessfully");
         } else {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: loginData.success == false
-                ? "Please select Terms and condition"
+                ? "unable to update"
                 : "thanks for login ",
             // timeInSecForIos: 3
           );
         }
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "updated sucsessfully");
       }
+      //signaturePadKey!.currentState!.toPathList().length
+      // else if (subcatlist.isNotEmpty) {
+      //   for (int i = 0; i < subcatlist.length; i++) {
+      //     if (subcatlist[i].subController.text.isEmpty) {
+      //       Fluttertoast.showToast(
+      //           backgroundColor: ColorPrimary,
+      //           textColor: Colors.white,
+      //           msg: "Please Enter SubCategories comission");
+      //     }
+      // else {
+      //   for (int i = 0; i < subcatlist.length; i++) {
+      //     if (i == subcatlist.length - 1) {
+      //       comiisionarray = comiisionarray +
+      //           double.parse(subcatlist[i].subController.text.trim())
+      //               .toStringAsPrecision(2);
+      //     } else {
+      //       comiisionarray = comiisionarray +
+      //           double.parse(subcatlist[i].subController.text.trim())
+      //               .toStringAsPrecision(2) +
+      //           ",";
+      //     }
+      //   }
+      //   final AddVendorResponse loginData = await ApiProvider().addVendor(
+      //       "${widget.id}",
+      //       _shopname.text,
+      //       _ownername.text,
+      //       _comission.text,
+      //       _mobile.text,
+      //       _address.text,
+      //       lat,
+      //       lng,
+      //       data,
+      //       arr,
+      //       comiisionarray);
+      //   log("ooooo ${loginData}");
+      //   log("ooooo ${comiisionarray}");
+      //   log("ooooo ${arr}");
+      //   if (loginData.success == true) {
+      //     Navigator.pushAndRemoveUntil(
+      //         context,
+      //         MaterialPageRoute(
+      //             builder: (context) =>
+      //                 AddFootwear(title: widget.title, id: widget.id)),
+      //         (Route<dynamic> route) => false);
+      //   } else {
+      //     Fluttertoast.showToast(
+      //       backgroundColor: ColorPrimary,
+      //       textColor: Colors.white,
+      //       msg: loginData.success == false
+      //           ? "Please select Terms and condition"
+      //           : "thanks for login ",
+      //       // timeInSecForIos: 3
+      //     );
+      //   }
+      // }
       //   }
       // }
     } else {
@@ -670,11 +798,99 @@ class _VendorFormState extends State<VendorForm> {
                       controller: _address,
                       autofocus: false,
                       decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.add_location,
+                            color: ColorPrimary,
+                          ),
+                        ),
                         contentPadding:
                             EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here',
+                        hintText: 'Enter here shop Address',
+                        hintStyle: TextStyle(
+                            color: Color.fromRGBO(85, 85, 85, 1),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _landmark,
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Color.fromRGBO(242, 242, 242, 1),
+                        hintText: 'Enter here Landmark (optional)',
+                        hintStyle: TextStyle(
+                            color: Color.fromRGBO(85, 85, 85, 1),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _pincode,
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Color.fromRGBO(242, 242, 242, 1),
+                        hintText: 'Enter here Your pincode',
+                        hintStyle: TextStyle(
+                            color: Color.fromRGBO(85, 85, 85, 1),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _city,
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Color.fromRGBO(242, 242, 242, 1),
+                        hintText: 'Enter here Your city/village',
+                        hintStyle: TextStyle(
+                            color: Color.fromRGBO(85, 85, 85, 1),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _state,
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Color.fromRGBO(242, 242, 242, 1),
+                        hintText: 'Enter here State',
                         hintStyle: TextStyle(
                             color: Color.fromRGBO(85, 85, 85, 1),
                             fontSize: 13,
