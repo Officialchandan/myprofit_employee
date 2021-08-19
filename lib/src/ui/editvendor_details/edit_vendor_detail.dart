@@ -14,6 +14,8 @@ import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_fiel
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:myprofit_employee/model/categories_respnse.dart';
+import 'package:myprofit_employee/model/get_all_state_response.dart';
+import 'package:myprofit_employee/model/getcity_by_state_response.dart';
 import 'package:myprofit_employee/model/getvenordbyid_response.dart';
 import 'package:myprofit_employee/model/updatevendordetail_response.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
@@ -123,21 +125,6 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please Enter Shopaddress");
-      } else if (_city.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter pincode");
-      } else if (_city.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter shop City");
-      } else if (_state.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter shop State");
       } else if (subcatlist.isNotEmpty) {
         String savelist = "";
 
@@ -171,6 +158,10 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                   _ownername.text,
                   _mobile.text,
                   _address.text,
+                  _landmark.text,
+                  widget.vendordata.city,
+                  widget.vendordata.state,
+                  widget.vendordata.pin,
                   subCatergory,
                   savelist);
           log("ooooo ${loginData.message}");
@@ -203,6 +194,10 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 _ownername.text,
                 _mobile.text,
                 _address.text,
+                 _landmark.text,
+                  widget.vendordata.city,
+                  widget.vendordata.state,
+                  widget.vendordata.pin,
                 subCatergory,
                 subCatergorycomission);
         log("ooooo ${loginData.message}");
@@ -244,127 +239,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   }
 
   //terms-conditions-dialog
-  termsConditionsDialog() {
-    return showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          Image? signature;
-          return Dialog(
-            backgroundColor: Colors.transparent,
-            insetPadding: EdgeInsets.all(15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height - 80,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: Column(
-                    children: [
-                      Stack(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                            child: Align(
-                              child: Text('Terms & Conditions',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600)),
-                              alignment: Alignment.center,
-                            ),
-                          ),
-                          Positioned(
-                            top: 10,
-                            right: MediaQuery.of(context).size.width / 80,
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              child: GestureDetector(
-                                child: Image.asset('images/bg-cross.png',
-                                    width: 20),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
-                          child: SingleChildScrollView(
-                            child: Text(
-                              'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley.',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                          margin: EdgeInsets.all(10),
-                          // height: 300,
-                          // width: devicewidth,
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 1),
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white54),
-                          child: Column(children: [
-                            Text('Signature',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
-                            Container(
-                              height: 180,
-                              width: 300,
-                              child: SfSignaturePad(
-                                backgroundColor: Colors.transparent,
-                                key: _signaturePadKey,
-                              ),
-                            ),
-                          ])),
-                      InkWell(
-                          child: Container(
-                            width: double.infinity,
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(102, 87, 244, 1),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(7),
-                                bottomRight: Radius.circular(7),
-                              ),
-                            ),
-                            child: Text(
-                              "Done",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          onTap: () async {
-                            _handleSaveButtonPressed();
-                          }),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
 
-  //terms-conditions-dialog
   Future<void> _handleSaveButtonPressed() async {
     final ui.Image imageData =
         await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
@@ -386,7 +261,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   //thank-you-dialog
 
   //select-category
-  var placeholderText = "Select sub categories";
+  var placeholderText = "Select Other categories";
 
   String subCatergory = "";
   String subCatergorycomission = "";
@@ -407,8 +282,60 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
     _mobile.text = widget.vendordata.ownerMobile;
 
     _address.text = widget.vendordata.address;
+    _landmark.text = widget.vendordata.landmark;
+
+    _pincode.text = widget.vendordata.pin.toString();
+    _state.text = widget.vendordata.stateName;
+
+    _city.text = widget.vendordata.cityName;
+    log(" pura milgya${widget.vendordata.city}");
+    log(" pura milgya${widget.vendordata.cityName}");
+    getStateId(101);
+    //getCityId(21);
   }
 
+  List<GetAllStateResponseData> stateData = [];
+  Future<List<GetAllStateResponseData>> getStateId(id) async {
+    if (await Network.isConnected()) {
+      SystemChannels.textInput.invokeMethod("TextInput.hide");
+      print("kai kroge +${id}");
+      GetAllStateResponse getData = await ApiProvider().getState(id);
+      if (getData.success) {
+        stateData = getData.data!;
+
+        log("ggg ${stateData}");
+      }
+    } else {
+      Fluttertoast.showToast(
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on  internet");
+    }
+    return stateData;
+    //_tap = true;
+  }
+
+  List<GetAllCityByStateResponseData> citydata = [];
+  Future<List<GetAllCityByStateResponseData>> getCityId(id) async {
+    if (await Network.isConnected()) {
+      SystemChannels.textInput.invokeMethod("TextInput.hide");
+      print("kai kroge +${id}");
+      GetAllCityByStateResponse getData =
+          await ApiProvider().getCityByState(id);
+      if (getData.success) {
+        citydata = getData.data!;
+
+        log("ggg ${citydata}");
+      }
+    } else {
+      Fluttertoast.showToast(
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on  internet");
+    }
+    return citydata;
+    //_tap = true;
+  }
   //select-category
 
   @override
@@ -544,6 +471,13 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 controller: _address,
                 autofocus: false,
                 decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.add_location,
+                            color: ColorPrimary,
+                          ),
+                        ),
                   contentPadding:
                       EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
@@ -580,68 +514,68 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 ),
               ),
               SizedBox(height: 10),
-              TextFormField(
-                controller: _pincode,
-                autofocus: false,
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
-                  hintText: 'Enter here pincode',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: _city,
-                autofocus: false,
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
-                  hintText: 'Enter here Your City/village',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: _state,
-                autofocus: false,
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
-                  hintText: 'Enter here State',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
+              // TextFormField(
+              //   controller: _pincode,
+              //   autofocus: false,
+              //   decoration: InputDecoration(
+              //     contentPadding:
+              //         EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+              //     filled: true,
+              //     fillColor: Color.fromRGBO(242, 242, 242, 1),
+              //     hintText: 'Enter here pincode',
+              //     hintStyle: TextStyle(
+              //         color: Color.fromRGBO(85, 85, 85, 1),
+              //         fontSize: 13,
+              //         fontWeight: FontWeight.w600),
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(10),
+              //       borderSide: BorderSide.none,
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 10),
+              // TextFormField(
+              //   controller: _city,
+              //   autofocus: false,
+              //   decoration: InputDecoration(
+              //     contentPadding:
+              //         EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+              //     filled: true,
+              //     fillColor: Color.fromRGBO(242, 242, 242, 1),
+              //     hintText: 'Enter here Your City/village',
+              //     hintStyle: TextStyle(
+              //         color: Color.fromRGBO(85, 85, 85, 1),
+              //         fontSize: 13,
+              //         fontWeight: FontWeight.w600),
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(10),
+              //       borderSide: BorderSide.none,
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 10),
+              // TextFormField(
+              //   controller: _state,
+              //   autofocus: false,
+              //   decoration: InputDecoration(
+              //     contentPadding:
+              //         EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+              //     filled: true,
+              //     fillColor: Color.fromRGBO(242, 242, 242, 1),
+              //     hintText: 'Enter here State',
+              //     hintStyle: TextStyle(
+              //         color: Color.fromRGBO(85, 85, 85, 1),
+              //         fontSize: 13,
+              //         fontWeight: FontWeight.w600),
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(10),
+              //       borderSide: BorderSide.none,
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 15),
               AutoSizeText(
-                'Sub Categories (If exists)',
+                'Other Categories (If exists)',
                 style: TextStyle(
                     color: Color.fromRGBO(48, 48, 48, 1),
                     fontWeight: FontWeight.w600),
@@ -666,7 +600,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                           key: _multiSelectKey,
                           initialChildSize: 0.7,
                           maxChildSize: 0.95,
-                          title: Text('Sub categories',
+                          title: Text('Other categories',
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,

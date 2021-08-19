@@ -42,11 +42,17 @@ class GetVendorByIdResponseData {
     required this.name,
     required this.commission,
     required this.address,
+    required this.landmark,
+    required this.city,
+    required this.state,
+    required this.pin,
     required this.lat,
     required this.lng,
     required this.ownerName,
     required this.ownerMobile,
     required this.ownerSign,
+    required this.cityName,
+    required this.stateName,
     required this.subCategory,
   });
 
@@ -55,11 +61,17 @@ class GetVendorByIdResponseData {
   String name;
   String commission;
   String address;
+  String landmark;
+  String city;
+  String state;
+  int pin;
   String lat;
   String lng;
   String ownerName;
   String ownerMobile;
   String ownerSign;
+  String cityName;
+  String stateName;
   List<SubCategory> subCategory;
 
   factory GetVendorByIdResponseData.fromJson(String str) =>
@@ -74,12 +86,17 @@ class GetVendorByIdResponseData {
         name: json["name"],
         commission: json["commission"],
         address: json["address"],
-        lat: json["lat"].toString(),
-        lng: json["lng"].toString(),
-        ownerName: json["owner_name"] == null ? "demo name" : json["owner_name"],
-        ownerMobile:
-            json["owner_mobile"] == null ? "0000000000" : json["owner_mobile"],
+        landmark: json["landmark"],
+        city: json["city"],
+        state: json["state"],
+        pin: json["pin"],
+        lat: json["lat"] == null ? "" : json["lat"],
+        lng: json["lng"] == null ? "" : json["lat"],
+        ownerName: json["owner_name"] == null ? "" : json["owner_name"],
+        ownerMobile: json["owner_mobile"] == null ? "" : json["owner_mobile"],
         ownerSign: json["owner_sign"],
+        cityName: json["city_name"],
+        stateName: json["state_name"],
         subCategory: List<SubCategory>.from(
             json["sub_category"].map((x) => SubCategory.fromMap(x))),
       );
@@ -90,11 +107,17 @@ class GetVendorByIdResponseData {
         "name": name,
         "commission": commission,
         "address": address,
+        "landmark": landmark,
+        "city": city,
+        "state": state,
+        "pin": pin,
         "lat": lat,
         "lng": lng,
         "owner_name": ownerName,
         "owner_mobile": ownerMobile,
         "owner_sign": ownerSign,
+        "city_name": cityName,
+        "state_name": stateName,
         "sub_category": List<dynamic>.from(subCategory.map((x) => x.toMap())),
       };
 }

@@ -14,6 +14,8 @@ import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_fiel
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:myprofit_employee/model/get_all_state_response.dart';
+import 'package:myprofit_employee/model/getcity_by_state_response.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import 'package:myprofit_employee/model/addvendor_form.dart';
@@ -192,10 +194,10 @@ class _VendorFormState extends State<VendorForm> {
               _comission.text,
               _mobile.text,
               _address.text,
-               _landmark.text,
-            _city.text,
-            _state.text,
-            _pincode.text,
+              _landmark.text,
+              cityid,
+              stateid,
+              _pincode.text,
               lat,
               lng,
               data,
@@ -231,8 +233,8 @@ class _VendorFormState extends State<VendorForm> {
             _mobile.text,
             _address.text,
             _landmark.text,
-            _city.text,
-            _state.text,
+            cityid,
+            stateid,
             _pincode.text,
             lat,
             lng,
@@ -332,6 +334,7 @@ class _VendorFormState extends State<VendorForm> {
           msg: "Please turn on the internet");
     }
   }
+//bottom sheet
 
   //terms-conditions-dialog
   termsConditionsDialog() {
@@ -585,8 +588,9 @@ class _VendorFormState extends State<VendorForm> {
   //thank-you-dialog
 
   //select-category
-  var placeholderText = "Select sub categories";
-
+  var placeholderText = "Select other categories";
+  var cityid;
+  var stateid;
   String arr = "";
   String comiisionarray = "";
   String commission = "";
@@ -601,14 +605,60 @@ class _VendorFormState extends State<VendorForm> {
   void initState() {
     super.initState();
     getCategories();
+    getStateId(101);
+    // getCityId(21);
   }
 
+  GetAllStateResponse? getData;
+  List<GetAllStateResponseData> stateData = [];
+  Future<List<GetAllStateResponseData>> getStateId(id) async {
+    if (await Network.isConnected()) {
+      SystemChannels.textInput.invokeMethod("TextInput.hide");
+      print("kai kroge +${id}");
+      getData = await ApiProvider().getState(id);
+      if (getData!.success) {
+        stateData = getData!.data!;
+
+        log("ggg ${stateData}");
+      }
+    } else {
+      Fluttertoast.showToast(
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on  internet");
+    }
+    return stateData;
+    //_tap = true;
+  }
+
+  List<GetAllCityByStateResponseData> citydata = [];
+  Future<List<GetAllCityByStateResponseData>> getCityId(id) async {
+    if (await Network.isConnected()) {
+      SystemChannels.textInput.invokeMethod("TextInput.hide");
+      print("kai kroge +${id}");
+      GetAllCityByStateResponse getData =
+          await ApiProvider().getCityByState(id);
+      if (getData.success) {
+        citydata = getData.data!;
+
+        log("ggg ${citydata}");
+      }
+    } else {
+      Fluttertoast.showToast(
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on  internet");
+    }
+    return citydata;
+    //_tap = true;
+  }
   //select-category
 
   @override
   Widget build(BuildContext context) {
     devicewidth = MediaQuery.of(context).size.width;
     deviceheight = MediaQuery.of(context).size.height;
+
     return WillPopScope(
       onWillPop: () {
         Navigator.pop(context);
@@ -699,7 +749,7 @@ class _VendorFormState extends State<VendorForm> {
                       // ],
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       //autovalidate: true,
-                      maxLength: 25,
+                      maxLength: 4,
                       autofocus: false,
                       // keyboardType: TextInputType.streetAddress,
                       decoration: InputDecoration(
@@ -862,27 +912,41 @@ class _VendorFormState extends State<VendorForm> {
                       ),
                     ),
                     SizedBox(height: 10),
+
                     TextFormField(
-                      controller: _city,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                        filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here Your city/village',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    TextFormField(
+                      // enableInteractiveSelection: false,
+                      readOnly: true,
+                      onTap: () {
+                        log("${stateData.length}");
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return ListView.separated(
+                                separatorBuilder: (context, index) => Divider(
+                                      color: Colors.black,
+                                    ),
+                                itemCount: stateData.length,
+                                itemBuilder: (BuildContext ctxt, int index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        getCityId(stateData[index].id);
+                                        _state.text = stateData[index].name;
+                                        stateid =
+                                            stateData[index].id.toString();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                          height: 30,
+                                          child:
+                                              Text("${stateData[index].name}")),
+                                    ),
+                                  );
+                                });
+                          },
+                        );
+                      },
                       controller: _state,
                       autofocus: false,
                       decoration: InputDecoration(
@@ -901,15 +965,76 @@ class _VendorFormState extends State<VendorForm> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      readOnly: true,
+                      onTap: () {
+                        log("${citydata.length}");
+                        if (citydata.length > 0) {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return ListView.separated(
+                                  separatorBuilder: (context, index) => Divider(
+                                        color: Colors.black,
+                                      ),
+                                  itemCount: citydata.length,
+                                  itemBuilder: (BuildContext ctxt, int index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          /// getCityId(stateData[index].id);
+                                          _city.text = citydata[index].name;
+                                          cityid =
+                                              citydata[index].id.toString();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Container(
+                                            height: 30,
+                                            child: Text(
+                                                "${citydata[index].name}")),
+                                      ),
+                                    );
+                                  });
+                            },
+                          );
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "select state from above list",
+                              backgroundColor: ColorPrimary);
+                        }
+                      },
+                      controller: _city,
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Color.fromRGBO(242, 242, 242, 1),
+                        hintText: 'Select Your city/village',
+                        hintStyle: TextStyle(
+                            color: Color.fromRGBO(85, 85, 85, 1),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+
                     SizedBox(height: 15),
                     AutoSizeText(
-                      'Sub Categories (If exists)',
+                      'Other Categories (If exists)',
                       style: TextStyle(
                           color: Color.fromRGBO(48, 48, 48, 1),
                           fontWeight: FontWeight.w600),
                       maxFontSize: 15,
                       minFontSize: 10,
                     ),
+                    SizedBox(height: 10),
+
                     SizedBox(height: 15),
 
                     // GestureDetector(
@@ -953,7 +1078,7 @@ class _VendorFormState extends State<VendorForm> {
                                         ?.unfocus();
                                     Navigator.pop(context);
                                   },
-                                  child: Text('Sub categories',
+                                  child: Text('Other categories',
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 14,
@@ -1379,6 +1504,7 @@ class _VendorFormState extends State<VendorForm> {
 
     setState(() {});
   }
+
 //image-picker
 }
 

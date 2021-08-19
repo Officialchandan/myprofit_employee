@@ -11,6 +11,8 @@ import 'package:myprofit_employee/model/dhabas_week_response.dart';
 import 'package:myprofit_employee/model/drivers_day_response.dart';
 import 'package:myprofit_employee/model/drivers_monthly_response.dart';
 import 'package:myprofit_employee/model/drivers_week_response.dart';
+import 'package:myprofit_employee/model/get_all_state_response.dart';
+import 'package:myprofit_employee/model/getcity_by_state_response.dart';
 import 'package:myprofit_employee/model/getvenordbyid_response.dart';
 import 'package:myprofit_employee/model/login_response.dart';
 import 'package:myprofit_employee/model/logout_response.dart';
@@ -124,8 +126,57 @@ class ApiProvider {
     }
   }
 
+  Future<GetAllStateResponse> getState(id) async {
+    log("chl gyi");
+    var token = await SharedPref.getStringPreference('token');
+    try {
+      Response res = await dio.post('$baseUrl/getAllState',
+          data: ({"country_id": id}),
+          options: Options(
+            headers: {"Authorization": "Bearer $token"},
+          ));
+      log("sss${res.data.toString()}");
+
+      return GetAllStateResponse.fromJson(res.toString());
+    } catch (error, stacktrace) {
+      String message = "";
+      if (error is DioError) {
+        ServerError e = ServerError.withError(error: error);
+        message = e.getErrorMessage();
+      } else {
+        message = "Something Went wrong";
+      }
+      print("Exception occurred: $message stackTrace: $stacktrace");
+      return GetAllStateResponse(success: false, message: message);
+    }
+  }
+
+  Future<GetAllCityByStateResponse> getCityByState(id) async {
+    log("chl gyi");
+    var token = await SharedPref.getStringPreference('token');
+    try {
+      Response res = await dio.post('$baseUrl/getAllCityByStateID',
+          data: ({"state_id": id}),
+          options: Options(
+            headers: {"Authorization": "Bearer $token"},
+          ));
+      log("sss${res.data.toString()}");
+
+      return GetAllCityByStateResponse.fromJson(res.toString());
+    } catch (error, stacktrace) {
+      String message = "";
+      if (error is DioError) {
+        ServerError e = ServerError.withError(error: error);
+        message = e.getErrorMessage();
+      } else {
+        message = "Something Went wrong";
+      }
+      print("Exception occurred: $message stackTrace: $stacktrace");
+      return GetAllCityByStateResponse(success: false, message: message);
+    }
+  }
   Future<UpdateVendorResponse> updatedetails(
-      id, shopname, ownername, mobile, address,
+      id, shopname, ownername, mobile, address,landmark,city,state,pin,
       [cat, subcat]) async {
     log("chl gyi }");
     log("chl gyi $id");
@@ -139,6 +190,11 @@ class ApiProvider {
             "owner_name": ownername,
             "owner_mobile": mobile,
             "address": address,
+            "landmark" : landmark,
+            "city" : city,
+            "state" : state,
+            "pin" : pin,
+
             "sub_cat_id": cat,
             "sub_cat_commission": subcat,
           },
