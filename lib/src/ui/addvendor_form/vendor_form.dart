@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
@@ -16,12 +17,15 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:myprofit_employee/model/get_all_state_response.dart';
 import 'package:myprofit_employee/model/getcity_by_state_response.dart';
+import 'package:myprofit_employee/src/ui/added_vendor_list/added_vendor_list.dart';
+import 'package:myprofit_employee/src/ui/map/google_maps.dart';
+import 'package:myprofit_employee/utils/colors.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import 'package:myprofit_employee/model/addvendor_form.dart';
 import 'package:myprofit_employee/model/categories_respnse.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
-import 'package:myprofit_employee/src/ui/add_footwear/add_footwear.dart';
 import 'package:myprofit_employee/src/ui/home/home.dart';
 import 'package:myprofit_employee/utils/colors.dart';
 
@@ -29,11 +33,12 @@ import 'package:myprofit_employee/utils/network.dart';
 import 'package:myprofit_employee/utils/validator.dart';
 
 class VendorForm extends StatefulWidget {
-  final int id;
-  final String title;
+  final int? id;
+  final String? title;
+  // final double? lat;
+  // final double? long;
 
-  const VendorForm({Key? key, required this.id, required this.title})
-      : super(key: key);
+  const VendorForm({Key? key, this.id, this.title}) : super(key: key);
 
   @override
   _VendorFormState createState() => _VendorFormState(this.id, this.title);
@@ -75,6 +80,12 @@ class _VendorFormState extends State<VendorForm> {
     // return result!.data!;
   }
 
+  String searchText = "";
+  bool searching = false;
+  TextEditingController _searchController = TextEditingController();
+  final PublishSubject<List<GetAllStateResponseData>> subject =
+      PublishSubject();
+  List<GetAllStateResponseData> loginData = [];
   GlobalKey<SfSignaturePadState> _signaturePadKey = GlobalKey();
   var devicewidth, deviceheight;
 
@@ -87,7 +98,7 @@ class _VendorFormState extends State<VendorForm> {
   bool valuefirst = false;
   bool valuesecond = false;
   //checkbox
-  int lat = 0, lng = 0;
+  double? lat, lng;
   TextEditingController _shopname = TextEditingController();
   TextEditingController _ownername = TextEditingController();
 
@@ -100,6 +111,12 @@ class _VendorFormState extends State<VendorForm> {
   TextEditingController _pincode = TextEditingController();
 
   TextEditingController _state = TextEditingController();
+  TextEditingController edtSearch = TextEditingController();
+  StreamController<bool> editController = StreamController();
+  StreamController<List<GetAllCityByStateResponse>> controller =
+      StreamController();
+  List<GetAllCityByStateResponse> cityList = [];
+
   List<SubCat> subcatlist = [];
 //api calling
   addVendors() async {
@@ -135,32 +152,42 @@ class _VendorFormState extends State<VendorForm> {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please Enter Shop address");
-      } else if (_city.text.isEmpty) {
+            msg: "Please Enter Shop Address");
+      } else if (lat == null) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please Enter pincode");
-      } else if (_city.text.isEmpty) {
+            msg: "Please Select Locator from map in Address Textfeild ");
+      } else if (_pincode.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please Enter shop City");
+            msg: "Please Enter Pincode");
+      } else if (_pincode.text.length != 6) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Valid Pincode");
       } else if (_state.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please Enter shop State");
+            msg: "Please Select Shop State");
+      } else if (_city.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Select Shop City");
       } else if (valuesecond == false) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please Select term and Condition");
+            msg: "Please Select Term and Condition");
       } else if (imageData == null) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: "Please do signature in terms and condition");
+            msg: "Please do Signature in Terms and Condition");
       } else if (subcatlist.isNotEmpty) {
         String savelist = "";
 
@@ -169,24 +196,23 @@ class _VendorFormState extends State<VendorForm> {
             Fluttertoast.showToast(
                 backgroundColor: ColorPrimary,
                 textColor: Colors.white,
-                msg: "Please Enter SubCategories comission");
+                msg: "Please Enter Other Categories Comission");
             savelist = "";
             break;
           } else {
             if (i == subcatlist.length - 1) {
-              savelist = savelist +
-                  double.parse(subcatlist[i].subController.text.trim())
-                      .toStringAsPrecision(2);
+              log("comiision====>${double.parse(subcatlist[i].subController.text.trim())}");
+              savelist = savelist + subcatlist[i].subController.text.trim();
             } else {
-              savelist = savelist +
-                  double.parse(subcatlist[i].subController.text.trim())
-                      .toStringAsPrecision(2) +
-                  ",";
+              log("comiision====>${subcatlist[i].subController.text.trim()}");
+              savelist =
+                  savelist + subcatlist[i].subController.text.trim() + ",";
             }
           }
         }
 
         if (savelist.isNotEmpty) {
+          log("ooooo1 }");
           final AddVendorResponse loginData = await ApiProvider().addVendor(
               "${widget.id}",
               _shopname.text,
@@ -202,26 +228,28 @@ class _VendorFormState extends State<VendorForm> {
               lng,
               data,
               arr,
-              comiisionarray);
-          log("ooooo ${loginData}");
-          log("ooooo ${comiisionarray}");
-          log("ooooo ${arr}");
+              savelist);
+          // log("ooooo ${loginData.data!.categoryType}");
+          // log("ooooo ${loginData.data!.ownerMobile}");
+          // log("ooooo ${savelist}");
+          // log("ooooo ${arr}");
           if (loginData.success == true) {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        AddFootwear(title: widget.title, id: widget.id)),
+                        AddedVendor(title: widget.title!, id: widget.id!)),
                 (Route<dynamic> route) => false);
           } else {
+            log("ooooo2 }");
             Fluttertoast.showToast(
-              backgroundColor: ColorPrimary,
-              textColor: Colors.white,
-              msg: loginData.success == false
-                  ? "unable to update"
-                  : "thanks for login ",
-              // timeInSecForIos: 3
-            );
+                backgroundColor: ColorPrimary,
+                textColor: Colors.white,
+                msg: loginData.success == false
+                    ? loginData.message
+                    : "loginData.message"
+                // timeInSecForIos: 3
+                );
           }
         }
       } else {
@@ -249,26 +277,22 @@ class _VendorFormState extends State<VendorForm> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      AddFootwear(title: widget.title, id: widget.id)),
+                      AddedVendor(title: widget.title!, id: widget.id!)),
               (Route<dynamic> route) => false);
           Fluttertoast.showToast(
               backgroundColor: ColorPrimary,
               textColor: Colors.white,
-              msg: "updated sucsessfully");
+              msg: "Added Sucsessfully");
         } else {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: loginData.success == false
-                ? "unable to update"
-                : "thanks for login ",
+                ? loginData.message
+                : "Thanks for login ",
             // timeInSecForIos: 3
           );
         }
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "updated sucsessfully");
       }
       //signaturePadKey!.currentState!.toPathList().length
       // else if (subcatlist.isNotEmpty) {
@@ -431,16 +455,20 @@ class _VendorFormState extends State<VendorForm> {
                           ),
                         ),
                         onTap: () async {
-                          log("${_signaturePadKey.currentState!.toPathList().length}");
-                          if (_signaturePadKey.currentState!
-                                  .toPathList()
-                                  .length !=
-                              0) {
-                            _handleSaveButtonPressed();
+                          if (_signaturePadKey.currentState != null) {
+                            log("${_signaturePadKey.currentState!.toPathList().length}");
+                            if (_signaturePadKey.currentState!
+                                    .toPathList()
+                                    .length !=
+                                0) {
+                              _handleSaveButtonPressed();
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Please do valid Signature",
+                                  backgroundColor: ColorPrimary);
+                            }
                           } else {
-                            Fluttertoast.showToast(
-                                msg: "please do valid signature",
-                                backgroundColor: ColorPrimary);
+                            Navigator.pop(context);
                           }
                         }),
                   ]),
@@ -600,7 +628,7 @@ class _VendorFormState extends State<VendorForm> {
 
   //List<Animal> _selectedCategory4 = [];
   final _multiSelectKey = GlobalKey<FormFieldState>();
-
+  var result1;
   @override
   void initState() {
     super.initState();
@@ -708,7 +736,8 @@ class _VendorFormState extends State<VendorForm> {
                     TextFormField(
                       controller: _shopname,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'[[a-zA-Z0-9 ]')),
                       ],
                       autofocus: false,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -735,7 +764,7 @@ class _VendorFormState extends State<VendorForm> {
                     ),
 
                     SizedBox(height: 15),
-                    Text(' comission on ${widget.title}',
+                    Text(' Comission on ${widget.title}',
                         style: TextStyle(
                             color: Color.fromRGBO(48, 48, 48, 1),
                             fontSize: 15,
@@ -743,10 +772,11 @@ class _VendorFormState extends State<VendorForm> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _comission,
-                      keyboardType: TextInputType.number,
-                      // inputFormatters: [
-                      //   FilteringTextInputFormatter.allow(RegExp(r'[[0-9]]')),
-                      // ],
+                      keyboardType: TextInputType.numberWithOptions(
+                          decimal: true, signed: false),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[[0-9. ]')),
+                      ],
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       //autovalidate: true,
                       maxLength: 4,
@@ -772,7 +802,7 @@ class _VendorFormState extends State<VendorForm> {
                     SizedBox(
                       height: 15,
                     ),
-                    Text('Owners name',
+                    Text('Owners Name',
                         style: TextStyle(
                             color: Color.fromRGBO(48, 48, 48, 1),
                             fontSize: 15,
@@ -781,7 +811,7 @@ class _VendorFormState extends State<VendorForm> {
                     TextFormField(
                       controller: _ownername,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
                       ],
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       //autovalidate: true,
@@ -849,7 +879,25 @@ class _VendorFormState extends State<VendorForm> {
                       autofocus: false,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            FocusScopeNode currentFocus =
+                                FocusScope.of(context);
+                            if (!currentFocus.hasPrimaryFocus) {
+                              currentFocus.unfocus();
+                            }
+                            result1 = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => GoogleMapScreen()));
+                            log("result ${result1}");
+                            if (result1 != null) {
+                              //Map location = result as Map;
+                              lat = result1["lat"];
+                              lng = result1["long"];
+                              //  Fluttertoast.showToast(msg: "$lat");
+                              log("result1---->${lat}");
+                            }
+                          },
                           icon: Icon(
                             Icons.add_location,
                             color: ColorPrimary,
@@ -894,13 +942,20 @@ class _VendorFormState extends State<VendorForm> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _pincode,
+                      keyboardType: TextInputType.number,
+                      validator: (numb) =>
+                          Validator.validatePincode(numb!, context),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      maxLength: 6,
                       autofocus: false,
                       decoration: InputDecoration(
+                        counterText: "",
                         contentPadding:
                             EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here Your pincode',
+                        hintText: 'Enter here Your Pincode',
                         hintStyle: TextStyle(
                             color: Color.fromRGBO(85, 85, 85, 1),
                             fontSize: 13,
@@ -918,43 +973,88 @@ class _VendorFormState extends State<VendorForm> {
                       readOnly: true,
                       onTap: () {
                         log("${stateData.length}");
+
                         showModalBottomSheet(
+                          enableDrag: true,
+                          isDismissible: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(15.0)),
+                          ),
                           context: context,
                           builder: (context) {
-                            return ListView.separated(
-                                separatorBuilder: (context, index) => Divider(
-                                      color: Colors.black,
-                                    ),
-                                itemCount: stateData.length,
-                                itemBuilder: (BuildContext ctxt, int index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        getCityId(stateData[index].id);
-                                        _state.text = stateData[index].name;
-                                        stateid =
-                                            stateData[index].id.toString();
+                            return IntrinsicHeight(
+                              child: Container(
+                                padding: EdgeInsets.only(top: 20, bottom: 0),
+                                child: Column(children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.45,
+                                    child: ListView.separated(
+                                        separatorBuilder: (context, index) =>
+                                            Divider(
+                                              color: Colors.black,
+                                            ),
+                                        itemCount: stateData.length,
+                                        itemBuilder:
+                                            (BuildContext ctxt, int index) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  _city.clear();
+                                                });
+
+                                                getCityId(stateData[index].id);
+                                                _state.text =
+                                                    stateData[index].name;
+                                                stateid = stateData[index]
+                                                    .id
+                                                    .toString();
+                                                Navigator.pop(context);
+                                              },
+                                              child: Container(
+                                                  height: 30,
+                                                  child: Text(
+                                                      "${stateData[index].name.toUpperCase()}")),
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                  Container(
+                                    // height: 15,
+                                    child: MaterialButton(
+                                      onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: Container(
-                                          height: 30,
-                                          child:
-                                              Text("${stateData[index].name}")),
+                                      height: 50,
+                                      elevation: 5,
+                                      child: Text(
+                                        "Cancel",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
                                     ),
-                                  );
-                                });
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  )
+                                ]),
+                              ),
+                            );
                           },
                         );
                       },
                       controller: _state,
                       autofocus: false,
                       decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.keyboard_arrow_down,
+                            color: ColorPrimary),
                         contentPadding:
                             EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here State',
+                        hintText: 'Select State',
                         hintStyle: TextStyle(
                             color: Color.fromRGBO(85, 85, 85, 1),
                             fontSize: 13,
@@ -965,43 +1065,17 @@ class _VendorFormState extends State<VendorForm> {
                         ),
                       ),
                     ),
+
                     SizedBox(height: 10),
                     TextFormField(
                       readOnly: true,
                       onTap: () {
                         log("${citydata.length}");
                         if (citydata.length > 0) {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return ListView.separated(
-                                  separatorBuilder: (context, index) => Divider(
-                                        color: Colors.black,
-                                      ),
-                                  itemCount: citydata.length,
-                                  itemBuilder: (BuildContext ctxt, int index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          /// getCityId(stateData[index].id);
-                                          _city.text = citydata[index].name;
-                                          cityid =
-                                              citydata[index].id.toString();
-                                          Navigator.pop(context);
-                                        },
-                                        child: Container(
-                                            height: 30,
-                                            child: Text(
-                                                "${citydata[index].name}")),
-                                      ),
-                                    );
-                                  });
-                            },
-                          );
+                          _showModal(context);
                         } else {
                           Fluttertoast.showToast(
-                              msg: "select state from above list",
+                              msg: "Select State from above list",
                               backgroundColor: ColorPrimary);
                         }
                       },
@@ -1010,6 +1084,8 @@ class _VendorFormState extends State<VendorForm> {
                       decoration: InputDecoration(
                         contentPadding:
                             EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        suffixIcon: Icon(Icons.keyboard_arrow_down,
+                            color: ColorPrimary),
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Select Your city/village',
@@ -1063,7 +1139,7 @@ class _VendorFormState extends State<VendorForm> {
                               child: MultiSelectDialogField<
                                   CategoriesResponseData?>(
                                 buttonIcon: Icon(Icons.keyboard_arrow_down,
-                                    color: Color.fromRGBO(85, 85, 85, 1)),
+                                    color: ColorPrimary),
                                 decoration: BoxDecoration(
                                   color: Color.fromRGBO(242, 242, 242, 1),
                                   borderRadius: BorderRadius.circular(10),
@@ -1141,12 +1217,12 @@ class _VendorFormState extends State<VendorForm> {
                                     subcatlist.clear();
                                     if (values.length == 0) {
                                       placeholderText =
-                                          "please select category";
+                                          "Please select category";
                                     } else {
                                       for (int i = 0; i < values.length; i++) {
                                         if (i == values.length - 1) {
                                           placeholderText =
-                                              "please select category";
+                                              "Please select category";
                                           arr = arr + values[i]!.id.toString();
                                         } else {
                                           // placeholderText = placeholderText +
@@ -1188,7 +1264,12 @@ class _VendorFormState extends State<VendorForm> {
                       return Padding(
                         padding: const EdgeInsets.only(top: 20),
                         child: TextFormField(
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true, signed: false),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[[0-9. ]')),
+                          ],
                           maxLength: 4,
                           controller: subcatlist[index].subController,
                           decoration: InputDecoration(
@@ -1415,6 +1496,7 @@ class _VendorFormState extends State<VendorForm> {
                           ),
                           onPressed: () {
                             log("kai kai---->");
+
                             log("${imageData.toString()}");
                             addVendors();
                           },
@@ -1435,6 +1517,95 @@ class _VendorFormState extends State<VendorForm> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showModal(context) {
+    showModalBottomSheet(
+      //isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+      ),
+      context: context,
+      builder: (context) {
+        return IntrinsicHeight(
+          child: Container(
+            padding: EdgeInsets.only(top: 20, bottom: 0),
+            child: Column(children: [
+              TextFormField(
+                controller: edtSearch,
+                autofocus: false,
+                decoration: InputDecoration(
+                  hintText: "Search your City...",
+                ),
+                onChanged: (text) {
+                  setState(() {
+                   // cityList = _buildSearchList(value);
+                  });
+                  // if (text.isNotEmpty) {
+                  //   List<GetAllCityByStateResponse>
+                  //       searchList = [];
+
+                  //   cityList.forEach((element) {
+                  //     if (element.data!.contains(
+                  //         text.trim().toLowerCase())) {
+                  //       searchList.add(element);
+                  //     }
+                  //   });
+                  //   controller.add(searchList);
+                  //   editController.add(true);
+                  // } else {
+                  //   controller.add(cityList);
+                  //   editController.add(false);
+                  // }
+                },
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.39,
+                child: ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                          color: Colors.black,
+                        ),
+                    itemCount: citydata.length,
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            /// getCityId(stateData[index].id);
+                            _city.text = citydata[index].name;
+                            cityid = citydata[index].id.toString();
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                              height: 30,
+                              child: Text("${citydata[index].name}")),
+                        ),
+                      );
+                    }),
+              ),
+              Container(
+                child: MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    edtSearch.clear();
+                    cityList.clear();
+                  },
+                  height: 50,
+                  elevation: 5,
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              )
+            ]),
+          ),
+        );
+      },
     );
   }
 
@@ -1471,7 +1642,12 @@ class _VendorFormState extends State<VendorForm> {
             ],
             cancelButton: CupertinoActionSheetAction(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GoogleMapScreen(
+                            id: widget.id, title: widget.title)));
+                // Navigator.pop(context);
               },
               child: Text('Cancel',
                   style: TextStyle(

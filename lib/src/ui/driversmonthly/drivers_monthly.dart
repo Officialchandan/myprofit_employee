@@ -77,7 +77,7 @@ class _DriversMonthlyState extends State<DriversMonthly> {
                           //     onChanged: (check) => saleAmountBloc
                           //         .add(CheckBoxEvent(checked: check!))),
                           Text(
-                            "Drivers Monthly report",
+                            "Drivers Monthly Report",
                             style: GoogleFonts.openSans(
                               fontSize: 23,
                               fontWeight: FontWeight.w700,

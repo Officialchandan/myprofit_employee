@@ -43,6 +43,19 @@ class Validator {
     return null;
   }
 
+  static String? validatePincode(String value, BuildContext context) {
+    String patttern = r'(^[0-9]*$)';
+    RegExp regExp = new RegExp(patttern);
+    if (value.length == 0) {
+      return "please enter PinCode number";
+    } else if (value.length != 6) {
+      return "PinCode number must 6 digits";
+    } else if (!regExp.hasMatch(value)) {
+      return "PinCode number must be digits";
+    }
+    return null;
+  }
+
   //employee-validator
   static String? validateEmployee(String value, BuildContext context) {
     String patttern = r'(^[0-9]*$)';

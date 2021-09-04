@@ -175,8 +175,9 @@ class ApiProvider {
       return GetAllCityByStateResponse(success: false, message: message);
     }
   }
+
   Future<UpdateVendorResponse> updatedetails(
-      id, shopname, ownername, mobile, address,landmark,city,state,pin,
+      id, shopname, ownername, mobile, address, landmark, city, state, pin,
       [cat, subcat]) async {
     log("chl gyi }");
     log("chl gyi $id");
@@ -190,11 +191,10 @@ class ApiProvider {
             "owner_name": ownername,
             "owner_mobile": mobile,
             "address": address,
-            "landmark" : landmark,
-            "city" : city,
-            "state" : state,
-            "pin" : pin,
-
+            "landmark": landmark,
+            "city": city,
+            "state": state,
+            "pin": pin,
             "sub_cat_id": cat,
             "sub_cat_commission": subcat,
           },
@@ -231,7 +231,7 @@ class ApiProvider {
       city,
       state,
       pin,
-       lat,
+      lat,
       lng,
       ownersign,
       subcat,
@@ -255,6 +255,7 @@ class ApiProvider {
           filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
       addvendor["sub_cat_id"] = subcat;
       addvendor["sub_cat_commission"] = subcatcommission;
+      log("addvendor$addvendor");
       FormData requestData = FormData.fromMap(addvendor);
       var token = await SharedPref.getStringPreference('token');
       Response res = await dio.post('$baseUrl/addVendorForm',

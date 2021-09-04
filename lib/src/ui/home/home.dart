@@ -9,9 +9,9 @@ import 'package:myprofit_employee/model/categories_respnse.dart';
 import 'package:myprofit_employee/model/getvenordbyid_response.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
 import 'package:myprofit_employee/src/ui/add_dhaba/add_dhaba.dart';
-import 'package:myprofit_employee/src/ui/add_footwear/add_footwear.dart';
+import 'package:myprofit_employee/src/ui/added_vendor_list/added_vendor_list.dart';
+import 'package:myprofit_employee/src/ui/addvendor_form/vendor_form.dart';
 import 'package:myprofit_employee/src/ui/login/login.dart';
-import 'package:myprofit_employee/src/ui/vendor_form/vendor_form.dart';
 import 'package:myprofit_employee/utils/colors.dart';
 import 'package:myprofit_employee/utils/network.dart';
 
@@ -115,20 +115,20 @@ class _HomeState extends State<Home> {
       if (getVendor.success) {
         loginData = getVendor.data!;
 
-        if (id == 1) {
-          //Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddDhaba()),
-          );
-        } else {
-          //Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AddFootwear(title: title, id: id)),
-          );
-        }
+        // if (id == 1) {
+        //   //Navigator.pop(context);
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => AddDhaba()),
+        //   );
+        // } else {
+        //Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AddedVendor(title: title, id: id)),
+        );
+        // }
       } else {
         if (id == 1) {
         } else {
@@ -267,6 +267,16 @@ class _HomeState extends State<Home> {
                 return Center(
                   child: Text("Data Not Found "),
                 );
+              }
+              if (snapshot.hasData) {
+                if (snapshot.data!.isEmpty) {
+                  return Center(
+                    child: Image(
+                      image: AssetImage("images/no_search.gif"),
+                      fit: BoxFit.contain,
+                    ),
+                  );
+                }
               }
               return categoryListWidget(snapshot.data!);
             }),

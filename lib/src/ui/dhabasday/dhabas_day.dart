@@ -77,7 +77,7 @@ class _DhabasDayState extends State<DhabasDay> {
                           //     onChanged: (check) => saleAmountBloc
                           //         .add(CheckBoxEvent(checked: check!))),
                           Text(
-                            "vendors Day report",
+                            "Vendors Day Report",
                             style: GoogleFonts.openSans(
                               fontSize: 23,
                               fontWeight: FontWeight.w700,

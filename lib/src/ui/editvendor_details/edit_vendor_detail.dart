@@ -19,7 +19,7 @@ import 'package:myprofit_employee/model/getcity_by_state_response.dart';
 import 'package:myprofit_employee/model/getvenordbyid_response.dart';
 import 'package:myprofit_employee/model/updatevendordetail_response.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
-import 'package:myprofit_employee/src/ui/add_footwear/add_footwear.dart';
+
 import 'package:myprofit_employee/src/ui/home/home.dart';
 import 'package:myprofit_employee/utils/colors.dart';
 import 'package:myprofit_employee/utils/network.dart';
@@ -96,147 +96,147 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   TextEditingController _state = TextEditingController();
 
 //api calling
-  addVendors() async {
-    if (await Network.isConnected()) {
-      SystemChannels.textInput.invokeMethod("TextInput.hide");
+  // addVendors() async {
+  //   if (await Network.isConnected()) {
+  //     SystemChannels.textInput.invokeMethod("TextInput.hide");
 
-      if (_shopname.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter ShopName");
-      } else if (_ownername.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter OwnerName");
-      } else if (_mobile.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter OwnerMobileNumber");
-      } else if (_mobile.text.length != 10) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Valid Mobile Number");
-      } else if (_address.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Shopaddress");
-      } else if (subcatlist.isNotEmpty) {
-        String savelist = "";
+  //     if (_shopname.text.isEmpty) {
+  //       Fluttertoast.showToast(
+  //           backgroundColor: ColorPrimary,
+  //           textColor: Colors.white,
+  //           msg: "Please Enter ShopName");
+  //     } else if (_ownername.text.isEmpty) {
+  //       Fluttertoast.showToast(
+  //           backgroundColor: ColorPrimary,
+  //           textColor: Colors.white,
+  //           msg: "Please Enter OwnerName");
+  //     } else if (_mobile.text.isEmpty) {
+  //       Fluttertoast.showToast(
+  //           backgroundColor: ColorPrimary,
+  //           textColor: Colors.white,
+  //           msg: "Please Enter OwnerMobileNumber");
+  //     } else if (_mobile.text.length != 10) {
+  //       Fluttertoast.showToast(
+  //           backgroundColor: ColorPrimary,
+  //           textColor: Colors.white,
+  //           msg: "Please Enter Valid Mobile Number");
+  //     } else if (_address.text.isEmpty) {
+  //       Fluttertoast.showToast(
+  //           backgroundColor: ColorPrimary,
+  //           textColor: Colors.white,
+  //           msg: "Please Enter Shopaddress");
+  //     } else if (subcatlist.isNotEmpty) {
+  //       String savelist = "";
 
-        for (int i = 0; i < subcatlist.length; i++) {
-          if (subcatlist[i].subController.text.isEmpty) {
-            Fluttertoast.showToast(
-                backgroundColor: ColorPrimary,
-                textColor: Colors.white,
-                msg: "Please Enter SubCategories comission");
-            savelist = "";
-            break;
-          } else {
-            if (i == subcatlist.length - 1) {
-              savelist = savelist +
-                  double.parse(subcatlist[i].subController.text.trim())
-                      .toStringAsPrecision(2);
-            } else {
-              savelist = savelist +
-                  double.parse(subcatlist[i].subController.text.trim())
-                      .toStringAsPrecision(2) +
-                  ",";
-            }
-          }
-        }
+  //       for (int i = 0; i < subcatlist.length; i++) {
+  //         if (subcatlist[i].subController.text.isEmpty) {
+  //           Fluttertoast.showToast(
+  //               backgroundColor: ColorPrimary,
+  //               textColor: Colors.white,
+  //               msg: "Please Enter OtherCategories comission");
+  //           savelist = "";
+  //           break;
+  //         } else {
+  //           if (i == subcatlist.length - 1) {
+  //             savelist = savelist +
+  //                 double.parse(subcatlist[i].subController.text.trim())
+  //                     .toStringAsPrecision(2);
+  //           } else {
+  //             savelist = savelist +
+  //                 double.parse(subcatlist[i].subController.text.trim())
+  //                     .toStringAsPrecision(2) +
+  //                 ",";
+  //           }
+  //         }
+  //       }
 
-        if (savelist.isNotEmpty) {
-          final UpdateVendorResponse loginData = await ApiProvider()
-              .updatedetails(
-                  "${widget.vendordata.id}",
-                  _shopname.text,
-                  _ownername.text,
-                  _mobile.text,
-                  _address.text,
-                  _landmark.text,
-                  widget.vendordata.city,
-                  widget.vendordata.state,
-                  widget.vendordata.pin,
-                  subCatergory,
-                  savelist);
-          log("ooooo ${loginData.message}");
-          if (loginData.success == true) {
-            log("${widget.vendordata.id}");
-            log("${widget.title}");
-            log("${widget.id}");
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AddFootwear(title: widget.title, id: widget.id)),
-            );
-          } else {
-            Fluttertoast.showToast(
-              backgroundColor: ColorPrimary,
-              textColor: Colors.white,
-              msg: loginData.success == false
-                  ? "unable to update"
-                  : "thanks for login ",
-              // timeInSecForIos: 3
-            );
-          }
-        }
-      } else {
-        final UpdateVendorResponse loginData = await ApiProvider()
-            .updatedetails(
-                "${widget.vendordata.id}",
-                _shopname.text,
-                _ownername.text,
-                _mobile.text,
-                _address.text,
-                 _landmark.text,
-                  widget.vendordata.city,
-                  widget.vendordata.state,
-                  widget.vendordata.pin,
-                subCatergory,
-                subCatergorycomission);
-        log("ooooo ${loginData.message}");
-        if (loginData.success == true) {
-          log("uuuuu${widget.vendordata.id}");
-          log("${widget.title}");
-          log("${widget.id}");
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    AddFootwear(title: widget.title, id: widget.id)),
-          );
-          Fluttertoast.showToast(
-              backgroundColor: ColorPrimary,
-              textColor: Colors.white,
-              msg: "updated sucsessfully");
-        } else {
-          Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: loginData.success == false
-                ? "unable to update"
-                : "thanks for login ",
-            // timeInSecForIos: 3
-          );
-        }
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "updated sucsessfully");
-      }
-    } else {
-      Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on the internet");
-    }
-  }
+  //       if (savelist.isNotEmpty) {
+  //         final UpdateVendorResponse loginData = await ApiProvider()
+  //             .updatedetails(
+  //                 "${widget.vendordata.id}",
+  //                 _shopname.text,
+  //                 _ownername.text,
+  //                 _mobile.text,
+  //                 _address.text,
+  //                 _landmark.text,
+  //                 widget.vendordata.city,
+  //                 widget.vendordata.state,
+  //                 widget.vendordata.pin,
+  //                 subCatergory,
+  //                 savelist);
+  //         log("ooooo ${loginData.message}");
+  //         if (loginData.success == true) {
+  //           log("${widget.vendordata.id}");
+  //           log("${widget.title}");
+  //           log("${widget.id}");
+  //           Navigator.pushReplacement(
+  //             context,
+  //             MaterialPageRoute(
+  //                 builder: (context) =>
+  //                     AddFootwear(title: widget.title, id: widget.id)),
+  //           );
+  //         } else {
+  //           Fluttertoast.showToast(
+  //             backgroundColor: ColorPrimary,
+  //             textColor: Colors.white,
+  //             msg: loginData.success == false
+  //                 ? "unable to update"
+  //                 : "thanks for login ",
+  //             // timeInSecForIos: 3
+  //           );
+  //         }
+  //       }
+  //     } else {
+  //       final UpdateVendorResponse loginData = await ApiProvider()
+  //           .updatedetails(
+  //               "${widget.vendordata.id}",
+  //               _shopname.text,
+  //               _ownername.text,
+  //               _mobile.text,
+  //               _address.text,
+  //                _landmark.text,
+  //                 widget.vendordata.city,
+  //                 widget.vendordata.state,
+  //                 widget.vendordata.pin,
+  //               subCatergory,
+  //               subCatergorycomission);
+  //       log("ooooo ${loginData.message}");
+  //       if (loginData.success == true) {
+  //         log("uuuuu${widget.vendordata.id}");
+  //         log("${widget.title}");
+  //         log("${widget.id}");
+  //         Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(
+  //               builder: (context) =>
+  //                   AddFootwear(title: widget.title, id: widget.id)),
+  //         );
+  //         Fluttertoast.showToast(
+  //             backgroundColor: ColorPrimary,
+  //             textColor: Colors.white,
+  //             msg: "updated sucsessfully");
+  //       } else {
+  //         Fluttertoast.showToast(
+  //           backgroundColor: ColorPrimary,
+  //           textColor: Colors.white,
+  //           msg: loginData.success == false
+  //               ? "unable to update"
+  //               : "thanks for login ",
+  //           // timeInSecForIos: 3
+  //         );
+  //       }
+  //       Fluttertoast.showToast(
+  //           backgroundColor: ColorPrimary,
+  //           textColor: Colors.white,
+  //           msg: "updated sucsessfully");
+  //     }
+  //   } else {
+  //     Fluttertoast.showToast(
+  //         backgroundColor: ColorPrimary,
+  //         textColor: Colors.white,
+  //         msg: "Please turn on the internet");
+  //   }
+  // }
 
   //terms-conditions-dialog
 
@@ -358,7 +358,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               );
             },
           ),
-          title: Text('Update ${widget.title} Details',
+          title: Text(' ${widget.title} Shop Details',
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
           centerTitle: true,
         ),
@@ -374,6 +374,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                       fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
+                readOnly: true,
                 //  _shopname.text = widget.shopename,
                 controller: _shopname,
                 inputFormatters: [
@@ -412,6 +413,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 maxLength: 25,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: _ownername,
+                readOnly: true,
                 decoration: InputDecoration(
                   counterText: "",
                   contentPadding:
@@ -438,6 +440,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               SizedBox(height: 10),
               TextFormField(
                 controller: _mobile,
+                readOnly: true,
                 keyboardType: TextInputType.number,
                 validator: (numb) => Validator.validateMobile(numb!, context),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -468,16 +471,17 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                       fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
+                readOnly: true,
                 controller: _address,
                 autofocus: false,
                 decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.add_location,
-                            color: ColorPrimary,
-                          ),
-                        ),
+                  // suffixIcon: IconButton(
+                  //   onPressed: () {},
+                  //   icon: Icon(
+                  //     Icons.add_location,
+                  //     color: ColorPrimary,
+                  //   ),
+                  // ),
                   contentPadding:
                       EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
@@ -494,8 +498,42 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 ),
               ),
               SizedBox(height: 10),
+              Text('Landmark',
+                  style: TextStyle(
+                      color: Color.fromRGBO(48, 48, 48, 1),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600)),
+              SizedBox(height: 10),
               TextFormField(
                 controller: _landmark,
+                readOnly: true,
+                autofocus: false,
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  filled: true,
+                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  hintText: 'landmark was not given by Vendor',
+                  hintStyle: TextStyle(
+                      color: Color.fromRGBO(85, 85, 85, 1),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Text('Pincode',
+                  style: TextStyle(
+                      color: Color.fromRGBO(48, 48, 48, 1),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600)),
+              SizedBox(height: 10),
+              TextFormField(
+                controller: _pincode,
+                readOnly: true,
                 autofocus: false,
                 decoration: InputDecoration(
                   contentPadding:
@@ -514,6 +552,59 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 ),
               ),
               SizedBox(height: 10),
+              Text('City',
+                  style: TextStyle(
+                      color: Color.fromRGBO(48, 48, 48, 1),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600)),
+              SizedBox(height: 10),
+              TextFormField(
+                controller: _city,
+                readOnly: true,
+                autofocus: false,
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  filled: true,
+                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  hintText: 'Enter here Landmark (optional)',
+                  hintStyle: TextStyle(
+                      color: Color.fromRGBO(85, 85, 85, 1),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Text('State',
+                  style: TextStyle(
+                      color: Color.fromRGBO(48, 48, 48, 1),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600)),
+              SizedBox(height: 10),
+              TextFormField(
+                controller: _state,
+                readOnly: true,
+                autofocus: false,
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  filled: true,
+                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  hintText: 'Enter here Landmark (optional)',
+                  hintStyle: TextStyle(
+                      color: Color.fromRGBO(85, 85, 85, 1),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
               // TextFormField(
               //   controller: _pincode,
               //   autofocus: false,
@@ -574,148 +665,148 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               //   ),
               // ),
               SizedBox(height: 15),
-              AutoSizeText(
-                'Other Categories (If exists)',
-                style: TextStyle(
-                    color: Color.fromRGBO(48, 48, 48, 1),
-                    fontWeight: FontWeight.w600),
-                maxFontSize: 15,
-                minFontSize: 10,
-              ),
-              SizedBox(height: 15),
-              SizedBox(height: 10),
-              Container(
-                child: result == null
-                    ? Center(child: CircularProgressIndicator())
-                    : Container(
-                        // width: devicewidth - 30,
-                        child: MultiSelectBottomSheetField<
-                            CategoriesResponseData?>(
-                          buttonIcon: Icon(Icons.keyboard_arrow_down,
-                              color: Color.fromRGBO(85, 85, 85, 1)),
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(242, 242, 242, 1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          key: _multiSelectKey,
-                          initialChildSize: 0.7,
-                          maxChildSize: 0.95,
-                          title: Text('Other categories',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600)),
-                          buttonText: Text(placeholderText,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: Color.fromRGBO(85, 85, 85, 1),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600)),
-                          searchTextStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600),
-                          cancelText: Text('Cancel',
-                              style: TextStyle(
-                                  color: Color(0xff6657f4),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600)),
-                          confirmText: Text('Ok',
-                              style: TextStyle(
-                                  color: Color(0xff6657f4),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600)),
-                          items: result!.data!
-                              .map((category) =>
-                                  MultiSelectItem<CategoriesResponseData>(
-                                      category, category.categoryName))
-                              .toList(),
-                          initialValue:
-                              subcatlist.map((e) => e.subCat).toList(),
-                          searchable: true,
+              // AutoSizeText(
+              //   'Other Categories (If exists)',
+              //   style: TextStyle(
+              //       color: Color.fromRGBO(48, 48, 48, 1),
+              //       fontWeight: FontWeight.w600),
+              //   maxFontSize: 15,
+              //   minFontSize: 10,
+              // ),
+              // SizedBox(height: 15),
+              // SizedBox(height: 10),
+              // Container(
+              //   child: result == null
+              //       ? Center(child: CircularProgressIndicator())
+              //       : Container(
+              //           // width: devicewidth - 30,
+              //           child: MultiSelectBottomSheetField<
+              //               CategoriesResponseData?>(
+              //             buttonIcon: Icon(Icons.keyboard_arrow_down,
+              //                 color: Color.fromRGBO(85, 85, 85, 1)),
+              //             decoration: BoxDecoration(
+              //               color: Color.fromRGBO(242, 242, 242, 1),
+              //               borderRadius: BorderRadius.circular(10),
+              //             ),
+              //             key: _multiSelectKey,
+              //             initialChildSize: 0.7,
+              //             maxChildSize: 0.95,
+              //             title: Text('Other categories',
+              //                 style: TextStyle(
+              //                     color: Colors.black,
+              //                     fontSize: 14,
+              //                     fontWeight: FontWeight.w600)),
+              //             buttonText: Text(placeholderText,
+              //                 overflow: TextOverflow.ellipsis,
+              //                 style: TextStyle(
+              //                     color: Color.fromRGBO(85, 85, 85, 1),
+              //                     fontSize: 13,
+              //                     fontWeight: FontWeight.w600)),
+              //             searchTextStyle: TextStyle(
+              //                 color: Colors.black,
+              //                 fontSize: 14,
+              //                 fontWeight: FontWeight.w600),
+              //             cancelText: Text('Cancel',
+              //                 style: TextStyle(
+              //                     color: Color(0xff6657f4),
+              //                     fontSize: 14,
+              //                     fontWeight: FontWeight.w600)),
+              //             confirmText: Text('Ok',
+              //                 style: TextStyle(
+              //                     color: Color(0xff6657f4),
+              //                     fontSize: 14,
+              //                     fontWeight: FontWeight.w600)),
+              //             items: result!.data!
+              //                 .map((category) =>
+              //                     MultiSelectItem<CategoriesResponseData>(
+              //                         category, category.categoryName))
+              //                 .toList(),
+              //             initialValue:
+              //                 subcatlist.map((e) => e.subCat).toList(),
+              //             searchable: true,
 
-                          validator: (values) {
-                            if (values == null || values.isEmpty) {
-                              return "";
-                            }
-                            List<String> names =
-                                values.map((e) => e!.categoryName).toList();
+              //             validator: (values) {
+              //               if (values == null || values.isEmpty) {
+              //                 return "";
+              //               }
+              //               List<String> names =
+              //                   values.map((e) => e!.categoryName).toList();
 
-                            if (names.contains("Frog")) {
-                              return "Frogs are weird!";
-                            }
-                            return null;
-                          },
-                          onConfirm: (values) {
-                            // SystemChannels.textInput.invokeMethod('TextInput.hide');
-                            SystemChannels.textInput
-                                .invokeMethod('TextInput.hide');
-                            setState(() {
-                              _selectedCategory3 = values;
-                              placeholderText = "";
-                              subcatlist.clear();
-                              if (values.length == 0) {
-                                placeholderText = "please select category";
-                              } else {
-                                for (int i = 0; i < values.length; i++) {
-                                  if (i == values.length - 1) {
-                                    placeholderText = "please select category";
-                                    subCatergory =
-                                        subCatergory + values[i]!.id.toString();
-                                  } else {
-                                    placeholderText = "please select category";
-                                    subCatergory = subCatergory +
-                                        values[i]!.id.toString() +
-                                        ",";
-                                  }
-                                  subcatlist.add(SubCat(values[i]!));
-                                }
-                              }
-                            });
-                            _multiSelectKey.currentState!.validate();
-                          },
-                          chipDisplay: MultiSelectChipDisplay(
-                            onTap: (item) {
-                              setState(() {
-                                _selectedCategory3.remove(item);
-                                log("dddd ${item}");
-                              });
-                              _multiSelectKey.currentState!.validate();
-                            },
-                          )..disabled = true,
-                          //  );
-                          // }
-                        ),
-                      ),
-              ),
-              Column(
-                  children: List.generate(
-                      subcatlist.length,
-                      (index) => Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: TextFormField(
-                              keyboardType: TextInputType.number,
-                              maxLength: 4,
-                              controller: subcatlist[index].subController,
-                              decoration: InputDecoration(
-                                counterText: "",
-                                contentPadding: EdgeInsets.only(
-                                    left: 14.0, bottom: 8.0, top: 8.0),
-                                filled: true,
-                                fillColor: Color.fromRGBO(242, 242, 242, 1),
-                                hintText:
-                                    'Please Enter ${subcatlist[index].subCat.categoryName} Commision',
-                                hintStyle: TextStyle(
-                                    color: Color.fromRGBO(85, 85, 85, 1),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                            ),
-                          ))),
+              //               if (names.contains("Frog")) {
+              //                 return "Frogs are weird!";
+              //               }
+              //               return null;
+              //             },
+              //             onConfirm: (values) {
+              //               // SystemChannels.textInput.invokeMethod('TextInput.hide');
+              //               SystemChannels.textInput
+              //                   .invokeMethod('TextInput.hide');
+              //               setState(() {
+              //                 _selectedCategory3 = values;
+              //                 placeholderText = "";
+              //                 subcatlist.clear();
+              //                 if (values.length == 0) {
+              //                   placeholderText = "please select category";
+              //                 } else {
+              //                   for (int i = 0; i < values.length; i++) {
+              //                     if (i == values.length - 1) {
+              //                       placeholderText = "please select category";
+              //                       subCatergory =
+              //                           subCatergory + values[i]!.id.toString();
+              //                     } else {
+              //                       placeholderText = "please select category";
+              //                       subCatergory = subCatergory +
+              //                           values[i]!.id.toString() +
+              //                           ",";
+              //                     }
+              //                     subcatlist.add(SubCat(values[i]!));
+              //                   }
+              //                 }
+              //               });
+              //               _multiSelectKey.currentState!.validate();
+              //             },
+              //             chipDisplay: MultiSelectChipDisplay(
+              //               onTap: (item) {
+              //                 setState(() {
+              //                   _selectedCategory3.remove(item);
+              //                   log("dddd ${item}");
+              //                 });
+              //                 _multiSelectKey.currentState!.validate();
+              //               },
+              //             )..disabled = true,
+              //             //  );
+              //             // }
+              //           ),
+              //         ),
+              // ),
+              // Column(
+              //     children: List.generate(
+              //         subcatlist.length,
+              //         (index) => Padding(
+              //               padding: const EdgeInsets.only(top: 20),
+              //               child: TextFormField(
+              //                 keyboardType: TextInputType.number,
+              //                 maxLength: 4,
+              //                 controller: subcatlist[index].subController,
+              //                 decoration: InputDecoration(
+              //                   counterText: "",
+              //                   contentPadding: EdgeInsets.only(
+              //                       left: 14.0, bottom: 8.0, top: 8.0),
+              //                   filled: true,
+              //                   fillColor: Color.fromRGBO(242, 242, 242, 1),
+              //                   hintText:
+              //                       'Please Enter ${subcatlist[index].subCat.categoryName} Commision',
+              //                   hintStyle: TextStyle(
+              //                       color: Color.fromRGBO(85, 85, 85, 1),
+              //                       fontSize: 13,
+              //                       fontWeight: FontWeight.w600),
+              //                   border: OutlineInputBorder(
+              //                     borderRadius: BorderRadius.circular(10),
+              //                     borderSide: BorderSide.none,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ))),
               SizedBox(height: 15),
               SizedBox(height: 15),
               Align(
@@ -730,7 +821,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     onPressed: () {
-                      addVendors();
+                      Navigator.pop(context);
                     },
                     child: Text(
                       "SUBMIT",

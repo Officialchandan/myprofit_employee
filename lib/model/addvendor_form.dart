@@ -5,75 +5,81 @@
 import 'dart:convert';
 
 class AddVendorResponse {
-    AddVendorResponse({
-        required this.success,
-        required this.message,
-        this.data,
-    });
+  AddVendorResponse({
+    required this.success,
+    required this.message,
+    this.data,
+  });
 
-    bool success;
-    String message;
-    AddVendorResponseData? data;
+  bool success;
+  String message;
+  AddVendorResponseData? data;
 
-    factory AddVendorResponse.fromJson(String str) => AddVendorResponse.fromMap(json.decode(str));
+  factory AddVendorResponse.fromJson(String str) =>
+      AddVendorResponse.fromMap(json.decode(str));
 
-    String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap());
 
-    factory AddVendorResponse.fromMap(Map<String, dynamic> json) => AddVendorResponse(
+  factory AddVendorResponse.fromMap(Map<String, dynamic> json) =>
+      AddVendorResponse(
         success: json["success"],
         message: json["message"],
-        data: AddVendorResponseData.fromMap(json["data"]),
-    );
+        data: json["data"] == null
+            ? null
+            : AddVendorResponseData.fromMap(json["data"]),
+      );
 
-    Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toMap() => {
         "success": success,
         "message": message,
         "data": data!.toMap(),
-    };
+      };
 }
 
 class AddVendorResponseData {
-    AddVendorResponseData({
-       required  this.vendorId,
-       required  this.uniqueId,
-       required  this.categoryType,
-       required  this.addedBy,
-       required  this.shopName,
-       required  this.shopCommission,
-       required  this.ownerName,
-       required  this.ownerSign,
-       required  this.address,
-       required  this.landmark,
-       required  this.city,
-       required  this.state,
-       required  this.pin,
-       required  this.latitude,
-       required  this.longitude,
-       required  this.ownerMobile,
-    });
+  AddVendorResponseData({
+    required this.vendorId,
+    required this.uniqueId,
+    required this.categoryType,
+    required this.addedBy,
+    required this.shopName,
+    required this.shopCommission,
+    required this.ownerName,
+    required this.ownerSign,
+    required this.address,
+    required this.landmark,
+    required this.city,
+    required this.state,
+    required this.pin,
+    required this.latitude,
+    required this.longitude,
+    required this.ownerMobile,
+  });
 
-    int vendorId;
-    String uniqueId;
-    String categoryType;
-    int addedBy;
-    String shopName;
-    String shopCommission;
-    String ownerName;
-    String ownerSign;
-    String address;
-    String landmark;
-    String city;
-    String state;
-    String pin;
-    String latitude;
-    String longitude;
-    String ownerMobile;
+  int vendorId;
+  String uniqueId;
+  String categoryType;
+  int addedBy;
+  String shopName;
+  String shopCommission;
+  String ownerName;
+  String ownerSign;
+  String address;
+  String landmark;
+  String city;
+  String state;
+  String pin;
+  String latitude;
+  String longitude;
+  String ownerMobile;
 
-    factory AddVendorResponseData.fromJson(String str) => AddVendorResponseData.fromMap(json.decode(str));
+  factory AddVendorResponseData.fromJson(String str) =>
+      AddVendorResponseData.fromMap(json.decode(str));
 
-    String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap());
 
-    factory AddVendorResponseData.fromMap(Map<String, dynamic> json) => AddVendorResponseData(
+  factory AddVendorResponseData.fromMap(Map<String, dynamic> json) =>
+      AddVendorResponseData(
         vendorId: json["vendor_id"],
         uniqueId: json["unique_id"],
         categoryType: json["category_type"],
@@ -90,9 +96,9 @@ class AddVendorResponseData {
         latitude: json["latitude"],
         longitude: json["longitude"],
         ownerMobile: json["owner_mobile"],
-    );
+      );
 
-    Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toMap() => {
         "vendor_id": vendorId,
         "unique_id": uniqueId,
         "category_type": categoryType,
@@ -109,5 +115,5 @@ class AddVendorResponseData {
         "latitude": latitude,
         "longitude": longitude,
         "owner_mobile": ownerMobile,
-    };
+      };
 }

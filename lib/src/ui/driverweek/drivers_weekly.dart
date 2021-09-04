@@ -77,7 +77,7 @@ class _DriversWeeklyState extends State<DriversWeekly> {
                           //     onChanged: (check) => saleAmountBloc
                           //         .add(CheckBoxEvent(checked: check!))),
                           Text(
-                            "Drivers Weekly report",
+                            "Drivers Weekly Report",
                             style: GoogleFonts.openSans(
                               fontSize: 23,
                               fontWeight: FontWeight.w700,
@@ -144,7 +144,7 @@ class _DriversWeeklyState extends State<DriversWeekly> {
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: AutoSizeText(
-                                              '  ${snapshot.data!.startWeek}to${snapshot.data!.endWeek}',
+                                              '  ${snapshot.data!.startWeek} - ${snapshot.data!.endWeek}',
                                               style: GoogleFonts.openSans(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 14.0,

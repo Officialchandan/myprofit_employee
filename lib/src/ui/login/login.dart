@@ -180,7 +180,7 @@ class _LoginState extends State<Login> {
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: loginData.success == false
-                ? "Please enter valid mobile number"
+                ? loginData.message
                 : "Thanks for Login",
 
             // timeInSecForIos: 3

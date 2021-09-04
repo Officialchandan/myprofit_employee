@@ -80,7 +80,7 @@ class _DriversDayState extends State<DriversDay> {
                     //     onChanged: (check) => saleAmountBloc
                     //         .add(CheckBoxEvent(checked: check!))),
                     Text(
-                      "Drivers Day report",
+                      "Drivers Day Report",
                       style: GoogleFonts.openSans(
                         fontSize: 23,
                         fontWeight: FontWeight.w700,

@@ -7,24 +7,23 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myprofit_employee/model/get_all_state_response.dart';
 import 'package:myprofit_employee/model/getvenordbyid_response.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
+import 'package:myprofit_employee/src/ui/addvendor_form/vendor_form.dart';
 import 'package:myprofit_employee/src/ui/bottom_navigation/bottom_navigation.dart';
 import 'package:myprofit_employee/src/ui/editvendor_details/edit_vendor_detail.dart';
-import 'package:myprofit_employee/src/ui/home/home.dart';
-import 'package:myprofit_employee/src/ui/vendor_form/vendor_form.dart';
 import 'package:myprofit_employee/utils/colors.dart';
 import 'package:myprofit_employee/utils/network.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AddFootwear extends StatefulWidget {
+class AddedVendor extends StatefulWidget {
   final String title;
   final int id;
 
-  const AddFootwear({required this.title, required this.id});
+  const AddedVendor({required this.title, required this.id});
   @override
-  _AddFootwearState createState() => _AddFootwearState(this.title, this.id);
+  _AddedVendorState createState() => _AddedVendorState(this.title, this.id);
 }
 
-class _AddFootwearState extends State<AddFootwear> {
+class _AddedVendorState extends State<AddedVendor> {
   // var t = widget.title;
   var footwearListText = [
     'Shoe Fly',
@@ -34,7 +33,7 @@ class _AddFootwearState extends State<AddFootwear> {
     'Kickass Kicks'
   ];
   var datas = [];
-  _AddFootwearState(String title, int id);
+  _AddedVendorState(String title, int id);
   final PublishSubject<List<GetVendorByIdResponseData>> subject =
       PublishSubject();
 
@@ -86,10 +85,11 @@ class _AddFootwearState extends State<AddFootwear> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => BottomNavigation()));
+                builder: (BuildContext context) => BottomNavigation()),
+            (route) => false);
         return Future.value(false);
       },
       child: SafeArea(
@@ -103,11 +103,17 @@ class _AddFootwearState extends State<AddFootwear> {
                       icon: const Icon(Icons.arrow_back_ios),
                       iconSize: 20,
                       onPressed: () {
-                        Navigator.pushReplacement(
+                        Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    BottomNavigation()));
+                                    BottomNavigation()),
+                            (route) => false);
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (BuildContext context) =>
+                        //             BottomNavigation()));
                       },
                     );
                   },
@@ -246,48 +252,58 @@ class _AddFootwearState extends State<AddFootwear> {
                     //       )
                     // :
 
-                    TextFormField(
-                      controller: _searchController,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        isCollapsed: true,
-                        contentPadding: EdgeInsets.fromLTRB(10, 8, 5, 8),
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: 'Search Category',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7),
-                          borderSide: BorderSide.none,
+                    Container(
+                      height: 50,
+                      padding: EdgeInsets.only(top: 5),
+                      color: Colors.grey.shade300,
+                      child: TextFormField(
+                        controller: _searchController,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: ColorPrimary,
+                            size: 25,
+                          ),
+                          isCollapsed: true,
+                          contentPadding: EdgeInsets.fromLTRB(10, 8, 5, 8),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          hintText: 'Search Shops',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
-                      ),
-                      onChanged: (text) {
-                        List<GetVendorByIdResponseData> searchList = [];
-                        if (text.isNotEmpty) {
-                          print("searchText -->$text");
+                        onChanged: (text) {
+                          List<GetVendorByIdResponseData> searchList = [];
+                          if (text.isNotEmpty) {
+                            print("searchText -->$text");
 
-                          log("ram ${loginData.length}");
-                          for (int i = 0; i < loginData.length; i++) {
-                            if (loginData[i]
-                                .name
-                                .toLowerCase()
-                                .contains(text.toLowerCase())) {
-                              print("Container -->$text");
-                              searchList.add(loginData[i]);
-                              log("ram ${loginData[i].name}");
-                            } else {
-                              print("Container -->data not found orign");
+                            log("ram ${loginData.length}");
+                            for (int i = 0; i < loginData.length; i++) {
+                              if (loginData[i]
+                                  .name
+                                  .toLowerCase()
+                                  .contains(text.toLowerCase())) {
+                                print("Container -->$text");
+                                searchList.add(loginData[i]);
+                                log("ram ${loginData[i].name}");
+                              } else {
+                                print("Container -->data not found orign");
+                              }
                             }
-                          }
 
-                          subject.add(searchList);
-                        } else {
-                          subject.add(loginData);
-                        }
-                      },
+                            subject.add(searchList);
+                          } else {
+                            subject.add(loginData);
+                          }
+                        },
+                      ),
                     ),
 
                     Expanded(
@@ -303,6 +319,16 @@ class _AddFootwearState extends State<AddFootwear> {
                               return Center(
                                 child: Text("Data Not Found"),
                               );
+                            }
+                            if (snapshot.hasData) {
+                              if (snapshot.data!.isEmpty) {
+                                return Center(
+                                  child: Image(
+                                    image: AssetImage("images/no_search.gif"),
+                                    fit: BoxFit.contain,
+                                  ),
+                                );
+                              }
                             }
                             return ListView.builder(
                                 shrinkWrap: true,
@@ -375,6 +401,13 @@ class _AddFootwearState extends State<AddFootwear> {
                                       ),
                                     ),
                                     onTap: () {
+                                      FocusScope.of(context)
+                                          .requestFocus(new FocusNode());
+                                      FocusScopeNode currentFocus =
+                                          FocusScope.of(context);
+                                      if (!currentFocus.hasPrimaryFocus) {
+                                        currentFocus.unfocus();
+                                      }
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(

@@ -9,6 +9,8 @@
         android:networkSecurityConfig="@xml/netwrok_security"
         android:label="Employee"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyDoB3iFy_QnGJp62a65YGn9rIaixPyDDjY"/>
 
         <activity
             android:name=".MainActivity"

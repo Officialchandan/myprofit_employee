@@ -78,7 +78,7 @@ class _DhabasMonthlyState extends State<DhabasMonthly> {
                           //     onChanged: (check) => saleAmountBloc
                           //         .add(CheckBoxEvent(checked: check!))),
                           Text(
-                            "Vendors Monthly report",
+                            "Vendors Monthly Report",
                             style: GoogleFonts.openSans(
                               fontSize: 23,
                               fontWeight: FontWeight.w700,

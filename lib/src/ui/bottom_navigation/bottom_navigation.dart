@@ -123,6 +123,8 @@ class _BottomNavigationState extends State<BottomNavigation>
           // }
 
           _tabController.animateTo(0);
+        } else if (Navigator.canPop(context)) {
+          Navigator.pop(context);
         } else {
           SystemNavigator.pop();
         }

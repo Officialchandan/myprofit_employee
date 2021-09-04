@@ -58,6 +58,13 @@ dependencies:
   #siggnature pad
   syncfusion_flutter_signaturepad:
 
+#google map
+  google_maps_flutter: 
+  geolocator: 
+  place_picker:
+  flutter_polyline_points:
+  
+
 
   #image view
   cached_network_image:
