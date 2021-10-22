@@ -24,23 +24,23 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.3
-  getwidget: ^2.0.3
-  percent_indicator: ^3.0.1
-  google_fonts: ^2.1.0
+  cupertino_icons: 
+  getwidget: 
+  percent_indicator: 
+  google_fonts: 
   image_picker: ^0.8.2
-  shared_preferences: ^2.0.6
+  shared_preferences: 
   multi_select_flutter:
   rxdart:
 
   #use for toast massages
-  fluttertoast: ^8.0.7
+  fluttertoast: 
 
   #use for bloc architecture
-  bloc: ^7.0.0
-  equatable: ^2.0.3
+  bloc: 
+  equatable: 
   # use for charts
-  syncfusion_flutter_charts: ^19.2.48
+  syncfusion_flutter_charts: 
   # use for auto size of text
   auto_size_text: ^3.0.0-nullsafety.0
 
@@ -53,7 +53,7 @@ dependencies:
   path_provider:
 
   #internet connection
-  connectivity: ^3.0.6
+  connectivity: 
 
   #siggnature pad
   syncfusion_flutter_signaturepad:

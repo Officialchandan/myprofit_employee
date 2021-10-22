@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myprofit_employee/src/ui/drawer/drawer.dart';
+
 import 'package:myprofit_employee/src/ui/home/home.dart';
-import 'package:myprofit_employee/src/ui/driver_list/driver_list.dart';
+
 import 'package:myprofit_employee/src/ui/performance_tracker/performance_tracker.dart';
+import 'package:myprofit_employee/src/ui/userregister/user_register_screen.dart';
 import 'package:myprofit_employee/utils/colors.dart';
 import 'package:myprofit_employee/utils/network.dart';
 
@@ -147,7 +149,7 @@ class _BottomNavigationState extends State<BottomNavigation>
                 Home(onTab: () {
                   _scaffoldkey.currentState!.openDrawer();
                 }),
-                DriverList(onTab: () {
+                UserRegister(onTab: () {
                   _scaffoldkey.currentState!.openDrawer();
                 }),
                 PerformanceTracker(onTab: () {

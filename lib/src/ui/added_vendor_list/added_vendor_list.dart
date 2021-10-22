@@ -109,11 +109,6 @@ class _AddedVendorState extends State<AddedVendor> {
                                 builder: (BuildContext context) =>
                                     BottomNavigation()),
                             (route) => false);
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (BuildContext context) =>
-                        //             BottomNavigation()));
                       },
                     );
                   },

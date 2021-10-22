@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp> {
         scaffoldBackgroundColor: Colors.white,
         primarySwatch: themeColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: GoogleFonts.openSans().fontFamily,
+        fontFamily: GoogleFonts.roboto().fontFamily,
         // fontFamily: TextStyle().fontFamily,
         appBarTheme: AppBarTheme(
           brightness: Brightness.dark,

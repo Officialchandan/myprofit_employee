@@ -44,7 +44,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       _marker.add(Marker(
           markerId: MarkerId('id-1'),
           position: LatLng(latitude, longitude),
-          infoWindow: InfoWindow(title: "house of titans")));
+          infoWindow: InfoWindow(title: "")));
       CameraPosition(target: LatLng(latitude, longitude), zoom: 20);
     });
   }

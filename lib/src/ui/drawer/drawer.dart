@@ -137,6 +137,29 @@ class _AppDrawerState extends State<AppDrawer> {
                   leading: Container(
                       width: 20,
                       child: Image.asset('images/s2.png', width: 20)),
+                  title: Text("Area Alotted",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Scripts()),
+                    );
+                  },
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(width: 0.7, color: Color(0xffcdcdcd))),
+                ),
+                child: ListTile(
+                  leading: Container(
+                      width: 20,
+                      child: Image.asset('images/s2.png', width: 20)),
                   title: Text("Script",
                       style: TextStyle(
                           color: Colors.black,

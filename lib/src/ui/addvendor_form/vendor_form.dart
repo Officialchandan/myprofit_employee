@@ -82,9 +82,7 @@ class _VendorFormState extends State<VendorForm> {
 
   String searchText = "";
   bool searching = false;
-  TextEditingController _searchController = TextEditingController();
-  final PublishSubject<List<GetAllStateResponseData>> subject =
-      PublishSubject();
+
   List<GetAllStateResponseData> loginData = [];
   GlobalKey<SfSignaturePadState> _signaturePadKey = GlobalKey();
   var devicewidth, deviceheight;
@@ -112,10 +110,8 @@ class _VendorFormState extends State<VendorForm> {
 
   TextEditingController _state = TextEditingController();
   TextEditingController edtSearch = TextEditingController();
-  StreamController<bool> editController = StreamController();
-  StreamController<List<GetAllCityByStateResponse>> controller =
-      StreamController();
-  List<GetAllCityByStateResponse> cityList = [];
+
+  List<GetAllCityByStateResponseData> cityList = [];
 
   List<SubCat> subcatlist = [];
 //api calling
@@ -617,7 +613,7 @@ class _VendorFormState extends State<VendorForm> {
 
   //select-category
   var placeholderText = "Select other categories";
-  var cityid;
+  String cityid = "";
   var stateid;
   String arr = "";
   String comiisionarray = "";
@@ -985,11 +981,11 @@ class _VendorFormState extends State<VendorForm> {
                           builder: (context) {
                             return IntrinsicHeight(
                               child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.60,
                                 padding: EdgeInsets.only(top: 20, bottom: 0),
                                 child: Column(children: [
-                                  Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.45,
+                                  Expanded(
                                     child: ListView.separated(
                                         separatorBuilder: (context, index) =>
                                             Divider(
@@ -1072,7 +1068,7 @@ class _VendorFormState extends State<VendorForm> {
                       onTap: () {
                         log("${citydata.length}");
                         if (citydata.length > 0) {
-                          _showModal(context);
+                          _showModal(context, citydata);
                         } else {
                           Fluttertoast.showToast(
                               msg: "Select State from above list",
@@ -1297,7 +1293,7 @@ class _VendorFormState extends State<VendorForm> {
                     // Text('Photo of the place where MyProfit board is to be placed',
                     //     style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     // SizedBox(height: 10),
-                    // InkWell(
+                    // InkWell(Fselect
                     //   child: ClipRRect(
                     //     borderRadius: BorderRadius.circular(10),
                     //     child: myProfitBoardImage != null
@@ -1520,94 +1516,38 @@ class _VendorFormState extends State<VendorForm> {
     );
   }
 
-  void _showModal(context) {
+  void _showModal(context, List<GetAllCityByStateResponseData> citydata) {
     showModalBottomSheet(
-      //isScrollControlled: true,
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
       ),
       context: context,
       builder: (context) {
-        return IntrinsicHeight(
-          child: Container(
-            padding: EdgeInsets.only(top: 20, bottom: 0),
-            child: Column(children: [
-              TextFormField(
-                controller: edtSearch,
-                autofocus: false,
-                decoration: InputDecoration(
-                  hintText: "Search your City...",
-                ),
-                onChanged: (text) {
-                  setState(() {
-                   // cityList = _buildSearchList(value);
-                  });
-                  // if (text.isNotEmpty) {
-                  //   List<GetAllCityByStateResponse>
-                  //       searchList = [];
-
-                  //   cityList.forEach((element) {
-                  //     if (element.data!.contains(
-                  //         text.trim().toLowerCase())) {
-                  //       searchList.add(element);
-                  //     }
-                  //   });
-                  //   controller.add(searchList);
-                  //   editController.add(true);
-                  // } else {
-                  //   controller.add(cityList);
-                  //   editController.add(false);
-                  // }
-                },
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.39,
-                child: ListView.separated(
-                    separatorBuilder: (context, index) => Divider(
-                          color: Colors.black,
-                        ),
-                    itemCount: citydata.length,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            /// getCityId(stateData[index].id);
-                            _city.text = citydata[index].name;
-                            cityid = citydata[index].id.toString();
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                              height: 30,
-                              child: Text("${citydata[index].name}")),
-                        ),
-                      );
-                    }),
-              ),
-              Container(
-                child: MaterialButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    edtSearch.clear();
-                    cityList.clear();
-                  },
-                  height: 50,
-                  elevation: 5,
-                  child: Text(
-                    "Cancel",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              )
-            ]),
-          ),
+        return CityBottomSheet(
+          citydata: citydata,
+          onSelect: (GetAllCityByStateResponseData city) {
+            _city.text = city.name;
+            cityid = city.id.toString();
+          },
         );
       },
     );
   }
+
+  // List<GetAllCityByStateResponseData> _buildSearchList(String userSearchTerm) {
+  //   List<GetAllCityByStateResponseData> _searchList = [];
+
+  //   for (int i = 0; i < citydata.length; i++) {
+  //     String name = citydata[i].name;
+  //     if (name.toLowerCase().contains(userSearchTerm.toLowerCase())) {
+  //       _searchList.add(citydata[i]);
+  //     } else {
+  //       Text("ju");
+  //     }
+  //   }
+  //   return _searchList;
+  // }
 
 //192.168.10.62
   //image-picker
@@ -1782,5 +1722,114 @@ class _SignPadState extends State<SignPad> {
           //   // key: ,
           // ),
         ]));
+  }
+}
+
+class CityBottomSheet extends StatefulWidget {
+  final List<GetAllCityByStateResponseData> citydata;
+  final Function(GetAllCityByStateResponseData city) onSelect;
+  CityBottomSheet({required this.citydata, required this.onSelect, Key? key})
+      : super(key: key);
+
+  @override
+  _CityBottomSheetState createState() => _CityBottomSheetState();
+}
+
+class _CityBottomSheetState extends State<CityBottomSheet> {
+  List<GetAllCityByStateResponseData> citydata = [];
+  TextEditingController edtSearch = TextEditingController();
+  StreamController<List<GetAllCityByStateResponseData>> subject =
+      StreamController();
+  @override
+  void dispose() {
+    super.dispose();
+    subject.close();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this.citydata = widget.citydata;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IntrinsicHeight(
+      child: Container(
+        padding: EdgeInsets.only(top: 20, bottom: 0),
+        height: MediaQuery.of(context).size.height * 0.60,
+        child: Column(children: [
+          TextFormField(
+            controller: edtSearch,
+            autofocus: false,
+            decoration: InputDecoration(
+              hintText: "Search your City...",
+            ),
+            onChanged: (text) {
+              if (text.isNotEmpty) {
+                List<GetAllCityByStateResponseData> searchList = [];
+
+                citydata.forEach((element) {
+                  if (element.name.contains(text.trim().toLowerCase())) {
+                    searchList.add(element);
+                  }
+                });
+                subject.add(searchList);
+              } else {
+                subject.add(citydata);
+              }
+            },
+          ),
+          Container(
+              height: MediaQuery.of(context).size.height * 0.40,
+              child: StreamBuilder<List<GetAllCityByStateResponseData>>(
+                  stream: subject.stream,
+                  initialData: citydata,
+                  builder: (context, snap) {
+                    if (snap.hasData && snap.data!.length > 0) {
+                      return ListView.separated(
+                          separatorBuilder: (context, index) => Divider(
+                                color: Colors.black,
+                              ),
+                          itemCount: snap.data!.length,
+                          itemBuilder: (BuildContext ctxt, int index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  widget.onSelect(snap.data![index]);
+
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                    height: 30,
+                                    child: Text("${snap.data![index].name}")),
+                              ),
+                            );
+                          });
+                    }
+
+                    return Container();
+                  })),
+          Container(
+            child: MaterialButton(
+              onPressed: () {
+                edtSearch.clear();
+                Navigator.pop(context);
+              },
+              height: 50,
+              elevation: 5,
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          )
+        ]),
+      ),
+    );
   }
 }

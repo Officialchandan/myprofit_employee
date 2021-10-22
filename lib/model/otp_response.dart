@@ -24,7 +24,9 @@ class OtpVerificationResponse {
       OtpVerificationResponse(
         success: json["success"],
         message: json["message"],
-        data: OtpVerificationResponseData.fromMap(json["data"]),
+        data: json["data"] == null
+            ? null
+            : OtpVerificationResponseData.fromMap(json["data"]),
       );
 
   Map<String, dynamic> toMap() => {
@@ -36,12 +38,12 @@ class OtpVerificationResponse {
 
 class OtpVerificationResponseData {
   OtpVerificationResponseData({
-    required this.vendorId,
+    required this.emp_id,
     required this.token,
     required this.tokenType,
   });
 
-  int vendorId;
+  int emp_id;
   String token;
   String tokenType;
 
@@ -52,13 +54,13 @@ class OtpVerificationResponseData {
 
   factory OtpVerificationResponseData.fromMap(Map<String, dynamic> json) =>
       OtpVerificationResponseData(
-        vendorId: json["vendor_id"],
+        emp_id: json["emp_id"] ,
         token: json["token"],
         tokenType: json["token_type"],
       );
 
   Map<String, dynamic> toMap() => {
-        "vendor_id": vendorId,
+        "emp_id": emp_id,
         "token": token,
         "token_type": tokenType,
       };

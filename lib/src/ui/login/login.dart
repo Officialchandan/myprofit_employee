@@ -214,7 +214,7 @@ class _LoginState extends State<Login> {
           SharedPref.setStringPreference(
               SharedPref.TOKEN, loginData.data!.token);
           SharedPref.setStringPreference(
-              SharedPref.VENDORID, loginData.data!.vendorId.toString());
+              SharedPref.VENDORID, loginData.data!.emp_id.toString());
           print("fffff");
           print(await SharedPref.getBooleanPreference(SharedPref.LOGIN));
 
