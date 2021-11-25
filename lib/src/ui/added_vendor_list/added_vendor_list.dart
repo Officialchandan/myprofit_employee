@@ -49,6 +49,7 @@ class _AddedVendorState extends State<AddedVendor> {
   @override
   void initState() {
     super.initState();
+    log("====>${widget.id}");
     getVendorId(widget.id);
   }
 

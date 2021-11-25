@@ -24,8 +24,10 @@ class GetVendorByIdResponse {
       GetVendorByIdResponse(
         success: json["success"],
         message: json["message"],
-        data: List<GetVendorByIdResponseData>.from(
-            json["data"].map((x) => GetVendorByIdResponseData.fromMap(x))),
+        data: json["data"] == null
+            ? []
+            : List<GetVendorByIdResponseData>.from(
+                json["data"].map((x) => GetVendorByIdResponseData.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {

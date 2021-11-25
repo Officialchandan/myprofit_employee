@@ -15,6 +15,7 @@ import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_fiel
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:myprofit_employee/model/add_chat_papdi.dart';
 import 'package:myprofit_employee/model/get_all_state_response.dart';
 import 'package:myprofit_employee/model/getcity_by_state_response.dart';
 import 'package:myprofit_employee/src/ui/added_vendor_list/added_vendor_list.dart';
@@ -114,6 +115,124 @@ class _VendorFormState extends State<VendorForm> {
   List<GetAllCityByStateResponseData> cityList = [];
 
   List<SubCat> subcatlist = [];
+  //api calling
+  addChatPapdi() async {
+    if (await Network.isConnected()) {
+      SystemChannels.textInput.invokeMethod("TextInput.hide");
+
+      if (_shopname.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Shop Name");
+      } else if (_comission.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Comission");
+      } else if (_ownername.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Owner Name");
+      } else if (_mobile.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Owner Mobile Number");
+      } else if (_mobile.text.length != 10) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Valid Mobile Number");
+      } else if (_address.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Shop Address");
+      } else if (lat == null) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Select Locator from map in Address Textfeild ");
+      } else if (_pincode.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Pincode");
+      } else if (_pincode.text.length != 6) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Valid Pincode");
+      } else if (_state.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Select Shop State");
+      } else if (_city.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Select Shop City");
+      } else if (valuesecond == false) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Select Term and Condition");
+      } else if (imageData == null) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please do Signature in Terms and Condition");
+      } else {
+        final ChatPapdiResponse loginData = await ApiProvider().addChatPapdi(
+            0,
+            _shopname.text,
+            _ownername.text,
+            _comission.text,
+            _mobile.text,
+            _address.text,
+            _landmark.text,
+            cityid,
+            stateid,
+            _pincode.text,
+            lat,
+            lng,
+            data);
+        log("ooooo ${loginData}");
+        log("ooooo ${comiisionarray}");
+        log("ooooo ${arr}");
+        if (loginData.success == true) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AddedVendor(title: widget.title!, id: widget.id!)),
+              (Route<dynamic> route) => false);
+          Fluttertoast.showToast(
+              backgroundColor: ColorPrimary,
+              textColor: Colors.white,
+              msg: "Added Sucsessfully");
+        } else {
+          Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: loginData.success == false
+                ? loginData.message
+                : "Thanks for login ",
+            // timeInSecForIos: 3
+          );
+        }
+      }
+    } else {
+      Fluttertoast.showToast(
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on the internet");
+    }
+  }
+
 //api calling
   addVendors() async {
     if (await Network.isConnected()) {
@@ -1097,17 +1216,29 @@ class _VendorFormState extends State<VendorForm> {
                     ),
 
                     SizedBox(height: 15),
-                    AutoSizeText(
-                      'Other Categories (If exists)',
-                      style: TextStyle(
-                          color: Color.fromRGBO(48, 48, 48, 1),
-                          fontWeight: FontWeight.w600),
-                      maxFontSize: 15,
-                      minFontSize: 10,
-                    ),
-                    SizedBox(height: 10),
+                    widget.id == 0
+                        ? Container(
+                            height: 0,
+                          )
+                        : AutoSizeText(
+                            'Other Categories (If exists)',
+                            style: TextStyle(
+                                color: Color.fromRGBO(48, 48, 48, 1),
+                                fontWeight: FontWeight.w600),
+                            maxFontSize: 15,
+                            minFontSize: 10,
+                          ),
+                    widget.id == 0
+                        ? Container(
+                            height: 0,
+                          )
+                        : SizedBox(height: 10),
 
-                    SizedBox(height: 15),
+                    widget.id == 0
+                        ? Container(
+                            height: 0,
+                          )
+                        : SizedBox(height: 15),
 
                     // GestureDetector(
                     //   onTap: () {
@@ -1117,143 +1248,156 @@ class _VendorFormState extends State<VendorForm> {
                     //     }
                     //   },
                     //   child:
-                    Container(
-                      child: result == null
-                          ? Center(child: CircularProgressIndicator())
-                          :
-                          // GestureDetector(
-                          //     onTap: () {
-                          //       FocusScopeNode currentFocus =
-                          //           FocusScope.of(context);
-                          //       if (!currentFocus.hasPrimaryFocus) {
-                          //         currentFocus.unfocus();
-                          //       }
-                          //     },
-                          //     child:
-                          Container(
-                              // width: devicewidth - 30,
-                              child: MultiSelectDialogField<
-                                  CategoriesResponseData?>(
-                                buttonIcon: Icon(Icons.keyboard_arrow_down,
-                                    color: ColorPrimary),
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(242, 242, 242, 1),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                    widget.id == 0
+                        ? Container(
+                            height: 0,
+                          )
+                        : Container(
+                            child: result == null
+                                ? Center(child: CircularProgressIndicator())
+                                :
+                                // GestureDetector(
+                                //     onTap: () {
+                                //       FocusScopeNode currentFocus =
+                                //           FocusScope.of(context);
+                                //       if (!currentFocus.hasPrimaryFocus) {
+                                //         currentFocus.unfocus();
+                                //       }
+                                //     },
+                                //     child:
+                                Container(
+                                    // width: devicewidth - 30,
+                                    child: MultiSelectDialogField<
+                                        CategoriesResponseData?>(
+                                      buttonIcon: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: ColorPrimary),
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(242, 242, 242, 1),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
 
-                                key: _multiSelectKey,
-                                // initialChildSize: 0.7,
-                                // maxChildSize: 0.95,
-                                title: GestureDetector(
-                                  onTap: () {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text('Other categories',
-                                      style: TextStyle(
+                                      key: _multiSelectKey,
+                                      // initialChildSize: 0.7,
+                                      // maxChildSize: 0.95,
+                                      title: GestureDetector(
+                                        onTap: () {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('Other categories',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600)),
+                                      ),
+                                      buttonText: Text(placeholderText,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color:
+                                                  Color.fromRGBO(85, 85, 85, 1),
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600)),
+                                      searchTextStyle: TextStyle(
                                           color: Colors.black,
                                           fontSize: 14,
-                                          fontWeight: FontWeight.w600)),
-                                ),
-                                buttonText: Text(placeholderText,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(85, 85, 85, 1),
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600)),
-                                searchTextStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600),
-                                cancelText: Text('Cancel',
-                                    style: TextStyle(
-                                        color: Color(0xff6657f4),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600)),
-                                confirmText: Text('Ok',
-                                    style: TextStyle(
-                                        color: Color(0xff6657f4),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600)),
-                                items: result!.data!
-                                    .map((category) =>
-                                        MultiSelectItem<CategoriesResponseData>(
-                                            category, category.categoryName))
-                                    .toList(),
-                                searchable: true,
-                                initialValue:
-                                    subcatlist.map((e) => e.subCat).toList(),
+                                          fontWeight: FontWeight.w600),
+                                      cancelText: Text('Cancel',
+                                          style: TextStyle(
+                                              color: Color(0xff6657f4),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600)),
+                                      confirmText: Text('Ok',
+                                          style: TextStyle(
+                                              color: Color(0xff6657f4),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600)),
+                                      items: result!.data!
+                                          .map((category) => MultiSelectItem<
+                                                  CategoriesResponseData>(
+                                              category, category.categoryName))
+                                          .toList(),
+                                      searchable: true,
+                                      initialValue: subcatlist
+                                          .map((e) => e.subCat)
+                                          .toList(),
 
-                                validator: (values) {
-                                  if (values == null || values.isEmpty) {
-                                    return "";
-                                  }
-                                  List<String> names = values
-                                      .map((e) => e!.categoryName)
-                                      .toList();
-
-                                  if (names.contains("Frog")) {
-                                    return "Frogs are weird!";
-                                  }
-                                  return null;
-                                },
-                                onConfirm: (values) {
-                                  // SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                  // SystemChannels.textInput
-                                  //     .invokeMethod('TextInput.hide');
-                                  FocusScopeNode currentFocus =
-                                      FocusScope.of(context);
-                                  if (!currentFocus.hasPrimaryFocus) {
-                                    currentFocus.unfocus();
-                                  }
-                                  setState(() {
-                                    _selectedCategory3 = values;
-                                    placeholderText = "";
-                                    subcatlist.clear();
-                                    if (values.length == 0) {
-                                      placeholderText =
-                                          "Please select category";
-                                    } else {
-                                      for (int i = 0; i < values.length; i++) {
-                                        if (i == values.length - 1) {
-                                          placeholderText =
-                                              "Please select category";
-                                          arr = arr + values[i]!.id.toString();
-                                        } else {
-                                          // placeholderText = placeholderText +
-                                          //     values[i]!.categoryName +
-                                          //     ", ";
-                                          arr = arr +
-                                              (values[i]!.id.toString()) +
-                                              ",";
+                                      validator: (values) {
+                                        if (values == null || values.isEmpty) {
+                                          return "";
                                         }
-                                        subcatlist.add(SubCat(values[i]!));
-                                      }
-                                    }
-                                  });
-                                  _multiSelectKey.currentState!.validate();
-                                },
-                                chipDisplay: MultiSelectChipDisplay(
-                                  onTap: (item) {
-                                    FocusScopeNode currentFocus =
-                                        FocusScope.of(context);
-                                    if (!currentFocus.hasPrimaryFocus) {
-                                      currentFocus.unfocus();
-                                    }
-                                    setState(() {
-                                      _selectedCategory3.remove(item);
-                                      log("dddd ${item}");
-                                    });
-                                    _multiSelectKey.currentState!.validate();
-                                  },
-                                )..disabled = true,
-                                //  );
-                                // }
-                              ),
-                            ),
-                      //),
-                    ),
+                                        List<String> names = values
+                                            .map((e) => e!.categoryName)
+                                            .toList();
+
+                                        if (names.contains("Frog")) {
+                                          return "Frogs are weird!";
+                                        }
+                                        return null;
+                                      },
+                                      onConfirm: (values) {
+                                        // SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                        // SystemChannels.textInput
+                                        //     .invokeMethod('TextInput.hide');
+                                        FocusScopeNode currentFocus =
+                                            FocusScope.of(context);
+                                        if (!currentFocus.hasPrimaryFocus) {
+                                          currentFocus.unfocus();
+                                        }
+                                        setState(() {
+                                          _selectedCategory3 = values;
+                                          placeholderText = "";
+                                          subcatlist.clear();
+                                          if (values.length == 0) {
+                                            placeholderText =
+                                                "Please select category";
+                                          } else {
+                                            for (int i = 0;
+                                                i < values.length;
+                                                i++) {
+                                              if (i == values.length - 1) {
+                                                placeholderText =
+                                                    "Please select category";
+                                                arr = arr +
+                                                    values[i]!.id.toString();
+                                              } else {
+                                                // placeholderText = placeholderText +
+                                                //     values[i]!.categoryName +
+                                                //     ", ";
+                                                arr = arr +
+                                                    (values[i]!.id.toString()) +
+                                                    ",";
+                                              }
+                                              subcatlist
+                                                  .add(SubCat(values[i]!));
+                                            }
+                                          }
+                                        });
+                                        _multiSelectKey.currentState!
+                                            .validate();
+                                      },
+                                      chipDisplay: MultiSelectChipDisplay(
+                                        onTap: (item) {
+                                          FocusScopeNode currentFocus =
+                                              FocusScope.of(context);
+                                          if (!currentFocus.hasPrimaryFocus) {
+                                            currentFocus.unfocus();
+                                          }
+                                          setState(() {
+                                            _selectedCategory3.remove(item);
+                                            log("dddd ${item}");
+                                          });
+                                          _multiSelectKey.currentState!
+                                              .validate();
+                                        },
+                                      )..disabled = true,
+                                      //  );
+                                      // }
+                                    ),
+                                  ),
+                            //),
+                          ),
                     //),
                     Column(
                         children: List.generate(subcatlist.length, (index) {
@@ -1494,7 +1638,11 @@ class _VendorFormState extends State<VendorForm> {
                             log("kai kai---->");
 
                             log("${imageData.toString()}");
-                            addVendors();
+                            if (widget.id == 0) {
+                              addChatPapdi();
+                            } else {
+                              addVendors();
+                            }
                           },
                           child: Text(
                             "SUBMIT",

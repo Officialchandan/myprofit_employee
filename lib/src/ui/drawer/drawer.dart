@@ -4,10 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myprofit_employee/model/logout_response.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
+
 import 'package:myprofit_employee/src/ui/bottom_navigation/bottom_navigation.dart';
-import 'package:myprofit_employee/src/ui/changelanguage/change_language.dart';
+
 import 'package:flutter/material.dart';
-import 'package:myprofit_employee/src/ui/home/home.dart';
+
 import 'package:myprofit_employee/src/ui/scripts/scripts.dart';
 import 'package:myprofit_employee/src/ui/company_information/company_information.dart';
 import 'package:myprofit_employee/src/ui/login/login.dart';
@@ -128,29 +129,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   },
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(width: 0.7, color: Color(0xffcdcdcd))),
-                ),
-                child: ListTile(
-                  leading: Container(
-                      width: 20,
-                      child: Image.asset('images/s2.png', width: 20)),
-                  title: Text("Area Alotted",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600)),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Scripts()),
-                    );
-                  },
-                ),
-              ),
+
               Container(
                 decoration: BoxDecoration(
                   border: Border(

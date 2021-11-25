@@ -2,13 +2,18 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myprofit_employee/model/user_not_intrested.dart';
+import 'package:myprofit_employee/provider/api_provider.dart';
+import 'package:myprofit_employee/src/ui/bottom_navigation/bottom_navigation.dart';
+import 'package:myprofit_employee/src/ui/userregister/user_register_screen.dart';
 import 'package:myprofit_employee/utils/colors.dart';
+import 'package:myprofit_employee/utils/network.dart';
 import 'package:myprofit_employee/utils/validator.dart';
 
 class UserNotInterested extends StatefulWidget {
-  UserNotInterested({
-    Key? key,
-  }) : super(key: key);
+  final String? location;
+  UserNotInterested({Key? key, this.location}) : super(key: key);
 
   @override
   _UserNotInterestedState createState() => _UserNotInterestedState();
@@ -19,6 +24,51 @@ class _UserNotInterestedState extends State<UserNotInterested> {
 
   TextEditingController _address = TextEditingController();
   TextEditingController _reason = TextEditingController();
+
+  addUser() async {
+    if (await Network.isConnected()) {
+      SystemChannels.textInput.invokeMethod("TextInput.hide");
+
+      if (_name.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter User Name");
+      } else if (_address.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter User Address");
+      } else {
+        final UserNotIntrestedResponse loginData = await ApiProvider()
+            .getUnIntrestedUser(
+                widget.location, _name.text, _address.text, _reason.text);
+
+        log("ooooo ${loginData}");
+        if (loginData.success) {
+          Fluttertoast.showToast(
+              backgroundColor: ColorPrimary,
+              textColor: Colors.white,
+              msg: loginData.message);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => BottomNavigation()),
+              (Route<dynamic> route) => false);
+        } else {
+          Fluttertoast.showToast(
+              backgroundColor: ColorPrimary,
+              textColor: Colors.white,
+              msg: loginData.message);
+        }
+      }
+    } else {
+      Fluttertoast.showToast(
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on the internet");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -155,7 +205,8 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         onPressed: () {
-                          log("kai kai---->");
+                          log("kai kai----> ${widget.location}");
+                          addUser();
                         },
                         child: Text(
                           "SUBMIT",

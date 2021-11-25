@@ -349,8 +349,13 @@ class _HomeState extends State<Home> {
                     //int id;
                     if (_tap == true) {
                       _tap = false;
-                      getVendorId(
-                          category[index].id, category[index].categoryName);
+                      if (category[index].id == 12) {
+                        getVendorId(
+                            category[index].id, category[index].categoryName);
+                      } else {
+                        getVendorId(
+                            category[index].id, category[index].categoryName);
+                      }
                     }
                   },
                   child: Text(

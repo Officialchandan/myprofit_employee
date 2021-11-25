@@ -136,7 +136,7 @@ class _LoginState extends State<Login> {
                       //         MaterialPageRoute(
                       //             builder: (context) => RegistrationScreen()),
                       //         (Route<dynamic> route) => false)
-                      //     : loginApiCall(
+                      //     : lSharedoginApiCall(
                       //         mobileController.text, _textFieldController.text);
                     },
                     child: new Text(

@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myprofit_employee/model/get_location_response.dart';
+import 'package:myprofit_employee/provider/api_provider.dart';
 import 'package:myprofit_employee/src/ui/drawer/drawer.dart';
 
 import 'package:myprofit_employee/src/ui/home/home.dart';
@@ -11,6 +13,7 @@ import 'package:myprofit_employee/src/ui/performance_tracker/performance_tracker
 import 'package:myprofit_employee/src/ui/userregister/user_register_screen.dart';
 import 'package:myprofit_employee/utils/colors.dart';
 import 'package:myprofit_employee/utils/network.dart';
+import 'package:myprofit_employee/utils/sharedpref.dart';
 
 class BottomNavigation extends StatefulWidget {
   @override
@@ -27,12 +30,29 @@ class _BottomNavigationState extends State<BottomNavigation>
   late TabController _tabController;
   //  _TabContainerState(page);
   int selectedTab = 0;
+  OnSelectListener? listener;
+
+  GetAlotedAreaResponse? res;
+  var success;
+
+  getArea() async {
+    res = await ApiProvider().getAlotedArea();
+
+    success = res!.success;
+    log("====>${await SharedPref.setIntegerPreference(SharedPref.LOCATION, res!.data![0].id)}");
+    log("====>${await SharedPref.getIntegerPreference(SharedPref.LOCATION)}");
+    await SharedPref.setIntegerPreference(
+        SharedPref.LOCATION, res!.data![0].id);
+
+    setState(() {});
+  }
 
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
     _tabController.addListener(_onTab);
     super.initState();
+    getArea();
   }
 
   _onTab() {
@@ -149,8 +169,8 @@ class _BottomNavigationState extends State<BottomNavigation>
                 Home(onTab: () {
                   _scaffoldkey.currentState!.openDrawer();
                 }),
-                UserRegister(onTab: () {
-                  _scaffoldkey.currentState!.openDrawer();
+                UserRegister(onTab: (OnSelectListener listener) {
+                  this.listener = listener;
                 }),
                 PerformanceTracker(onTab: () {
                   _scaffoldkey.currentState!.openDrawer();
@@ -166,6 +186,11 @@ class _BottomNavigationState extends State<BottomNavigation>
                   BorderSide(width: 3, color: Color.fromRGBO(102, 87, 244, 1)),
               insets: EdgeInsets.fromLTRB(30, 0, 30, 70),
             ),
+            onTap: (index) {
+              if (index == 1) {
+                show();
+              }
+            },
             labelColor: Color.fromRGBO(102, 87, 244, 1),
             labelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             unselectedLabelColor: Color.fromRGBO(128, 128, 128, 1),
@@ -211,5 +236,91 @@ class _BottomNavigationState extends State<BottomNavigation>
         ),
       ),
     );
+  }
+
+  show() {
+    showModalBottomSheet(
+        isDismissible: false,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+              padding: EdgeInsets.only(top: 10),
+              height: 250,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              child: Column(children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                        height: 30,
+                        width: 30,
+                        child: Image.asset("images/category1.png")),
+                    Text(
+                      "   Select Area",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                success == true && res != null
+                    ? Expanded(
+                        child: ListView.builder(
+                            itemCount: res!.data!.length,
+                            itemBuilder: (context, index) {
+                              return Column(children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(
+                                        context, res!.data![index].id);
+                                    // Navigator.pushAndRemoveUntil(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) => UserRegister(
+                                    //               onTab: () {},
+                                    //               location:
+                                    //                   (res!.data![index].id)
+                                    //                       .toString(),
+                                    //             )),
+                                    //     (Route<dynamic> route) => false);
+                                  },
+                                  child: ListTile(
+                                    title: Text(
+                                      "${res!.data![index].locationName}",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                Divider(
+                                  thickness: 1,
+                                )
+                              ]);
+                            }),
+                      )
+                    : res != null
+                        ? Center(
+                            child: Text("Data Not Found"),
+                          )
+                        : Center(child: CircularProgressIndicator()),
+              ]));
+        }).then((value) {
+      if (value != null && listener != null) {
+        listener!.onAreaSelect(value.toString());
+      } else {
+        _tabController.animateTo(0);
+      }
+    });
   }
 }
