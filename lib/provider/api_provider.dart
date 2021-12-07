@@ -15,6 +15,7 @@ import 'package:myprofit_employee/model/drivers_day_response.dart';
 import 'package:myprofit_employee/model/drivers_monthly_response.dart';
 import 'package:myprofit_employee/model/drivers_week_response.dart';
 import 'package:myprofit_employee/model/get_all_state_response.dart';
+import 'package:myprofit_employee/model/get_employee_tracket.dart';
 import 'package:myprofit_employee/model/get_location_response.dart';
 import 'package:myprofit_employee/model/getcity_by_state_response.dart';
 import 'package:myprofit_employee/model/getvenordbyid_response.dart';
@@ -475,7 +476,7 @@ class ApiProvider {
   }
 
   Future<AddIntrestedUserResponse> getIntrestedUser(
-      location_id, name, mobile, email, address, phone) async {
+      location_id, name, mobile, email, address, phone, gift) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${SharedPref.getStringPreference(SharedPref.VENDORID)}");
@@ -494,7 +495,8 @@ class ApiProvider {
             "mobile": mobile,
             "email": email,
             "address": address,
-            "is_smartphone": phone
+            "is_smartphone": phone,
+            "is_gift_given": gift,
           }),
           options: Options(
             headers: {"Authorization": "Bearer $token"},
@@ -669,5 +671,32 @@ class ApiProvider {
       print("Exception occurred: $message stackTrace: $error");
       return ChatPapdiResponse(success: false, message: message);
     }
+  }
+
+  Future<GetEmployeTrackerResponse> getEmployeTracker() async {
+    log("chl gyi 2}");
+    print(await SharedPref.getStringPreference('token'));
+    var token = await SharedPref.getStringPreference('token');
+    //try {
+    Response res = await dio.get(
+      '$baseUrl/getEmployeeTracker',
+      options: Options(headers: {"Authorization": "Bearer ${token}"}),
+    );
+    log("d");
+    log("${res}");
+
+    return GetEmployeTrackerResponse.fromJson(res.toString());
+    // } catch (error, stacktrace) {
+    //   log("chl gyi 2}");
+    //   String message = "";
+    //   if (error is DioError) {
+    //     ServerError e = ServerError.withError(error: error);
+    //     message = e.getErrorMessage();
+    //   } else {
+    //     message = "Something Went wrong";
+    //   }
+    //   print("Exception occurred: $message stackTrace: $stacktrace");
+    //   return GetEmployeTrackerResponse(success: false, message: message);
+    // }
   }
 }

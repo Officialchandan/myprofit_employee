@@ -68,6 +68,10 @@ dependencies:
 
   #image view
   cached_network_image:
+
+
+  #day picker
+  day_picker: 2.1.0
 dev_dependencies: 
   flutter_test:
     sdk: flutter

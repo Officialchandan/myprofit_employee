@@ -329,73 +329,89 @@ class _AddedVendorState extends State<AddedVendor> {
                             return ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: snapshot.data!.length,
+                                padding: EdgeInsets.only(top: 6),
                                 itemBuilder: (BuildContext context, int index) {
                                   return GestureDetector(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                          bottom: 10,
-                                          top: 10,
-                                          left: 10,
-                                          right: 10),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.grey.shade400,
-                                              blurRadius: 4,
-                                              spreadRadius: 2,
-                                              offset: Offset(2, 2)),
-                                        ],
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(15)),
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(snapshot.data![index].name,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600)),
-                                              SizedBox(height: 5),
-                                              Text(
-                                                  '+91 ${snapshot.data![index].ownerMobile}',
-                                                  style: TextStyle(
-                                                      color: Color(0xff555555),
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600)),
-                                              SizedBox(height: 5),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Image.asset(
-                                                      'images/g-pin.png',
-                                                      width: 13),
-                                                  Text(
-                                                      ' ${snapshot.data![index].address}',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Color(0xff555555),
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w600)),
-                                                ],
+                                    child: Column(children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            //  bottom: 5,
+                                            // top: 5,
+                                            //     left: 10,
+                                            //     right: 10
+                                            ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.transparent,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15)),
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: Image.network(
+                                                "${snapshot.data![index].vendorImage}",
+                                                width: 65,
+                                                height: 65,
+                                                fit: BoxFit.cover,
                                               ),
-                                            ],
-                                          ),
-                                        ],
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(snapshot.data![index].name,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600)),
+                                                SizedBox(height: 5),
+                                                Text(
+                                                    '+91 ${snapshot.data![index].ownerMobile}',
+                                                    style: TextStyle(
+                                                        color:
+                                                            Color(0xff555555),
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w600)),
+                                                SizedBox(height: 5),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Image.asset(
+                                                        'images/g-pin.png',
+                                                        width: 13),
+                                                    Text(
+                                                        ' ${snapshot.data![index].address}',
+                                                        style: TextStyle(
+                                                            color: Color(
+                                                                0xff555555),
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600)),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                                      Divider(
+                                        thickness: 1,
+                                        color: Colors.grey.shade300,
+                                      )
+                                    ]),
                                     onTap: () {
                                       FocusScope.of(context)
                                           .requestFocus(new FocusNode());

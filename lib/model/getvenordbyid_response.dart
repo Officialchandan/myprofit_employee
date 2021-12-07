@@ -55,6 +55,7 @@ class GetVendorByIdResponseData {
     required this.ownerSign,
     required this.cityName,
     required this.stateName,
+    required this.vendorImage,
     required this.subCategory,
   });
 
@@ -74,6 +75,7 @@ class GetVendorByIdResponseData {
   String ownerSign;
   String cityName;
   String stateName;
+  String vendorImage;
   List<SubCategory> subCategory;
 
   factory GetVendorByIdResponseData.fromJson(String str) =>
@@ -99,6 +101,7 @@ class GetVendorByIdResponseData {
         ownerSign: json["owner_sign"],
         cityName: json["city_name"],
         stateName: json["state_name"],
+        vendorImage: json["vendor_image"],
         subCategory: List<SubCategory>.from(
             json["sub_category"].map((x) => SubCategory.fromMap(x))),
       );
@@ -120,6 +123,7 @@ class GetVendorByIdResponseData {
         "owner_sign": ownerSign,
         "city_name": cityName,
         "state_name": stateName,
+        "vendor_image": vendorImage,
         "sub_category": List<dynamic>.from(subCategory.map((x) => x.toMap())),
       };
 }

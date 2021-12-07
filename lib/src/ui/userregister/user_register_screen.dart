@@ -46,7 +46,8 @@ class _UserRegisterState extends State<UserRegister>
   TextEditingController _mobile = TextEditingController();
   TextEditingController _address = TextEditingController();
   TextEditingController _otp = TextEditingController();
-  int _character = 1;
+  int _character = -1;
+  int _gift = -1;
   //otp api call
   otpapi(userid) async {
     if (await Network.isConnected()) {
@@ -196,10 +197,20 @@ class _UserRegisterState extends State<UserRegister>
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please Enter User Address");
+      } else if (_character == -1) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Select On Phone Type");
+      } else if (_gift == -1) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Select gift given or not");
       } else if (_emailaddress.text.isEmpty) {
         final AddIntrestedUserResponse loginData = await ApiProvider()
             .getIntrestedUser(areaId, _name.text, _mobile.text,
-                _emailaddress.text, _address.text, _character);
+                _emailaddress.text, _address.text, _character, _gift);
 
         log("ooooo ${loginData}");
         if (loginData.success) {
@@ -214,7 +225,7 @@ class _UserRegisterState extends State<UserRegister>
       } else {
         final AddIntrestedUserResponse loginData = await ApiProvider()
             .getIntrestedUser(areaId, _name.text, _mobile.text,
-                _emailaddress.text, _address.text, _character);
+                _emailaddress.text, _address.text, _character, _gift);
 
         log("ooooo ${loginData}");
         if (loginData.success) {
@@ -402,6 +413,12 @@ class _UserRegisterState extends State<UserRegister>
                         ),
                       ),
                     ),
+                    SizedBox(height: 20),
+                    Text('Which Phone Customer have',
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     Row(
                       children: [
                         Container(
@@ -432,6 +449,49 @@ class _UserRegisterState extends State<UserRegister>
                                 log("===>$_character");
                                 setState(() {
                                   _character = value!;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Text('is gift given',
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.40,
+                          child: ListTile(
+                            title: const Text('YES'),
+                            leading: Radio<int>(
+                              value: 1,
+                              groupValue: _gift,
+                              onChanged: (value) {
+                                log("===>$_gift");
+                                setState(() {
+                                  _gift = value!;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.40,
+                          child: ListTile(
+                            title: const Text('NO'),
+                            contentPadding: EdgeInsets.all(0),
+                            leading: Radio<int>(
+                              value: 0,
+                              groupValue: _gift,
+                              onChanged: (value) {
+                                log("===>$_gift");
+                                setState(() {
+                                  _gift = value!;
                                 });
                               },
                             ),

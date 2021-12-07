@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
@@ -21,17 +20,16 @@ import 'package:myprofit_employee/model/getcity_by_state_response.dart';
 import 'package:myprofit_employee/src/ui/added_vendor_list/added_vendor_list.dart';
 import 'package:myprofit_employee/src/ui/map/google_maps.dart';
 import 'package:myprofit_employee/utils/colors.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import 'package:myprofit_employee/model/addvendor_form.dart';
 import 'package:myprofit_employee/model/categories_respnse.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
 import 'package:myprofit_employee/src/ui/home/home.dart';
-import 'package:myprofit_employee/utils/colors.dart';
 
 import 'package:myprofit_employee/utils/network.dart';
 import 'package:myprofit_employee/utils/validator.dart';
+import 'package:day_picker/day_picker.dart';
 
 class VendorForm extends StatefulWidget {
   final int? id;
@@ -63,6 +61,40 @@ class _VendorFormState extends State<VendorForm> {
   Uint8List? data;
   ui.Image? imageData;
   _VendorFormState(id, title);
+  TimeOfDay selectedTime = TimeOfDay.now();
+  DateTime currentDate = DateTime.now();
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: DateTime(2015),
+        lastDate: DateTime(2050));
+    if (pickedDate != null && pickedDate != currentDate)
+      setState(() {
+        currentDate = pickedDate;
+      });
+    setState(() {
+      log("message=>$pickedDate");
+      _startday.text = currentDate.weekday.toString();
+    });
+  }
+
+  Future<void> _selectDate1(BuildContext context) async {
+    final DateTime? pickedDate1 = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: DateTime(2015),
+        lastDate: DateTime(2050));
+    if (pickedDate1 != null && pickedDate1 != currentDate)
+      setState(() {
+        currentDate = pickedDate1;
+      });
+    setState(() {
+      log("message=>$pickedDate1");
+      _startday.text = currentDate.day.toString();
+    });
+  }
+
   getCategories() async {
     result = await ApiProvider().getCategoriess();
     print(result);
@@ -103,7 +135,10 @@ class _VendorFormState extends State<VendorForm> {
 
   TextEditingController _mobile = TextEditingController();
   TextEditingController _comission = TextEditingController();
-
+  TextEditingController _openingtime = TextEditingController();
+  TextEditingController _closingtime = TextEditingController();
+  TextEditingController _startday = TextEditingController();
+  TextEditingController _endday = TextEditingController();
   TextEditingController _address = TextEditingController();
   TextEditingController _landmark = TextEditingController();
   TextEditingController _city = TextEditingController();
@@ -113,7 +148,28 @@ class _VendorFormState extends State<VendorForm> {
   TextEditingController edtSearch = TextEditingController();
 
   List<GetAllCityByStateResponseData> cityList = [];
-
+  dynamic selecteddays;
+  List<DayInWeek> _days = [
+    DayInWeek(
+      "Sun",
+    ),
+    DayInWeek(
+      "Mon",
+    ),
+    DayInWeek("Tue", isSelected: true),
+    DayInWeek(
+      "Wed",
+    ),
+    DayInWeek(
+      "Thu",
+    ),
+    DayInWeek(
+      "Fri",
+    ),
+    DayInWeek(
+      "Sat",
+    ),
+  ];
   List<SubCat> subcatlist = [];
   //api calling
   addChatPapdi() async {
@@ -303,6 +359,21 @@ class _VendorFormState extends State<VendorForm> {
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please do Signature in Terms and Condition");
+      } else if (_openingtime.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please select opening time");
+      } else if (_closingtime.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please select close time");
+      } else if (selecteddays == null) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please select opening shop days");
       } else if (subcatlist.isNotEmpty) {
         String savelist = "";
 
@@ -749,7 +820,100 @@ class _VendorFormState extends State<VendorForm> {
     super.initState();
     getCategories();
     getStateId(101);
+    super.initState();
+    cards.add(createCard());
     // getCityId(21);
+  }
+
+  var nameTECs = <TextEditingController>[];
+  var ageTECs = <TextEditingController>[];
+  var jobTECs = <TextEditingController>[];
+  var cards = <Card>[];
+
+  Card createCard() {
+    var nameController = TextEditingController();
+    var ageController = TextEditingController();
+
+    nameTECs.add(nameController);
+    ageTECs.add(ageController);
+
+    return Card(
+      color: Colors.white,
+      margin: EdgeInsets.only(top: 10),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextFormField(
+              controller: nameController,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+              ],
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              //autovalidate: true,
+
+              decoration: InputDecoration(
+                counterText: "",
+                contentPadding:
+                    EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                filled: true,
+                fillColor: Color.fromRGBO(242, 242, 242, 1),
+                hintText: 'Enter here title',
+                hintStyle: TextStyle(
+                    color: Color.fromRGBO(85, 85, 85, 1),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              controller: ageController,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+              ],
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              //autovalidate: true,
+
+              decoration: InputDecoration(
+                counterText: "",
+                contentPadding:
+                    EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                filled: true,
+                fillColor: Color.fromRGBO(242, 242, 242, 1),
+                hintText: 'Enter here description',
+                hintStyle: TextStyle(
+                    color: Color.fromRGBO(85, 85, 85, 1),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _onDone() {
+    List<PersonEntry> entries = [];
+    for (int i = 0; i < cards.length; i++) {
+      var name = nameTECs[i].text;
+      var age = ageTECs[i].text;
+      var job = jobTECs[i].text;
+      entries.add(PersonEntry(name, age, job));
+    }
+    Navigator.pop(context, entries);
   }
 
   GetAllStateResponse? getData;
@@ -795,6 +959,7 @@ class _VendorFormState extends State<VendorForm> {
     return citydata;
     //_tap = true;
   }
+
   //select-category
 
   @override
@@ -835,833 +1000,1052 @@ class _VendorFormState extends State<VendorForm> {
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
               centerTitle: true,
             ),
-            body: GestureDetector(
-              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-              child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(16, 14, 16, 14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Shop Name',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _shopname,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r'[[a-zA-Z0-9 ]')),
-                      ],
-                      autofocus: false,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      //autovalidate: true,
-                      maxLength: 25,
+            body: StreamBuilder(builder: (context, snapshot) {
+              return GestureDetector(
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(16, 14, 16, 14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Shop Name',
+                          style: TextStyle(
+                              color: Color.fromRGBO(48, 48, 48, 1),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _shopname,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'[[a-zA-Z0-9 ]')),
+                        ],
+                        autofocus: false,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        //autovalidate: true,
+                        maxLength: 25,
 
-                      // keyboardType: TextInputType.streetAddress,
-                      decoration: InputDecoration(
-                        counterText: "",
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                        filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 15),
-                    Text(' Comission on ${widget.title}',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _comission,
-                      keyboardType: TextInputType.numberWithOptions(
-                          decimal: true, signed: false),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[[0-9. ]')),
-                      ],
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      //autovalidate: true,
-                      maxLength: 4,
-                      autofocus: false,
-                      // keyboardType: TextInputType.streetAddress,
-                      decoration: InputDecoration(
-                        counterText: "",
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                        filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter Comission of ${widget.title}',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text('Owners Name',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _ownername,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
-                      ],
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      //autovalidate: true,
-                      maxLength: 25,
-                      decoration: InputDecoration(
-                        counterText: "",
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                        filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Text('Mobile Number ',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _mobile,
-                      keyboardType: TextInputType.number,
-                      validator: (numb) =>
-                          Validator.validateMobile(numb!, context),
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      maxLength: 10,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        counterText: "",
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                        filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 15),
-
-                    Text('Address',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _address,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          onPressed: () async {
-                            FocusScopeNode currentFocus =
-                                FocusScope.of(context);
-                            if (!currentFocus.hasPrimaryFocus) {
-                              currentFocus.unfocus();
-                            }
-                            result1 = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => GoogleMapScreen()));
-                            log("result ${result1}");
-                            if (result1 != null) {
-                              //Map location = result as Map;
-                              lat = result1["lat"];
-                              lng = result1["long"];
-                              //  Fluttertoast.showToast(msg: "$lat");
-                              log("result1---->${lat}");
-                            }
-                          },
-                          icon: Icon(
-                            Icons.add_location,
-                            color: ColorPrimary,
+                        // keyboardType: TextInputType.streetAddress,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          contentPadding: EdgeInsets.only(
+                              left: 14.0, bottom: 8.0, top: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintText: 'Enter here',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
                           ),
                         ),
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                        filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here shop Address',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
                       ),
-                    ),
 
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _landmark,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                        filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here Landmark (optional)',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _pincode,
-                      keyboardType: TextInputType.number,
-                      validator: (numb) =>
-                          Validator.validatePincode(numb!, context),
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      maxLength: 6,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        counterText: "",
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                        filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here Your Pincode',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-
-                    TextFormField(
-                      // enableInteractiveSelection: false,
-                      readOnly: true,
-                      onTap: () {
-                        log("${stateData.length}");
-
-                        showModalBottomSheet(
-                          enableDrag: true,
-                          isDismissible: true,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(15.0)),
+                      SizedBox(height: 15),
+                      Text(' Comission on ${widget.title}',
+                          style: TextStyle(
+                              color: Color.fromRGBO(48, 48, 48, 1),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _comission,
+                        keyboardType: TextInputType.numberWithOptions(
+                            decimal: true, signed: false),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'[[0-9. ]')),
+                        ],
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        //autovalidate: true,
+                        maxLength: 4,
+                        autofocus: false,
+                        // keyboardType: TextInputType.streetAddress,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          contentPadding: EdgeInsets.only(
+                              left: 14.0, bottom: 8.0, top: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintText: 'Enter Comission of ${widget.title}',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
                           ),
-                          context: context,
-                          builder: (context) {
-                            return IntrinsicHeight(
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.60,
-                                padding: EdgeInsets.only(top: 20, bottom: 0),
-                                child: Column(children: [
-                                  Expanded(
-                                    child: ListView.separated(
-                                        separatorBuilder: (context, index) =>
-                                            Divider(
-                                              color: Colors.black,
-                                            ),
-                                        itemCount: stateData.length,
-                                        itemBuilder:
-                                            (BuildContext ctxt, int index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  _city.clear();
-                                                });
-
-                                                getCityId(stateData[index].id);
-                                                _state.text =
-                                                    stateData[index].name;
-                                                stateid = stateData[index]
-                                                    .id
-                                                    .toString();
-                                                Navigator.pop(context);
-                                              },
-                                              child: Container(
-                                                  height: 30,
-                                                  child: Text(
-                                                      "${stateData[index].name.toUpperCase()}")),
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                  Container(
-                                    // height: 15,
-                                    child: MaterialButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      height: 50,
-                                      elevation: 5,
-                                      child: Text(
-                                        "Cancel",
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  )
-                                ]),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text('Owners Name',
+                          style: TextStyle(
+                              color: Color.fromRGBO(48, 48, 48, 1),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _ownername,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'[a-zA-Z ]')),
+                        ],
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        //autovalidate: true,
+                        maxLength: 25,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          contentPadding: EdgeInsets.only(
+                              left: 14.0, bottom: 8.0, top: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintText: 'Enter here',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Text('Mobile Number ',
+                          style: TextStyle(
+                              color: Color.fromRGBO(48, 48, 48, 1),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _mobile,
+                        keyboardType: TextInputType.number,
+                        validator: (numb) =>
+                            Validator.validateMobile(numb!, context),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        maxLength: 10,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          contentPadding: EdgeInsets.only(
+                              left: 14.0, bottom: 8.0, top: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintText: 'Enter here',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Text('Timings of Shop ',
+                          style: TextStyle(
+                              color: Color.fromRGBO(48, 48, 48, 1),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(height: 10),
+                      Row(children: [
+                        Container(
+                          width: devicewidth * 0.43,
+                          child: TextFormField(
+                            readOnly: true,
+                            onTap: () {
+                              _selectTime(context);
+                            },
+                            controller: _openingtime,
+                            maxLength: 10,
+                            autofocus: false,
+                            decoration: InputDecoration(
+                              counterText: "",
+                              contentPadding: EdgeInsets.only(
+                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              filled: true,
+                              fillColor: Color.fromRGBO(242, 242, 242, 1),
+                              hintText: 'Opening timing',
+                              hintStyle: TextStyle(
+                                  color: Color.fromRGBO(85, 85, 85, 1),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
                               ),
-                            );
-                          },
-                        );
-                      },
-                      controller: _state,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.keyboard_arrow_down,
-                            color: ColorPrimary),
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                        filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Select State',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 10),
-                    TextFormField(
-                      readOnly: true,
-                      onTap: () {
-                        log("${citydata.length}");
-                        if (citydata.length > 0) {
-                          _showModal(context, citydata);
-                        } else {
-                          Fluttertoast.showToast(
-                              msg: "Select State from above list",
-                              backgroundColor: ColorPrimary);
-                        }
-                      },
-                      controller: _city,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                        suffixIcon: Icon(Icons.keyboard_arrow_down,
-                            color: ColorPrimary),
-                        filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Select Your city/village',
-                        hintStyle: TextStyle(
-                            color: Color.fromRGBO(85, 85, 85, 1),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 15),
-                    widget.id == 0
-                        ? Container(
-                            height: 0,
-                          )
-                        : AutoSizeText(
-                            'Other Categories (If exists)',
-                            style: TextStyle(
-                                color: Color.fromRGBO(48, 48, 48, 1),
-                                fontWeight: FontWeight.w600),
-                            maxFontSize: 15,
-                            minFontSize: 10,
+                            ),
                           ),
-                    widget.id == 0
-                        ? Container(
-                            height: 0,
-                          )
-                        : SizedBox(height: 10),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Container(
+                          width: devicewidth * 0.42,
+                          child: TextFormField(
+                            controller: _closingtime,
+                            readOnly: true,
+                            onTap: () {
+                              _selectTime1(context);
+                            },
+                            maxLength: 10,
+                            autofocus: false,
+                            decoration: InputDecoration(
+                              counterText: "",
+                              contentPadding: EdgeInsets.only(
+                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              filled: true,
+                              fillColor: Color.fromRGBO(242, 242, 242, 1),
+                              hintText: 'Closing timing',
+                              hintStyle: TextStyle(
+                                  color: Color.fromRGBO(85, 85, 85, 1),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]),
+                      SizedBox(height: 15),
+                      Text('Select shop open days',
+                          style: TextStyle(
+                              color: Color.fromRGBO(48, 48, 48, 1),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(height: 10),
 
-                    widget.id == 0
-                        ? Container(
-                            height: 0,
-                          )
-                        : SizedBox(height: 15),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SelectWeekDays(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          days: _days,
+                          border: false,
+                          boxDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30.0),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              colors: [ColorPrimary, ColorPrimary],
+                              tileMode: TileMode
+                                  .repeated, // repeats the gradient over the canvas
+                            ),
+                          ),
+                          onSelect: (values) {
+                            // <== Callback to handle the selected days
+                            print(values);
+                            selecteddays = values;
+                            log("$selecteddays}");
+                          },
+                        ),
+                      ),
 
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     FocusScopeNode currentFocus = FocusScope.of(context);
-                    //     if (!currentFocus.hasPrimaryFocus) {
-                    //       currentFocus.unfocus();
-                    //     }
-                    //   },
-                    //   child:
-                    widget.id == 0
-                        ? Container(
-                            height: 0,
-                          )
-                        : Container(
-                            child: result == null
-                                ? Center(child: CircularProgressIndicator())
-                                :
-                                // GestureDetector(
-                                //     onTap: () {
-                                //       FocusScopeNode currentFocus =
-                                //           FocusScope.of(context);
-                                //       if (!currentFocus.hasPrimaryFocus) {
-                                //         currentFocus.unfocus();
-                                //       }
-                                //     },
-                                //     child:
-                                Container(
-                                    // width: devicewidth - 30,
-                                    child: MultiSelectDialogField<
-                                        CategoriesResponseData?>(
-                                      buttonIcon: Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: ColorPrimary),
-                                      decoration: BoxDecoration(
-                                        color: Color.fromRGBO(242, 242, 242, 1),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
+                      SizedBox(height: 15),
+                      Text('Address',
+                          style: TextStyle(
+                              color: Color.fromRGBO(48, 48, 48, 1),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _address,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          suffixIcon: Container(
+                            width: 120,
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "Select location",
+                                    style: TextStyle(fontSize: 10),
+                                    maxLines: 2,
+                                  ),
+                                  IconButton(
+                                    onPressed: () async {
+                                      FocusScopeNode currentFocus =
+                                          FocusScope.of(context);
+                                      if (!currentFocus.hasPrimaryFocus) {
+                                        currentFocus.unfocus();
+                                      }
+                                      result1 = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  GoogleMapScreen()));
+                                      log("result ${result1}");
+                                      if (result1 != null) {
+                                        //Map location = result as Map;
+                                        lat = result1["lat"];
+                                        lng = result1["long"];
+                                        //  Fluttertoast.showToast(msg: "$lat");
+                                        log("result1---->${lat}");
+                                      }
+                                    },
+                                    icon: Icon(
+                                      Icons.add_location,
+                                      color: ColorPrimary,
+                                    ),
+                                    tooltip: "Select location",
+                                  ),
+                                ]),
+                          ),
+                          contentPadding: EdgeInsets.only(
+                              left: 14.0, bottom: 8.0, top: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintText: 'Enter here shop Address',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
 
-                                      key: _multiSelectKey,
-                                      // initialChildSize: 0.7,
-                                      // maxChildSize: 0.95,
-                                      title: GestureDetector(
-                                        onTap: () {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _landmark,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: 14.0, bottom: 8.0, top: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintText: 'Enter here Landmark (optional)',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _pincode,
+                        keyboardType: TextInputType.number,
+                        validator: (numb) =>
+                            Validator.validatePincode(numb!, context),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        maxLength: 6,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          contentPadding: EdgeInsets.only(
+                              left: 14.0, bottom: 8.0, top: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintText: 'Enter here Your Pincode',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+
+                      TextFormField(
+                        // enableInteractiveSelection: false,
+                        readOnly: true,
+                        onTap: () {
+                          log("${stateData.length}");
+
+                          showModalBottomSheet(
+                            enableDrag: true,
+                            isDismissible: true,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(15.0)),
+                            ),
+                            context: context,
+                            builder: (context) {
+                              return IntrinsicHeight(
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.60,
+                                  padding: EdgeInsets.only(top: 20, bottom: 0),
+                                  child: Column(children: [
+                                    Expanded(
+                                      child: ListView.separated(
+                                          separatorBuilder: (context, index) =>
+                                              Divider(
+                                                color: Colors.black,
+                                              ),
+                                          itemCount: stateData.length,
+                                          itemBuilder:
+                                              (BuildContext ctxt, int index) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _city.clear();
+                                                  });
+
+                                                  getCityId(
+                                                      stateData[index].id);
+                                                  _state.text =
+                                                      stateData[index].name;
+                                                  stateid = stateData[index]
+                                                      .id
+                                                      .toString();
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Container(
+                                                    height: 30,
+                                                    child: Text(
+                                                        "${stateData[index].name.toUpperCase()}")),
+                                              ),
+                                            );
+                                          }),
+                                    ),
+                                    Container(
+                                      // height: 15,
+                                      child: MaterialButton(
+                                        onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        child: Text('Other categories',
+                                        height: 50,
+                                        elevation: 5,
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    )
+                                  ]),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        controller: _state,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          suffixIcon: Icon(Icons.keyboard_arrow_down,
+                              color: ColorPrimary),
+                          contentPadding: EdgeInsets.only(
+                              left: 14.0, bottom: 8.0, top: 8.0),
+                          filled: true,
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintText: 'Select State',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10),
+                      TextFormField(
+                        readOnly: true,
+                        onTap: () {
+                          log("${citydata.length}");
+                          if (citydata.length > 0) {
+                            _showModal(context, citydata);
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: "Select State from above list",
+                                backgroundColor: ColorPrimary);
+                          }
+                        },
+                        controller: _city,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: 14.0, bottom: 8.0, top: 8.0),
+                          suffixIcon: Icon(Icons.keyboard_arrow_down,
+                              color: ColorPrimary),
+                          filled: true,
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintText: 'Select Your city/village',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 15),
+                      widget.id == 0
+                          ? Container(
+                              height: 0,
+                            )
+                          : AutoSizeText(
+                              'Other Categories (If exists)',
+                              style: TextStyle(
+                                  color: Color.fromRGBO(48, 48, 48, 1),
+                                  fontWeight: FontWeight.w600),
+                              maxFontSize: 15,
+                              minFontSize: 10,
+                            ),
+                      widget.id == 0
+                          ? Container(
+                              height: 0,
+                            )
+                          : SizedBox(height: 10),
+
+                      widget.id == 0
+                          ? Container(
+                              height: 0,
+                            )
+                          : SizedBox(height: 15),
+
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     FocusScopeNode currentFocus = FocusScope.of(context);
+                      //     if (!currentFocus.hasPrimaryFocus) {
+                      //       currentFocus.unfocus();
+                      //     }
+                      //   },
+                      //   child:
+                      widget.id == 0
+                          ? Container(
+                              height: 0,
+                            )
+                          : Container(
+                              child: result == null
+                                  ? Center(child: CircularProgressIndicator())
+                                  :
+                                  // GestureDetector(
+                                  //     onTap: () {
+                                  //       FocusScopeNode currentFocus =
+                                  //           FocusScope.of(context);
+                                  //       if (!currentFocus.hasPrimaryFocus) {
+                                  //         currentFocus.unfocus();
+                                  //       }
+                                  //     },
+                                  //     child:
+                                  Container(
+                                      // width: devicewidth - 30,
+                                      child: MultiSelectDialogField<
+                                          CategoriesResponseData?>(
+                                        buttonIcon: Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: ColorPrimary),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              Color.fromRGBO(242, 242, 242, 1),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+
+                                        key: _multiSelectKey,
+                                        // initialChildSize: 0.7,
+                                        // maxChildSize: 0.95,
+                                        title: GestureDetector(
+                                          onTap: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Other categories',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600)),
+                                        ),
+                                        buttonText: Text(placeholderText,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
-                                                color: Colors.black,
+                                                color: Color.fromRGBO(
+                                                    85, 85, 85, 1),
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600)),
+                                        searchTextStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600),
+                                        cancelText: Text('Cancel',
+                                            style: TextStyle(
+                                                color: Color(0xff6657f4),
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w600)),
-                                      ),
-                                      buttonText: Text(placeholderText,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color:
-                                                  Color.fromRGBO(85, 85, 85, 1),
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600)),
-                                      searchTextStyle: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600),
-                                      cancelText: Text('Cancel',
-                                          style: TextStyle(
-                                              color: Color(0xff6657f4),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600)),
-                                      confirmText: Text('Ok',
-                                          style: TextStyle(
-                                              color: Color(0xff6657f4),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600)),
-                                      items: result!.data!
-                                          .map((category) => MultiSelectItem<
-                                                  CategoriesResponseData>(
-                                              category, category.categoryName))
-                                          .toList(),
-                                      searchable: true,
-                                      initialValue: subcatlist
-                                          .map((e) => e.subCat)
-                                          .toList(),
+                                        confirmText: Text('Ok',
+                                            style: TextStyle(
+                                                color: Color(0xff6657f4),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600)),
+                                        items: result!.data!
+                                            .map((category) => MultiSelectItem<
+                                                    CategoriesResponseData>(
+                                                category,
+                                                category.categoryName))
+                                            .toList(),
+                                        searchable: true,
+                                        initialValue: subcatlist
+                                            .map((e) => e.subCat)
+                                            .toList(),
 
-                                      validator: (values) {
-                                        if (values == null || values.isEmpty) {
-                                          return "";
-                                        }
-                                        List<String> names = values
-                                            .map((e) => e!.categoryName)
-                                            .toList();
-
-                                        if (names.contains("Frog")) {
-                                          return "Frogs are weird!";
-                                        }
-                                        return null;
-                                      },
-                                      onConfirm: (values) {
-                                        // SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                        // SystemChannels.textInput
-                                        //     .invokeMethod('TextInput.hide');
-                                        FocusScopeNode currentFocus =
-                                            FocusScope.of(context);
-                                        if (!currentFocus.hasPrimaryFocus) {
-                                          currentFocus.unfocus();
-                                        }
-                                        setState(() {
-                                          _selectedCategory3 = values;
-                                          placeholderText = "";
-                                          subcatlist.clear();
-                                          if (values.length == 0) {
-                                            placeholderText =
-                                                "Please select category";
-                                          } else {
-                                            for (int i = 0;
-                                                i < values.length;
-                                                i++) {
-                                              if (i == values.length - 1) {
-                                                placeholderText =
-                                                    "Please select category";
-                                                arr = arr +
-                                                    values[i]!.id.toString();
-                                              } else {
-                                                // placeholderText = placeholderText +
-                                                //     values[i]!.categoryName +
-                                                //     ", ";
-                                                arr = arr +
-                                                    (values[i]!.id.toString()) +
-                                                    ",";
-                                              }
-                                              subcatlist
-                                                  .add(SubCat(values[i]!));
-                                            }
+                                        validator: (values) {
+                                          if (values == null ||
+                                              values.isEmpty) {
+                                            return "";
                                           }
-                                        });
-                                        _multiSelectKey.currentState!
-                                            .validate();
-                                      },
-                                      chipDisplay: MultiSelectChipDisplay(
-                                        onTap: (item) {
+                                          List<String> names = values
+                                              .map((e) => e!.categoryName)
+                                              .toList();
+
+                                          if (names.contains("Frog")) {
+                                            return "Frogs are weird!";
+                                          }
+                                          return null;
+                                        },
+                                        onConfirm: (values) {
+                                          // SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                          // SystemChannels.textInput
+                                          //     .invokeMethod('TextInput.hide');
                                           FocusScopeNode currentFocus =
                                               FocusScope.of(context);
                                           if (!currentFocus.hasPrimaryFocus) {
                                             currentFocus.unfocus();
                                           }
                                           setState(() {
-                                            _selectedCategory3.remove(item);
-                                            log("dddd ${item}");
+                                            _selectedCategory3 = values;
+                                            placeholderText = "";
+                                            subcatlist.clear();
+                                            if (values.length == 0) {
+                                              placeholderText =
+                                                  "Please select category";
+                                            } else {
+                                              for (int i = 0;
+                                                  i < values.length;
+                                                  i++) {
+                                                if (i == values.length - 1) {
+                                                  placeholderText =
+                                                      "Please select category";
+                                                  arr = arr +
+                                                      values[i]!.id.toString();
+                                                } else {
+                                                  // placeholderText = placeholderText +
+                                                  //     values[i]!.categoryName +
+                                                  //     ", ";
+                                                  arr = arr +
+                                                      (values[i]!
+                                                          .id
+                                                          .toString()) +
+                                                      ",";
+                                                }
+                                                subcatlist
+                                                    .add(SubCat(values[i]!));
+                                              }
+                                            }
                                           });
                                           _multiSelectKey.currentState!
                                               .validate();
                                         },
-                                      )..disabled = true,
-                                      //  );
-                                      // }
+                                        chipDisplay: MultiSelectChipDisplay(
+                                          onTap: (item) {
+                                            FocusScopeNode currentFocus =
+                                                FocusScope.of(context);
+                                            if (!currentFocus.hasPrimaryFocus) {
+                                              currentFocus.unfocus();
+                                            }
+                                            setState(() {
+                                              _selectedCategory3.remove(item);
+                                              log("dddd ${item}");
+                                            });
+                                            _multiSelectKey.currentState!
+                                                .validate();
+                                          },
+                                        )..disabled = true,
+                                        //  );
+                                        // }
+                                      ),
                                     ),
-                                  ),
-                            //),
+                              //),
+                            ),
+                      //),
+                      Column(
+                          children: List.generate(subcatlist.length, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: TextFormField(
+                            keyboardType: TextInputType.numberWithOptions(
+                                decimal: true, signed: false),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[[0-9. ]')),
+                            ],
+                            maxLength: 4,
+                            controller: subcatlist[index].subController,
+                            decoration: InputDecoration(
+                              counterText: "",
+                              contentPadding: EdgeInsets.only(
+                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              filled: true,
+                              fillColor: Color.fromRGBO(242, 242, 242, 1),
+                              hintText:
+                                  'Please Enter ${subcatlist[index].subCat.categoryName} Commision',
+                              hintStyle: TextStyle(
+                                  color: Color.fromRGBO(85, 85, 85, 1),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
                           ),
-                    //),
-                    Column(
-                        children: List.generate(subcatlist.length, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: TextFormField(
-                          keyboardType: TextInputType.numberWithOptions(
-                              decimal: true, signed: false),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'[[0-9. ]')),
-                          ],
-                          maxLength: 4,
-                          controller: subcatlist[index].subController,
-                          decoration: InputDecoration(
-                            counterText: "",
-                            contentPadding: EdgeInsets.only(
-                                left: 14.0, bottom: 8.0, top: 8.0),
-                            filled: true,
-                            fillColor: Color.fromRGBO(242, 242, 242, 1),
-                            hintText:
-                                'Please Enter ${subcatlist[index].subCat.categoryName} Commision',
-                            hintStyle: TextStyle(
-                                color: Color.fromRGBO(85, 85, 85, 1),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
+                        );
+                      })),
+
+                      SizedBox(height: 15),
+                      // Text('Photo of the place where MyProfit board is to be placed',
+                      //     style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                      // SizedBox(height: 10),
+                      // InkWell(Fselect
+                      //   child: ClipRRect(
+                      //     borderRadius: BorderRadius.circular(10),
+                      //     child: myProfitBoardImage != null
+                      //         ? Image(image: FileImage(myProfitBoardImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
+                      //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                      //   ),
+                      //   onTap: () {
+                      //     showBottomSheet(5, context);
+                      //   },
+                      // ),
+                      // SizedBox(height: 15),
+                      // Text('Documents for validation of Shop', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                      // SizedBox(height: 10),
+                      // InkWell(
+                      //   child: ClipRRect(
+                      //     borderRadius: BorderRadius.circular(10),
+                      //     child: validationShopImage != null
+                      //         ? Image(image: FileImage(validationShopImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
+                      //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                      //   ),
+                      //   onTap: () {
+                      //     showBottomSheet(6, context);
+                      //   },
+                      // ),
+                      //     Container(
+                      //       child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      // children: [
+                      //   Container(
+                      //     width: double.infinity,
+                      //     height: MediaQuery.of(context).size.height - 80,
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.white,
+                      //       borderRadius: BorderRadius.circular(7),
+                      //     ),
+                      //     child: Column(
+                      //       children: [
+                      //         Stack(
+                      //           children: [
+                      //             Padding(
+                      //               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      //               child: Align(
+                      //                 child: Text('Terms & Conditions',
+                      //                     style: TextStyle(
+                      //                         color: Colors.black,
+                      //                         fontSize: 16,
+                      //                         fontWeight: FontWeight.w600)),
+                      //                 alignment: Alignment.center,
+                      //               ),
+                      //             ),
+                      //             Positioned(
+                      //               top: 10,
+                      //               right: MediaQuery.of(context).size.width / 80,
+                      //               child: Padding(
+                      //                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      //                 child: GestureDetector(
+                      //                   child: Image.asset('images/bg-cross.png',
+                      //                       width: 20),
+                      //                   onTap: () {
+                      //                     Navigator.pop(context);
+                      //                   },
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //         SizedBox(height: 12),
+                      //         Expanded(
+                      //           child: Padding(
+                      //             padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
+                      //             child: SingleChildScrollView(
+                      //               child: Text(
+                      //                 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley.',
+                      //                 style: TextStyle(
+                      //                     color: Colors.black,
+                      //                     fontSize: 14,
+                      //                     fontWeight: FontWeight.w400),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         Container(
+                      //             margin: EdgeInsets.all(10),
+                      //             // height: 300,
+                      //             // width: devicewidth,
+                      //             decoration: BoxDecoration(
+                      //                 border: Border.all(width: 1),
+                      //                 borderRadius: BorderRadius.circular(20),
+                      //                 color: Colors.white54),
+                      //             child: Column(children: [
+                      //               Row(
+                      //                   mainAxisAlignment:
+                      //                       MainAxisAlignment.spaceEvenly,
+                      //                   children: [
+                      //                     Text('Signature',
+                      //                         style: TextStyle(
+                      //                             color: Colors.black,
+                      //                             fontSize: 16,
+                      //                             fontWeight: FontWeight.w600)),
+                      //                     GestureDetector(
+                      //                       onTap: () {
+                      //                         _signaturePadKey.currentState!.clear();
+                      //                       },
+                      //                       child: Text('Clear',
+                      //                           style: TextStyle(
+                      //                               color: Colors.black,
+                      //                               fontSize: 16,
+                      //                               fontWeight: FontWeight.w600)),
+                      //                     ),
+                      //                   ]),
+                      //               Container(
+                      //                 height: 180,
+                      //                 width: 300,
+                      //                 child: SfSignaturePad(
+                      //                   backgroundColor: Colors.transparent,
+                      //                   key: _signaturePadKey,
+                      //                 ),
+                      //               ),
+                      //             ])),
+                      //         InkWell(
+                      //             child: Container(
+                      //               width: double.infinity,
+                      //               alignment: Alignment.center,
+                      //               padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                      //               decoration: BoxDecoration(
+                      //                 color: Color.fromRGBO(102, 87, 244, 1),
+                      //                 borderRadius: BorderRadius.only(
+                      //                   bottomLeft: Radius.circular(7),
+                      //                   bottomRight: Radius.circular(7),
+                      //                 ),
+                      //               ),
+                      //               child: Text(
+                      //                 "Done",
+                      //                 style: TextStyle(
+                      //                     color: Colors.white,
+                      //                     fontSize: 16,
+                      //                     fontWeight: FontWeight.w600),
+                      //               ),
+                      //             ),
+                      //             onTap: () async {
+                      //               _handleSaveButtonPressed();
+                      //             }),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ],
+                      //     ),),
+                      // MaterialButton(
+                      //   child: Text('Add entries'),
+                      //   onPressed: () async {
+                      //     List<PersonEntry> persons = await Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => _onDone(),
+                      //       ),
+                      //     );
+                      //     if (persons != null) persons.forEach(print);
+                      //   },
+                      // ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          height: 30,
+                          width: 130,
+                          //padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: ColorPrimary,
+                          ),
+                          child: Center(
+                            child: InkWell(
+                              child: Text('Add Custom Feild',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  )),
+                              onTap: () =>
+                                  setState(() => cards.add(createCard())),
                             ),
                           ),
                         ),
-                      );
-                    })),
-
-                    SizedBox(height: 15),
-                    // Text('Photo of the place where MyProfit board is to be placed',
-                    //     style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-                    // SizedBox(height: 10),
-                    // InkWell(Fselect
-                    //   child: ClipRRect(
-                    //     borderRadius: BorderRadius.circular(10),
-                    //     child: myProfitBoardImage != null
-                    //         ? Image(image: FileImage(myProfitBoardImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                    //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
-                    //   ),
-                    //   onTap: () {
-                    //     showBottomSheet(5, context);
-                    //   },
-                    // ),
-                    // SizedBox(height: 15),
-                    // Text('Documents for validation of Shop', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-                    // SizedBox(height: 10),
-                    // InkWell(
-                    //   child: ClipRRect(
-                    //     borderRadius: BorderRadius.circular(10),
-                    //     child: validationShopImage != null
-                    //         ? Image(image: FileImage(validationShopImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                    //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
-                    //   ),
-                    //   onTap: () {
-                    //     showBottomSheet(6, context);
-                    //   },
-                    // ),
-                    //     Container(
-                    //       child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    // children: [
-                    //   Container(
-                    //     width: double.infinity,
-                    //     height: MediaQuery.of(context).size.height - 80,
-                    //     decoration: BoxDecoration(
-                    //       color: Colors.white,
-                    //       borderRadius: BorderRadius.circular(7),
-                    //     ),
-                    //     child: Column(
-                    //       children: [
-                    //         Stack(
-                    //           children: [
-                    //             Padding(
-                    //               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    //               child: Align(
-                    //                 child: Text('Terms & Conditions',
-                    //                     style: TextStyle(
-                    //                         color: Colors.black,
-                    //                         fontSize: 16,
-                    //                         fontWeight: FontWeight.w600)),
-                    //                 alignment: Alignment.center,
-                    //               ),
-                    //             ),
-                    //             Positioned(
-                    //               top: 10,
-                    //               right: MediaQuery.of(context).size.width / 80,
-                    //               child: Padding(
-                    //                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    //                 child: GestureDetector(
-                    //                   child: Image.asset('images/bg-cross.png',
-                    //                       width: 20),
-                    //                   onTap: () {
-                    //                     Navigator.pop(context);
-                    //                   },
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //         SizedBox(height: 12),
-                    //         Expanded(
-                    //           child: Padding(
-                    //             padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
-                    //             child: SingleChildScrollView(
-                    //               child: Text(
-                    //                 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley.',
-                    //                 style: TextStyle(
-                    //                     color: Colors.black,
-                    //                     fontSize: 14,
-                    //                     fontWeight: FontWeight.w400),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         Container(
-                    //             margin: EdgeInsets.all(10),
-                    //             // height: 300,
-                    //             // width: devicewidth,
-                    //             decoration: BoxDecoration(
-                    //                 border: Border.all(width: 1),
-                    //                 borderRadius: BorderRadius.circular(20),
-                    //                 color: Colors.white54),
-                    //             child: Column(children: [
-                    //               Row(
-                    //                   mainAxisAlignment:
-                    //                       MainAxisAlignment.spaceEvenly,
-                    //                   children: [
-                    //                     Text('Signature',
-                    //                         style: TextStyle(
-                    //                             color: Colors.black,
-                    //                             fontSize: 16,
-                    //                             fontWeight: FontWeight.w600)),
-                    //                     GestureDetector(
-                    //                       onTap: () {
-                    //                         _signaturePadKey.currentState!.clear();
-                    //                       },
-                    //                       child: Text('Clear',
-                    //                           style: TextStyle(
-                    //                               color: Colors.black,
-                    //                               fontSize: 16,
-                    //                               fontWeight: FontWeight.w600)),
-                    //                     ),
-                    //                   ]),
-                    //               Container(
-                    //                 height: 180,
-                    //                 width: 300,
-                    //                 child: SfSignaturePad(
-                    //                   backgroundColor: Colors.transparent,
-                    //                   key: _signaturePadKey,
-                    //                 ),
-                    //               ),
-                    //             ])),
-                    //         InkWell(
-                    //             child: Container(
-                    //               width: double.infinity,
-                    //               alignment: Alignment.center,
-                    //               padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                    //               decoration: BoxDecoration(
-                    //                 color: Color.fromRGBO(102, 87, 244, 1),
-                    //                 borderRadius: BorderRadius.only(
-                    //                   bottomLeft: Radius.circular(7),
-                    //                   bottomRight: Radius.circular(7),
-                    //                 ),
-                    //               ),
-                    //               child: Text(
-                    //                 "Done",
-                    //                 style: TextStyle(
-                    //                     color: Colors.white,
-                    //                     fontSize: 16,
-                    //                     fontWeight: FontWeight.w600),
-                    //               ),
-                    //             ),
-                    //             onTap: () async {
-                    //               _handleSaveButtonPressed();
-                    //             }),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ],
-                    //     ),),
-                    Container(
-                      transform: Matrix4.translationValues(-10, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Checkbox(
-                            value: this.valuesecond,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                this.valuesecond = value!;
-                              });
-                            },
-                          ),
-                          Row(
-                            children: [
-                              Text('Accept all ',
-                                  style: TextStyle(
-                                      color: Color(0xff303030),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600)),
-                              InkWell(
-                                child: Text('Terms & Conditions',
-                                    style: TextStyle(
-                                        color: Color(0xff6657f4),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        decoration: TextDecoration.underline)),
-                                onTap: () {
-                                  log("img ${data}");
-                                  termsConditionsDialog();
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
                       ),
-                    ),
-                    SizedBox(height: 15),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ButtonTheme(
-                        minWidth: 200,
-                        // ignore: deprecated_member_use
-                        child: RaisedButton(
-                          padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                          color: Color.fromRGBO(102, 87, 244, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          onPressed: () {
-                            log("kai kai---->");
-
-                            log("${imageData.toString()}");
-                            if (widget.id == 0) {
-                              addChatPapdi();
-                            } else {
-                              addVendors();
-                            }
+                      Container(
+                        height: deviceheight / 2,
+                        child: ListView.builder(
+                          itemCount: cards.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return cards[index];
                           },
-                          child: Text(
-                            "SUBMIT",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: MaterialButton(
+                            child: Text('remove new'),
+                            onPressed: () {
+                              setState(() {
+                                cards.remove(1);
+                              });
+                            }),
+                      ),
+                      Container(
+                        transform: Matrix4.translationValues(-10, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Checkbox(
+                              value: this.valuesecond,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  this.valuesecond = value!;
+                                });
+                              },
+                            ),
+                            Row(
+                              children: [
+                                Text('Accept all ',
+                                    style: TextStyle(
+                                        color: Color(0xff303030),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600)),
+                                InkWell(
+                                  child: Text('Terms & Conditions',
+                                      style: TextStyle(
+                                          color: Color(0xff6657f4),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          decoration:
+                                              TextDecoration.underline)),
+                                  onTap: () {
+                                    log("img ${data}");
+                                    termsConditionsDialog();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ButtonTheme(
+                          minWidth: 200,
+                          // ignore: deprecated_member_use
+                          child: RaisedButton(
+                            padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                            color: Color.fromRGBO(102, 87, 244, 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            onPressed: () {
+                              log("kai kai---->");
+
+                              log("${imageData.toString()}");
+                              if (widget.id == 0) {
+                                addChatPapdi();
+                              } else {
+                                addVendors();
+                              }
+                            },
+                            child: Text(
+                              "SUBMIT",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
           ),
         ),
       ),
     );
+  }
+
+  _selectTime(BuildContext context) async {
+    final TimeOfDay? timeOfDay = await showTimePicker(
+        context: context,
+        initialTime: selectedTime,
+        initialEntryMode: TimePickerEntryMode.dial,
+        helpText: " select shop open time");
+    if (timeOfDay != null && timeOfDay != selectedTime) {
+      setState(() {
+        selectedTime = timeOfDay;
+        log("${selectedTime.hour}:${selectedTime.minute}");
+      });
+      setState(() {});
+      _openingtime.text =
+          "${selectedTime.hour}:${selectedTime.minute}".toString();
+    }
+  }
+
+  _selectTime1(BuildContext context) async {
+    final TimeOfDay? timeOfDay1 = await showTimePicker(
+        context: context,
+        initialTime: selectedTime,
+        initialEntryMode: TimePickerEntryMode.dial,
+        helpText: " select shop close time");
+    if (timeOfDay1 != null && timeOfDay1 != selectedTime) {
+      setState(() {
+        selectedTime = timeOfDay1;
+        log("${selectedTime.hour}:${selectedTime.minute}");
+      });
+      setState(() {});
+      _closingtime.text =
+          "${selectedTime.hour}:${selectedTime.minute}".toString();
+    }
   }
 
   void _showModal(context, List<GetAllCityByStateResponseData> citydata) {
@@ -1979,5 +2363,17 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
         ]),
       ),
     );
+  }
+}
+
+class PersonEntry {
+  final String name;
+  final String age;
+  final String studyJob;
+
+  PersonEntry(this.name, this.age, this.studyJob);
+  @override
+  String toString() {
+    return 'Person: name= $name, age= $age, study job= $studyJob';
   }
 }
