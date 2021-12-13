@@ -1,11 +1,26 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:myprofit_employee/provider/NavigationService.dart';
 import 'package:myprofit_employee/src/ui/splash/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'provider/api_provider.dart';
+
 NavigationService navigationService = NavigationService();
 void main() {
+  dio.interceptors.add(LogInterceptor(
+      responseBody: true,
+      responseHeader: false,
+      requestBody: true,
+      request: true,
+      requestHeader: true,
+      error: true,
+      logPrint: (text) {
+        log(text.toString());
+      }));
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

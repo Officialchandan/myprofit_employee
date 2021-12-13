@@ -28,6 +28,8 @@ import 'package:myprofit_employee/provider/server_error.dart';
 import 'package:myprofit_employee/utils/sharedpref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+Dio dio = Dio(baseOptions);
+
 BaseOptions baseOptions = BaseOptions(
   receiveTimeout: 60000,
   sendTimeout: 60000,
@@ -38,7 +40,6 @@ BaseOptions baseOptions = BaseOptions(
 class ApiProvider {
   var client = http.Client();
   var baseUrl = "http://employee.tekzee.in/api/v1";
-  Dio dio = Dio(baseOptions);
 
   Future<LoginResponse> login(mobile) async {
     log("chl gyi");
@@ -242,7 +243,11 @@ class ApiProvider {
       lng,
       ownersign,
       subcat,
-      subcatcommission) async {
+      subcatcommission,
+      opentime,
+      closetime,
+      List<String> openingdays,
+      List<Map<String, String>> customfield) async {
     //log("chl gyi ${mobile + otp}");
     try {
       Map<String, dynamic> addvendor = HashMap<String, dynamic>();
@@ -262,6 +267,15 @@ class ApiProvider {
           filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
       addvendor["sub_cat_id"] = subcat;
       addvendor["sub_cat_commission"] = subcatcommission;
+      addvendor["opening_time"] = opentime;
+      addvendor["closing_time"] = closetime;
+      addvendor["custom_field"] = customfield.toString();
+      String opendays = "";
+      for (int i = 0; i < openingdays.length; i++) {
+        opendays += openingdays[i] + ",";
+      }
+      addvendor["opening_days"] = opendays;
+
       log("addvendor$addvendor");
       FormData requestData = FormData.fromMap(addvendor);
       var token = await SharedPref.getStringPreference('token');

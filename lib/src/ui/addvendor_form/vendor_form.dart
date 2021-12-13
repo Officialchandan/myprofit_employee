@@ -15,9 +15,11 @@ import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:myprofit_employee/model/add_chat_papdi.dart';
+import 'package:myprofit_employee/model/custome_textfeild.dart';
 import 'package:myprofit_employee/model/get_all_state_response.dart';
 import 'package:myprofit_employee/model/getcity_by_state_response.dart';
 import 'package:myprofit_employee/src/ui/added_vendor_list/added_vendor_list.dart';
+import 'package:myprofit_employee/src/ui/addvendor_form/form.dart';
 import 'package:myprofit_employee/src/ui/map/google_maps.dart';
 import 'package:myprofit_employee/utils/colors.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
@@ -40,7 +42,7 @@ class VendorForm extends StatefulWidget {
   const VendorForm({Key? key, this.id, this.title}) : super(key: key);
 
   @override
-  _VendorFormState createState() => _VendorFormState(this.id, this.title);
+  _VendorFormState createState() => _VendorFormState();
 }
 
 //select-category
@@ -60,7 +62,7 @@ class _VendorFormState extends State<VendorForm> {
   File? image;
   Uint8List? data;
   ui.Image? imageData;
-  _VendorFormState(id, title);
+
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime currentDate = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
@@ -147,8 +149,11 @@ class _VendorFormState extends State<VendorForm> {
   TextEditingController _state = TextEditingController();
   TextEditingController edtSearch = TextEditingController();
 
+  List<UserForm?> users = [];
+  User user = User();
+
   List<GetAllCityByStateResponseData> cityList = [];
-  dynamic selecteddays;
+  List<String>? selecteddays;
   List<DayInWeek> _days = [
     DayInWeek(
       "Sun",
@@ -319,6 +324,21 @@ class _VendorFormState extends State<VendorForm> {
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please Enter Valid Mobile Number");
+      } else if (_openingtime.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please select opening time");
+      } else if (_closingtime.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please select close time");
+      } else if (selecteddays!.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please select opening shop days");
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
@@ -359,21 +379,6 @@ class _VendorFormState extends State<VendorForm> {
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please do Signature in Terms and Condition");
-      } else if (_openingtime.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please select opening time");
-      } else if (_closingtime.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please select close time");
-      } else if (selecteddays == null) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please select opening shop days");
       } else if (subcatlist.isNotEmpty) {
         String savelist = "";
 
@@ -414,7 +419,11 @@ class _VendorFormState extends State<VendorForm> {
               lng,
               data,
               arr,
-              savelist);
+              savelist,
+              _openingtime.text,
+              _closingtime.text,
+              selecteddays!,
+              customedata);
           // log("ooooo ${loginData.data!.categoryType}");
           // log("ooooo ${loginData.data!.ownerMobile}");
           // log("ooooo ${savelist}");
@@ -454,7 +463,11 @@ class _VendorFormState extends State<VendorForm> {
             lng,
             data,
             arr,
-            comiisionarray);
+            comiisionarray,
+            _openingtime.text,
+            _closingtime.text,
+            selecteddays!,
+            customedata);
         log("ooooo ${loginData}");
         log("ooooo ${comiisionarray}");
         log("ooooo ${arr}");
@@ -808,6 +821,7 @@ class _VendorFormState extends State<VendorForm> {
   String arr = "";
   String comiisionarray = "";
   String commission = "";
+  List<Map<String, String>> customedata = [];
   //List<Animal> _selectedAnimals = [];
   // List<Category> _selectedCategory2 = [];
   List<CategoriesResponseData?> _selectedCategory3 = [];
@@ -821,99 +835,8 @@ class _VendorFormState extends State<VendorForm> {
     getCategories();
     getStateId(101);
     super.initState();
-    cards.add(createCard());
+
     // getCityId(21);
-  }
-
-  var nameTECs = <TextEditingController>[];
-  var ageTECs = <TextEditingController>[];
-  var jobTECs = <TextEditingController>[];
-  var cards = <Card>[];
-
-  Card createCard() {
-    var nameController = TextEditingController();
-    var ageController = TextEditingController();
-
-    nameTECs.add(nameController);
-    ageTECs.add(ageController);
-
-    return Card(
-      color: Colors.white,
-      margin: EdgeInsets.only(top: 10),
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            TextFormField(
-              controller: nameController,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
-              ],
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              //autovalidate: true,
-
-              decoration: InputDecoration(
-                counterText: "",
-                contentPadding:
-                    EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                filled: true,
-                fillColor: Color.fromRGBO(242, 242, 242, 1),
-                hintText: 'Enter here title',
-                hintStyle: TextStyle(
-                    color: Color.fromRGBO(85, 85, 85, 1),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: ageController,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
-              ],
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              //autovalidate: true,
-
-              decoration: InputDecoration(
-                counterText: "",
-                contentPadding:
-                    EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                filled: true,
-                fillColor: Color.fromRGBO(242, 242, 242, 1),
-                hintText: 'Enter here description',
-                hintStyle: TextStyle(
-                    color: Color.fromRGBO(85, 85, 85, 1),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  _onDone() {
-    List<PersonEntry> entries = [];
-    for (int i = 0; i < cards.length; i++) {
-      var name = nameTECs[i].text;
-      var age = ageTECs[i].text;
-      var job = jobTECs[i].text;
-      entries.add(PersonEntry(name, age, job));
-    }
-    Navigator.pop(context, entries);
   }
 
   GetAllStateResponse? getData;
@@ -1234,11 +1157,16 @@ class _VendorFormState extends State<VendorForm> {
                           fontWeight: FontWeight.w500,
                           days: _days,
                           border: false,
+                          daysFillColor: ColorPrimary,
+                          backgroundColor: ColorPrimary,
+                          selectedDayTextColor: Colors.white,
+                          daysBorderColor: Colors.grey,
+                          unSelectedDayTextColor: Colors.black,
                           boxDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30.0),
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
-                              colors: [ColorPrimary, ColorPrimary],
+                              colors: [Colors.white10, Colors.white10],
                               tileMode: TileMode
                                   .repeated, // repeats the gradient over the canvas
                             ),
@@ -1247,7 +1175,7 @@ class _VendorFormState extends State<VendorForm> {
                             // <== Callback to handle the selected days
                             print(values);
                             selecteddays = values;
-                            log("$selecteddays}");
+                            log("===>$selecteddays}");
                           },
                         ),
                       ),
@@ -1907,32 +1835,36 @@ class _VendorFormState extends State<VendorForm> {
                                   style: TextStyle(
                                     color: Colors.white,
                                   )),
-                              onTap: () =>
-                                  setState(() => cards.add(createCard())),
+                              onTap: () => setState(() {
+                                log("");
+                                onAddForm();
+                              }),
                             ),
                           ),
                         ),
                       ),
-                      Container(
-                        height: deviceheight / 2,
-                        child: ListView.builder(
-                          itemCount: cards.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return cards[index];
-                          },
-                        ),
-                      ),
+                      users.length != 0
+                          ? Container(
+                              height:
+                                  150 * double.parse(users.length.toString()),
+                              child: ListView.builder(
+                                addAutomaticKeepAlives: true,
+                                itemCount: users.length,
+                                itemBuilder: (_, i) => users[i]!,
+                              ),
+                            )
+                          : Text(""),
 
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: MaterialButton(
-                            child: Text('remove new'),
-                            onPressed: () {
-                              setState(() {
-                                cards.remove(1);
-                              });
-                            }),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(16.0),
+                      //   child: MaterialButton(
+                      //       child: Text('remove new'),
+                      //       onPressed: () {
+                      //         setState(() {
+                      //           onDelete();
+                      //         });
+                      //       }),
+                      // ),
                       Container(
                         transform: Matrix4.translationValues(-10, 0, 0),
                         child: Row(
@@ -1984,8 +1916,17 @@ class _VendorFormState extends State<VendorForm> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             onPressed: () {
-                              log("kai kai---->");
-
+                              customedata.clear();
+                              for (int i = 0; users.length > i; i++) {
+                                log("'name kai---->${users[i]!.user.title}");
+                                log("value kai---->${users[i]!.user.description}");
+                                customedata.add({
+                                  '"name"':
+                                      '"${(users[i]!.user.title).toString()}"',
+                                  '"value"':
+                                      '"${(users[i]!.user.description).toString()}"'
+                                });
+                              }
                               log("${imageData.toString()}");
                               if (widget.id == 0) {
                                 addChatPapdi();
@@ -2153,6 +2094,25 @@ class _VendorFormState extends State<VendorForm> {
     setState(() {});
   }
 
+  void onDelete(User _user) {
+    setState(() {
+      var find = users.firstWhere(
+        (it) => it!.user == _user,
+        orElse: () => null,
+      );
+      if (find != null) users.removeAt(users.indexOf(find));
+    });
+  }
+
+  void onAddForm() {
+    setState(() {
+      var _user = User();
+      users.add(UserForm(
+        user: _user,
+        onDelete: () => onDelete(_user),
+      ));
+    });
+  }
 //image-picker
 }
 
@@ -2366,14 +2326,105 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
   }
 }
 
-class PersonEntry {
-  final String name;
-  final String age;
-  final String studyJob;
+// class PersonEntry {
+//   final String name;
+//   final String age;
+//   final String studyJob;
 
-  PersonEntry(this.name, this.age, this.studyJob);
-  @override
-  String toString() {
-    return 'Person: name= $name, age= $age, study job= $studyJob';
-  }
-}
+//   PersonEntry(this.name, this.age, this.studyJob);
+//   @override
+//   String toString() {
+//     return 'Person: name= $name, age= $age, study job= $studyJob';
+//   }
+// }
+// var nameTECs = <TextEditingController>[];
+//   var ageTECs = <TextEditingController>[];
+//   var jobTECs = <TextEditingController>[];
+//   var cards = <Card>[];
+
+//   Card createCard() {
+//     var nameController = TextEditingController();
+//     var ageController = TextEditingController();
+
+//     nameTECs.add(nameController);
+//     ageTECs.add(ageController);
+
+//     return Card(
+//       color: Colors.white,
+//       margin: EdgeInsets.only(top: 10),
+//       elevation: 5,
+//       child: Padding(
+//         padding: const EdgeInsets.all(10.0),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: <Widget>[
+//             TextFormField(
+//               controller: nameController,
+//               inputFormatters: [
+//                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+//               ],
+//               autovalidateMode: AutovalidateMode.onUserInteraction,
+//               //autovalidate: true,
+
+//               decoration: InputDecoration(
+//                 counterText: "",
+//                 contentPadding:
+//                     EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+//                 filled: true,
+//                 fillColor: Color.fromRGBO(242, 242, 242, 1),
+//                 hintText: 'Enter here title',
+//                 hintStyle: TextStyle(
+//                     color: Color.fromRGBO(85, 85, 85, 1),
+//                     fontSize: 13,
+//                     fontWeight: FontWeight.w600),
+//                 border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(10),
+//                   borderSide: BorderSide.none,
+//                 ),
+//               ),
+//             ),
+//             SizedBox(
+//               height: 10,
+//             ),
+//             TextFormField(
+//               controller: ageController,
+//               inputFormatters: [
+//                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+//               ],
+//               autovalidateMode: AutovalidateMode.onUserInteraction,
+//               //autovalidate: true,
+
+//               decoration: InputDecoration(
+//                 counterText: "",
+//                 contentPadding:
+//                     EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+//                 filled: true,
+//                 fillColor: Color.fromRGBO(242, 242, 242, 1),
+//                 hintText: 'Enter here description',
+//                 hintStyle: TextStyle(
+//                     color: Color.fromRGBO(85, 85, 85, 1),
+//                     fontSize: 13,
+//                     fontWeight: FontWeight.w600),
+//                 border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(10),
+//                   borderSide: BorderSide.none,
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   _onDone() {
+//     List<PersonEntry> entries = [];
+//     for (int i = 0; i < cards.length; i++) {
+//       var name = nameTECs[i].text;
+//       var age = ageTECs[i].text;
+//       var job = jobTECs[i].text;
+//       entries.add(PersonEntry(name, age, job));
+//     }
+//     Navigator.pop(context, entries);
+//   }
+
