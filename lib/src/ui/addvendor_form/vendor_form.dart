@@ -1456,171 +1456,174 @@ class _VendorFormState extends State<VendorForm> {
                             )
                           : SizedBox(height: 15),
 
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     FocusScopeNode currentFocus = FocusScope.of(context);
-                      //     if (!currentFocus.hasPrimaryFocus) {
-                      //       currentFocus.unfocus();
-                      //     }
-                      //   },
-                      //   child:
-                      widget.id == 0
-                          ? Container(
-                              height: 0,
-                            )
-                          : Container(
-                              child: result == null
-                                  ? Center(child: CircularProgressIndicator())
-                                  :
-                                  // GestureDetector(
-                                  //     onTap: () {
-                                  //       FocusScopeNode currentFocus =
-                                  //           FocusScope.of(context);
-                                  //       if (!currentFocus.hasPrimaryFocus) {
-                                  //         currentFocus.unfocus();
-                                  //       }
-                                  //     },
-                                  //     child:
-                                  Container(
-                                      // width: devicewidth - 30,
-                                      child: MultiSelectDialogField<
-                                          CategoriesResponseData?>(
-                                        buttonIcon: Icon(
-                                            Icons.keyboard_arrow_down,
-                                            color: ColorPrimary),
-                                        decoration: BoxDecoration(
-                                          color:
-                                              Color.fromRGBO(242, 242, 242, 1),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
+                      GestureDetector(
+                        onTap: () {
+                          FocusScopeNode currentFocus = FocusScope.of(context);
+                          if (!currentFocus.hasPrimaryFocus) {
+                            currentFocus.unfocus();
+                          }
+                        },
+                        child: widget.id == 0
+                            ? Container(
+                                height: 0,
+                              )
+                            : Container(
+                                child: result == null
+                                    ? Center(child: CircularProgressIndicator())
+                                    :
+                                    // GestureDetector(
+                                    //     onTap: () {
+                                    //       FocusScopeNode currentFocus =
+                                    //           FocusScope.of(context);
+                                    //       if (!currentFocus.hasPrimaryFocus) {
+                                    //         currentFocus.unfocus();
+                                    //       }
+                                    //     },
+                                    //     child:
+                                    Container(
+                                        // width: devicewidth - 30,
+                                        child: MultiSelectDialogField<
+                                            CategoriesResponseData?>(
+                                          buttonIcon: Icon(
+                                              Icons.keyboard_arrow_down,
+                                              color: ColorPrimary),
+                                          decoration: BoxDecoration(
+                                            color: Color.fromRGBO(
+                                                242, 242, 242, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
 
-                                        key: _multiSelectKey,
-                                        // initialChildSize: 0.7,
-                                        // maxChildSize: 0.95,
-                                        title: GestureDetector(
-                                          onTap: () {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text('Other categories',
+                                          key: _multiSelectKey,
+                                          // initialChildSize: 0.7,
+                                          // maxChildSize: 0.95,
+                                          title: GestureDetector(
+                                            onTap: () {
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('Other categories',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                          ),
+                                          buttonText: Text(placeholderText,
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: Color.fromRGBO(
+                                                      85, 85, 85, 1),
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w600)),
+                                          searchTextStyle: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600),
+                                          cancelText: Text('Cancel',
+                                              style: TextStyle(
+                                                  color: Color(0xff6657f4),
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600)),
-                                        ),
-                                        buttonText: Text(placeholderText,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    85, 85, 85, 1),
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600)),
-                                        searchTextStyle: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600),
-                                        cancelText: Text('Cancel',
-                                            style: TextStyle(
-                                                color: Color(0xff6657f4),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600)),
-                                        confirmText: Text('Ok',
-                                            style: TextStyle(
-                                                color: Color(0xff6657f4),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600)),
-                                        items: result!.data!
-                                            .map((category) => MultiSelectItem<
-                                                    CategoriesResponseData>(
-                                                category,
-                                                category.categoryName))
-                                            .toList(),
-                                        searchable: true,
-                                        initialValue: subcatlist
-                                            .map((e) => e.subCat)
-                                            .toList(),
+                                          confirmText: Text('Ok',
+                                              style: TextStyle(
+                                                  color: Color(0xff6657f4),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600)),
+                                          items: result!.data!
+                                              .map((category) => MultiSelectItem<
+                                                      CategoriesResponseData>(
+                                                  category,
+                                                  category.categoryName))
+                                              .toList(),
+                                          searchable: true,
+                                          initialValue: subcatlist
+                                              .map((e) => e.subCat)
+                                              .toList(),
 
-                                        validator: (values) {
-                                          if (values == null ||
-                                              values.isEmpty) {
-                                            return "";
-                                          }
-                                          List<String> names = values
-                                              .map((e) => e!.categoryName)
-                                              .toList();
-
-                                          if (names.contains("Frog")) {
-                                            return "Frogs are weird!";
-                                          }
-                                          return null;
-                                        },
-                                        onConfirm: (values) {
-                                          // SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                          // SystemChannels.textInput
-                                          //     .invokeMethod('TextInput.hide');
-                                          FocusScopeNode currentFocus =
-                                              FocusScope.of(context);
-                                          if (!currentFocus.hasPrimaryFocus) {
-                                            currentFocus.unfocus();
-                                          }
-                                          setState(() {
-                                            _selectedCategory3 = values;
-                                            placeholderText = "";
-                                            subcatlist.clear();
-                                            if (values.length == 0) {
-                                              placeholderText =
-                                                  "Please select category";
-                                            } else {
-                                              for (int i = 0;
-                                                  i < values.length;
-                                                  i++) {
-                                                if (i == values.length - 1) {
-                                                  placeholderText =
-                                                      "Please select category";
-                                                  arr = arr +
-                                                      values[i]!.id.toString();
-                                                } else {
-                                                  // placeholderText = placeholderText +
-                                                  //     values[i]!.categoryName +
-                                                  //     ", ";
-                                                  arr = arr +
-                                                      (values[i]!
-                                                          .id
-                                                          .toString()) +
-                                                      ",";
-                                                }
-                                                subcatlist
-                                                    .add(SubCat(values[i]!));
-                                              }
+                                          validator: (values) {
+                                            if (values == null ||
+                                                values.isEmpty) {
+                                              return "";
                                             }
-                                          });
-                                          _multiSelectKey.currentState!
-                                              .validate();
-                                        },
-                                        chipDisplay: MultiSelectChipDisplay(
-                                          onTap: (item) {
+                                            List<String> names = values
+                                                .map((e) => e!.categoryName)
+                                                .toList();
+
+                                            if (names.contains("Frog")) {
+                                              return "Frogs are weird!";
+                                            }
+                                            return null;
+                                          },
+                                          onConfirm: (values) {
+                                            // SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                            // SystemChannels.textInput
+                                            //     .invokeMethod('TextInput.hide');
                                             FocusScopeNode currentFocus =
                                                 FocusScope.of(context);
                                             if (!currentFocus.hasPrimaryFocus) {
                                               currentFocus.unfocus();
                                             }
                                             setState(() {
-                                              _selectedCategory3.remove(item);
-                                              log("dddd ${item}");
+                                              _selectedCategory3 = values;
+                                              placeholderText = "";
+                                              subcatlist.clear();
+                                              if (values.length == 0) {
+                                                placeholderText =
+                                                    "Please select category";
+                                              } else {
+                                                for (int i = 0;
+                                                    i < values.length;
+                                                    i++) {
+                                                  if (i == values.length - 1) {
+                                                    placeholderText =
+                                                        "Please select category";
+                                                    arr = arr +
+                                                        values[i]!
+                                                            .id
+                                                            .toString();
+                                                  } else {
+                                                    // placeholderText = placeholderText +
+                                                    //     values[i]!.categoryName +
+                                                    //     ", ";
+                                                    arr = arr +
+                                                        (values[i]!
+                                                            .id
+                                                            .toString()) +
+                                                        ",";
+                                                  }
+                                                  subcatlist
+                                                      .add(SubCat(values[i]!));
+                                                }
+                                              }
                                             });
                                             _multiSelectKey.currentState!
                                                 .validate();
                                           },
-                                        )..disabled = true,
-                                        //  );
-                                        // }
+                                          chipDisplay: MultiSelectChipDisplay(
+                                            onTap: (item) {
+                                              FocusScopeNode currentFocus =
+                                                  FocusScope.of(context);
+                                              if (!currentFocus
+                                                  .hasPrimaryFocus) {
+                                                currentFocus.unfocus();
+                                              }
+                                              setState(() {
+                                                _selectedCategory3.remove(item);
+                                                log("dddd ${item}");
+                                              });
+                                              _multiSelectKey.currentState!
+                                                  .validate();
+                                            },
+                                          )..disabled = true,
+                                          //  );
+                                          // }
+                                        ),
                                       ),
-                                    ),
-                              //),
-                            ),
-                      //),
+                                //),
+                              ),
+                      ),
                       Column(
                           children: List.generate(subcatlist.length, (index) {
                         return Padding(
