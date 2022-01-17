@@ -96,6 +96,10 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                               ),
                             ),
                           ]),
+
+                      Divider(
+                        thickness: 2,
+                      ),
                       SizedBox(
                         height: 15,
                       ),
@@ -118,6 +122,10 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                               ),
                             ),
                           ]),
+
+                      Divider(
+                        thickness: 2,
+                      ),
                       SizedBox(
                         height: 15,
                       ),
@@ -140,6 +148,13 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                               ),
                             ),
                           ]),
+
+                      Divider(
+                        thickness: 2,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
                       // Row(
                       //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       //   children: [

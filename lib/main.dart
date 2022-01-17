@@ -1,16 +1,46 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:myprofit_employee/provider/NavigationService.dart';
+import 'package:myprofit_employee/src/ui/added_vendor_list/added_vendor_list.dart';
+import 'package:myprofit_employee/src/ui/home/home.dart';
 import 'package:myprofit_employee/src/ui/splash/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myprofit_employee/utils/colors.dart';
+import 'package:myprofit_employee/utils/sharedpref.dart';
 
 import 'provider/api_provider.dart';
 
 NavigationService navigationService = NavigationService();
-void main() {
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    "high_importance_channel", "High Importance Notification",
+    importance: Importance.high, playSound: true);
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("A bg Message showed up: ${message.messageId}");
+}
+
+fcmToken() async {
+  try {
+    log("device token${await firebaseMessaging.getToken()}");
+    String? tok = await firebaseMessaging.getToken();
+
+    SharedPref.setStringPreference(SharedPref.DEVICETOKEN, tok!);
+  } catch (e) {
+    log("error");
+  }
+}
+
+Future<void> main() async {
   dio.interceptors.add(LogInterceptor(
       responseBody: true,
       responseHeader: false,
@@ -22,8 +52,56 @@ void main() {
         log(text.toString());
       }));
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await fcmToken();
+  FirebaseMessaging.onBackgroundMessage((_firebaseMessagingBackgroundHandler));
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    log("notification data -> ${message.data}");
+    log("notification title ${message.notification!.title}");
+    log("notification body ${message.notification!.body}");
+    log("===>$android");
+    if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(channel.id, channel.name,
+                color: ColorPrimary, playSound: true, icon: "logo"),
+          ));
+    }
+    // Navigator.push(navigationService.navigatorKey.currentContext!,
+    //     MaterialPageRoute(builder: (_) => MoneyDueScreen()));
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print("a new on message");
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null) {
+      log("notification aya");
+      Navigator.push(navigationService.navigatorKey.currentContext!,
+          MaterialPageRoute(builder: (_) => Home(onTab: () {})));
+    }
+  });
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+  CircularProgressIndicator();
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   runApp(MyApp());
 }
 

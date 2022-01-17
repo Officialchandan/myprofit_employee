@@ -22,8 +22,10 @@ import 'package:myprofit_employee/model/getvenordbyid_response.dart';
 import 'package:myprofit_employee/model/login_response.dart';
 import 'package:myprofit_employee/model/logout_response.dart';
 import 'package:myprofit_employee/model/otp_response.dart';
+import 'package:myprofit_employee/model/update-notification.dart';
 import 'package:myprofit_employee/model/updatevendordetail_response.dart';
 import 'package:myprofit_employee/model/user_not_intrested.dart';
+import 'package:myprofit_employee/model/vendor_send_notification.dart';
 import 'package:myprofit_employee/provider/server_error.dart';
 import 'package:myprofit_employee/utils/sharedpref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -229,25 +231,26 @@ class ApiProvider {
   }
 
   Future<AddVendorResponse> addVendor(
-      vendor,
-      shopname,
-      ownername,
-      commission,
-      ownermobile,
-      address,
-      landmark,
-      city,
-      state,
-      pin,
-      lat,
-      lng,
-      ownersign,
-      subcat,
-      subcatcommission,
-      opentime,
-      closetime,
-      List<String> openingdays,
-      List<Map<String, String>> customfield) async {
+    vendor,
+    shopname,
+    ownername,
+    commission,
+    ownermobile,
+    address,
+    landmark,
+    city,
+    state,
+    pin,
+    lat,
+    lng,
+    ownersign,
+    subcat,
+    subcatcommission,
+    opentime,
+    closetime,
+    List<String> openingdays,
+    List<Map<String, String>> customfield,
+  ) async {
     //log("chl gyi ${mobile + otp}");
     try {
       Map<String, dynamic> addvendor = HashMap<String, dynamic>();
@@ -269,6 +272,8 @@ class ApiProvider {
       addvendor["sub_cat_commission"] = subcatcommission;
       addvendor["opening_time"] = opentime;
       addvendor["closing_time"] = closetime;
+      addvendor["device_token"] =
+          await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
       addvendor["custom_field"] = customfield.toString();
       String opendays = "";
       for (int i = 0; i < openingdays.length; i++) {
@@ -712,5 +717,47 @@ class ApiProvider {
     //   print("Exception occurred: $message stackTrace: $stacktrace");
     //   return GetEmployeTrackerResponse(success: false, message: message);
     // }
+  }
+
+  Future<VendorNotificationResponse> getNotifications(Map input) async {
+    try {
+      var token = await SharedPref.getStringPreference('token');
+      Response res = await dio.post('$baseUrl/getEmployeeSendNotificatonList',
+          data: input,
+          options: Options(headers: {"Authorization": "Bearer ${token}"}));
+
+      return VendorNotificationResponse.fromJson(res.toString());
+    } catch (error) {
+      String message = "";
+      if (error is DioError) {
+        ServerError e = ServerError.withError(error: error);
+        message = e.getErrorMessage();
+      } else {
+        message = "Please try again later!";
+      }
+      print("Exception occurred: $message stackTrace: $error");
+      return VendorNotificationResponse(success: false, message: message);
+    }
+  }
+
+  Future<UpdateNotificationStatus> markAsReadNotification(Map input) async {
+    try {
+      var token = await SharedPref.getStringPreference('token');
+      Response res = await dio.post('$baseUrl/updateSendNotificationStatus',
+          data: input,
+          options: Options(headers: {"Authorization": "Bearer ${token}"}));
+
+      return UpdateNotificationStatus.fromJson(res.toString());
+    } catch (error) {
+      String message = "";
+      if (error is DioError) {
+        ServerError e = ServerError.withError(error: error);
+        message = e.getErrorMessage();
+      } else {
+        message = "Please try again later!";
+      }
+      print("Exception occurred: $message stackTrace: $error");
+      return UpdateNotificationStatus(success: false, message: message);
+    }
   }
 }

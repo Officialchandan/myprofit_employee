@@ -1319,11 +1319,7 @@ class _VendorFormState extends State<VendorForm> {
                                   padding: EdgeInsets.only(top: 20, bottom: 0),
                                   child: Column(children: [
                                     Expanded(
-                                      child: ListView.separated(
-                                          separatorBuilder: (context, index) =>
-                                              Divider(
-                                                color: Colors.black,
-                                              ),
+                                      child: ListView.builder(
                                           itemCount: stateData.length,
                                           itemBuilder:
                                               (BuildContext ctxt, int index) {
@@ -2265,7 +2261,9 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
                 List<GetAllCityByStateResponseData> searchList = [];
 
                 citydata.forEach((element) {
-                  if (element.name.contains(text.trim().toLowerCase())) {
+                  if (element.name
+                      .toLowerCase()
+                      .contains(text.trim().toLowerCase())) {
                     searchList.add(element);
                   }
                 });
@@ -2282,10 +2280,7 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
                   initialData: citydata,
                   builder: (context, snap) {
                     if (snap.hasData && snap.data!.length > 0) {
-                      return ListView.separated(
-                          separatorBuilder: (context, index) => Divider(
-                                color: Colors.black,
-                              ),
+                      return ListView.builder(
                           itemCount: snap.data!.length,
                           itemBuilder: (BuildContext ctxt, int index) {
                             return Padding(

@@ -37,7 +37,7 @@ dependencies:
   fluttertoast: 
 
   #use for bloc architecture
-  bloc: 
+  flutter_bloc: ^7.3.3
   equatable: 
   # use for charts
   syncfusion_flutter_charts: 
@@ -46,6 +46,7 @@ dependencies:
 
   #location
   location:
+  intl:
   #api integration
   dio:
   http: 
@@ -64,7 +65,11 @@ dependencies:
   place_picker:
   flutter_polyline_points:
   
+ #firebase
 
+  firebase_core:
+  flutter_local_notifications:
+  firebase_messaging:
 
   #image view
   cached_network_image:

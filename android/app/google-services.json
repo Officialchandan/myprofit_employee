@@ -1,0 +1,166 @@
+{
+  "project_info": {
+    "project_number": "187823831764",
+    "project_id": "myprofit-321106",
+    "storage_bucket": "myprofit-321106.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187823831764:android:9550027212a489d8ddd941",
+        "android_client_info": {
+          "package_name": "com.myprofit.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187823831764-btl2uhsa81hptp3la60alh1gio26ghph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myprofit.customer",
+            "certificate_hash": "a29629280bec0e5cfac131624433a3cf317239bc"
+          }
+        },
+        {
+          "client_id": "187823831764-soutg7agvvgl48vf030s12av5kmhuth5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myprofit.customer",
+            "certificate_hash": "400b99af75d3720faffe86e542c5bf9c0f253301"
+          }
+        },
+        {
+          "client_id": "187823831764-dpp4iht9civ6mh011fqbj56umm9r5jep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6kRu8Y5cryiVrWYMpDNWJBTKf1z6UYUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187823831764-dpp4iht9civ6mh011fqbj56umm9r5jep.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "187823831764-6lsigb8m7rltfb49v73df5pqk43runc0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.myprofit.customer"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187823831764:android:90d947d07545a826ddd941",
+        "android_client_info": {
+          "package_name": "com.myprofit.employee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187823831764-ifqf3but0moa1v0v1anq1viilaq2hlul.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myprofit.employee",
+            "certificate_hash": "874de9bc27a809316c89ccf4b1e49028c4911c87"
+          }
+        },
+        {
+          "client_id": "187823831764-dpp4iht9civ6mh011fqbj56umm9r5jep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6kRu8Y5cryiVrWYMpDNWJBTKf1z6UYUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187823831764-dpp4iht9civ6mh011fqbj56umm9r5jep.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "187823831764-6lsigb8m7rltfb49v73df5pqk43runc0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.myprofit.customer"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187823831764:android:cdb5683a1f8b8506ddd941",
+        "android_client_info": {
+          "package_name": "com.myprofit.vendor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187823831764-8tt2q9ekql9dt238ikgdos41u1sjbn37.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myprofit.vendor",
+            "certificate_hash": "aa1c578dd63d6497af49f80b1a55d93d15f2e4f7"
+          }
+        },
+        {
+          "client_id": "187823831764-gqjr7t0r5td3tkj6qigs8tnnup9208g3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myprofit.vendor",
+            "certificate_hash": "874de9bc27a809316c89ccf4b1e49028c4911c87"
+          }
+        },
+        {
+          "client_id": "187823831764-qee6l95pqd1gm8ecpaadcb62rhkiopmr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myprofit.vendor",
+            "certificate_hash": "400b99af75d3720faffe86e542c5bf9c0f253301"
+          }
+        },
+        {
+          "client_id": "187823831764-dpp4iht9civ6mh011fqbj56umm9r5jep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6kRu8Y5cryiVrWYMpDNWJBTKf1z6UYUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187823831764-dpp4iht9civ6mh011fqbj56umm9r5jep.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "187823831764-6lsigb8m7rltfb49v73df5pqk43runc0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.myprofit.customer"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

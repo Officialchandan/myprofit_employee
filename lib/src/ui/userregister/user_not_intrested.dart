@@ -170,7 +170,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                     ],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     //autovalidate: true,
-                    maxLength: 25,
+                    maxLength: 200,
                     maxLines: 6,
                     minLines: 5,
                     decoration: InputDecoration(

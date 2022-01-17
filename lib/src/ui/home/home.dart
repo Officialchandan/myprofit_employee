@@ -2,20 +2,27 @@ import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myprofit_employee/model/categories_respnse.dart';
 import 'package:myprofit_employee/model/getvenordbyid_response.dart';
+import 'package:myprofit_employee/model/notfication_list.dart';
 import 'package:myprofit_employee/provider/api_provider.dart';
+import 'package:myprofit_employee/provider/server_error.dart';
 import 'package:myprofit_employee/src/ui/add_dhaba/add_dhaba.dart';
 import 'package:myprofit_employee/src/ui/added_vendor_list/added_vendor_list.dart';
 import 'package:myprofit_employee/src/ui/addvendor_form/vendor_form.dart';
+
 import 'package:myprofit_employee/src/ui/login/login.dart';
 import 'package:myprofit_employee/utils/colors.dart';
 import 'package:myprofit_employee/utils/network.dart';
+import 'package:myprofit_employee/utils/sharedpref.dart';
 
 import 'package:rxdart/rxdart.dart';
+
+import 'notification_screen/notification_screen.dart';
 
 class Home extends StatefulWidget {
   final Function onTab;
@@ -54,13 +61,14 @@ class _HomeState extends State<Home> {
   String searchText = "";
   bool searching = false;
   int? id;
-
+  List<NotificationListData> notificationList = [];
   final PublishSubject<List<CategoriesResponseData>> subject = PublishSubject();
   List<GetVendorByIdResponseData> loginData = [];
   @override
   void initState() {
     super.initState();
     getCategories();
+    getNotificationCount();
     _tap = true;
     // getVendorId(id);
     // subject.stream
@@ -152,6 +160,31 @@ class _HomeState extends State<Home> {
     return loginData;
   }
 
+  Future<NotificationListResponse> getNotificationCount() async {
+    try {
+      var token = await SharedPref.getStringPreference('token');
+      Response res = await dio.get(
+        "http://employee.tekzee.in/api/v1/getNotificatonList",
+        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+      );
+      NotificationListResponse count =
+          NotificationListResponse.fromJson(res.toString());
+      notificationList = count.data!;
+      setState(() {});
+      return count;
+    } catch (error) {
+      String message = "";
+      if (error is DioError) {
+        ServerError e = ServerError.withError(error: error);
+        message = e.getErrorMessage();
+      } else {
+        message = "Please try again later!";
+      }
+      print("Exception occurred: $message stackTrace: $error");
+      return NotificationListResponse(success: false, message: message);
+    }
+  }
+
   getCategories() async {
     if (await Network.isConnected()) {
       result = await ApiProvider().getCategoriess();
@@ -239,7 +272,7 @@ class _HomeState extends State<Home> {
                 ? IconButton(
                     icon: const Icon(Icons.close),
                     iconSize: 25,
-                    onPressed: () {
+                    onPressed: () async {
                       _searchController.clear();
                       subject.add(categorieslist);
                       searching = false;
@@ -249,11 +282,57 @@ class _HomeState extends State<Home> {
                 : IconButton(
                     icon: const Icon(Icons.search_outlined),
                     iconSize: 25,
-                    onPressed: () {
+                    onPressed: () async {
                       searching = true;
                       setState(() {});
                     },
                   ),
+            Stack(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.notifications,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NotificationScreen()));
+                  },
+                ),
+                notificationList.isNotEmpty
+                    ? Positioned(
+                        right: 10,
+                        top: 8,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Container(
+                            height: 14,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(50),
+                              border: Border.all(color: ColorPrimary, width: 1),
+                            ),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
+                                child: Text(
+                                  notificationList.length.toString(),
+                                  textDirection: TextDirection.ltr,
+                                  style: TextStyle(
+                                    color: ColorPrimary,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 8,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ))
+                    : Container()
+              ],
+            ),
           ],
         ),
         body: StreamBuilder<List<CategoriesResponseData>>(
