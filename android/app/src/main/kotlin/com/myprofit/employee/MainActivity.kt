@@ -1,4 +1,4 @@
-package com.myprofit.myprofit_employee
+package com.myprofit.employee
 
 import io.flutter.embedding.android.FlutterActivity
 

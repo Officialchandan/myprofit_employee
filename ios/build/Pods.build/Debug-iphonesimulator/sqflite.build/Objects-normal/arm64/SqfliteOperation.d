@@ -1,7 +1,7 @@
 dependencies: \
   /Users/mac/fluttersdk/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.0+3/ios/Classes/SqfliteOperation.m \
-  /Users/mac/Documents/vaibhav/myprofit_employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/build/Pods.build/Debug-iphonesimulator/sqflite.build/module.modulemap \
-  /Users/mac/Documents/vaibhav/myprofit_employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/Pods/Target\ Support\ Files/sqflite/sqflite-prefix.pch \
+  /Users/mac/Documents/vaibhav/employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/build/Pods.build/Debug-iphonesimulator/sqflite.build/module.modulemap \
+  /Users/mac/Documents/vaibhav/employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/Pods/Target\ Support\ Files/sqflite/sqflite-prefix.pch \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator14.3.sdk/usr/include/mach-o/compact_unwind_encoding.modulemap \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator14.3.sdk/usr/include/mach-o/dyld.modulemap \
   /Users/mac/fluttersdk/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.0+3/ios/Classes/SqfliteOperation.h \

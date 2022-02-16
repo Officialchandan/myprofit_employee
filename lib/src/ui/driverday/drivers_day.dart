@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:myprofit_employee/model/drivers_day_response.dart';
-import 'package:myprofit_employee/provider/api_provider.dart';
-import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/widget/app_bar.dart';
+import 'package:employee/model/drivers_day_response.dart';
+import 'package:employee/provider/api_provider.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/widget/app_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

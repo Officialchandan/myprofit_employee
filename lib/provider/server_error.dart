@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:employee/main.dart';
+import 'package:employee/src/ui/login/login.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/sharedpref.dart';
 import 'package:flutter/material.dart';
-import 'package:myprofit_employee/main.dart';
-import 'package:myprofit_employee/src/ui/login/login.dart';
-import 'package:myprofit_employee/utils/sharedpref.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ServerError implements Exception {
   int? _errorCode = 200;
@@ -38,12 +40,16 @@ class ServerError implements Exception {
         _errorMessage = "Receive timeout in connection";
         break;
       case DioErrorType.response:
-        _errorMessage =
-            "Received invalid status code: ${error.response!.statusCode}";
+        _errorMessage = "Received invalid status code: ${error.response!.statusCode}";
         if (error.response!.statusCode == 401) {
           print("come here-->");
 
           logout();
+        }
+
+        if (error.response!.statusCode == 500) {
+          print("come here-->");
+          Fluttertoast.showToast(msg: "Internal Server error", backgroundColor: ColorPrimary);
         }
 
         break;
@@ -59,25 +65,21 @@ class ServerError implements Exception {
     double devicewidth = 300;
 
     showDialog(
-      barrierDismissible: false,
+        barrierDismissible: false,
         context: navigationService.navigatorKey.currentContext!,
         builder: (context) => AlertDialog(
-          
-          content:
-              Text("Your session has been expired! Please login again"),
-          contentPadding: EdgeInsets.all(15),
-          actions: [
-            TextButton(
-                onPressed: () async {
-                  SharedPref.clearSharedPreference(context);
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login()),
-                      (route) => false);
-                },
-                child: Text("Ok"))
-          ],
-        ));
+              content: Text("Your session has been expired! Please login again"),
+              contentPadding: EdgeInsets.all(15),
+              actions: [
+                TextButton(
+                    onPressed: () async {
+                      SharedPref.clearSharedPreference(context);
+                      Navigator.pushAndRemoveUntil(
+                          context, MaterialPageRoute(builder: (context) => Login()), (route) => false);
+                    },
+                    child: Text("Ok"))
+              ],
+            ));
 
     // EasyLoading.showError("Your session has been expired! Please login again",);
   }

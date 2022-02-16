@@ -1,10 +1,11 @@
 import 'dart:io';
+
+import 'package:employee/src/ui/form2/form2.dart';
+import 'package:employee/utils/validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myprofit_employee/src/ui/form2/form2.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myprofit_employee/utils/validator.dart';
 
 class Form1 extends StatefulWidget {
   @override
@@ -143,7 +144,6 @@ class _Form1State extends State<Form1> {
   }
   //date-picker
 
-
   TextEditingController _dhabaIDController = TextEditingController();
   TextEditingController _dhabaNameController = TextEditingController();
   TextEditingController _dhabaOwnerNameController = TextEditingController();
@@ -169,7 +169,6 @@ class _Form1State extends State<Form1> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(102, 87, 244, 1),
           leading: Builder(
@@ -186,7 +185,6 @@ class _Form1State extends State<Form1> {
           title: Text('Form 1 - All Dhabas', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
           centerTitle: true,
         ),
-
         body: SingleChildScrollView(
           padding: EdgeInsets.fromLTRB(16, 14, 16, 14),
           child: Column(
@@ -210,7 +208,8 @@ class _Form1State extends State<Form1> {
                 controller: _dhabaIDController,
               ),
               SizedBox(height: 15),
-              Text('Dhaba name', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Dhaba name',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -246,7 +245,8 @@ class _Form1State extends State<Form1> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Name of Dhaba owner', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Name of Dhaba owner',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -264,7 +264,8 @@ class _Form1State extends State<Form1> {
                 controller: _dhabaOwnerNameController,
               ),
               SizedBox(height: 15),
-              Text('Internet availability at Dhaba', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Internet availability at Dhaba',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -311,8 +312,10 @@ class _Form1State extends State<Form1> {
                 controller: _netSpeedtestController,
               ),
               SizedBox(height: 15),
-              Text('Location between the tolls', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-              Text('(eg- between toll no.5 and toll no.6)', style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 14, fontWeight: FontWeight.w500)),
+              Text('Location between the tolls',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('(eg- between toll no.5 and toll no.6)',
+                  style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 14, fontWeight: FontWeight.w500)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -331,7 +334,8 @@ class _Form1State extends State<Form1> {
                 controller: _locationBetweenTollsController,
               ),
               SizedBox(height: 15),
-              Text('Mobile no of Dhaba owner', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Mobile no of Dhaba owner',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -463,7 +467,8 @@ class _Form1State extends State<Form1> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('No of tables and chairs in Dhaba', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('No of tables and chairs in Dhaba',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -537,7 +542,8 @@ class _Form1State extends State<Form1> {
               SizedBox(height: 15),
               Text('Is there space to increase seating capacity?',
                   style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-              Text('(Employee’s judgement)', style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 14, fontWeight: FontWeight.w500)),
+              Text('(Employee’s judgement)',
+                  style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 14, fontWeight: FontWeight.w500)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -600,7 +606,8 @@ class _Form1State extends State<Form1> {
                 controller: _noPeopleEatingController,
               ),
               SizedBox(height: 15),
-              Text('Timings of Dhaba', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Timings of Dhaba',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -614,7 +621,8 @@ class _Form1State extends State<Form1> {
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Opening timing',
-                        hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                        hintStyle:
+                            TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -641,7 +649,8 @@ class _Form1State extends State<Form1> {
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Closing timing',
-                        hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                        hintStyle:
+                            TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -661,7 +670,8 @@ class _Form1State extends State<Form1> {
                 ],
               ),
               SizedBox(height: 15),
-              Text('Workers in day shift', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Workers in day shift',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -684,7 +694,8 @@ class _Form1State extends State<Form1> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Workers at night shift', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Workers at night shift',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -707,7 +718,8 @@ class _Form1State extends State<Form1> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Lodging facility available or not?', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Lodging facility available or not?',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -735,9 +747,11 @@ class _Form1State extends State<Form1> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Main mrp of dishes :', style: TextStyle(color: Color.fromRGBO(102, 87, 244, 1), fontSize: 16, fontWeight: FontWeight.w600)),
+              Text('Main mrp of dishes :',
+                  style: TextStyle(color: Color.fromRGBO(102, 87, 244, 1), fontSize: 16, fontWeight: FontWeight.w600)),
               SizedBox(height: 15),
-              Text('Dal', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Dal',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -760,7 +774,8 @@ class _Form1State extends State<Form1> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Sev tomato', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Sev tomato',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -783,7 +798,8 @@ class _Form1State extends State<Form1> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Rice', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Rice',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -806,7 +822,8 @@ class _Form1State extends State<Form1> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Chapati', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Chapati',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -829,7 +846,8 @@ class _Form1State extends State<Form1> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Land ownership or not?', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Land ownership or not?',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -857,7 +875,8 @@ class _Form1State extends State<Form1> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Land legal or not?', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Land legal or not?',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -885,7 +904,8 @@ class _Form1State extends State<Form1> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Does he use UPI?', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Does he use UPI?',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -932,7 +952,8 @@ class _Form1State extends State<Form1> {
                 controller: _tryTeachHimController,
               ),
               SizedBox(height: 15),
-              Text('Parking area of Dhaba', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Parking area of Dhaba',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -969,14 +990,23 @@ class _Form1State extends State<Form1> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Photo of seating capacity', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Photo of seating capacity',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               InkWell(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: seatingCapacityImage != null
-                      ? Image(image: FileImage(seatingCapacityImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                      : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                      ? Image(
+                          image: FileImage(seatingCapacityImage!),
+                          width: double.infinity,
+                          height: 150,
+                          fit: BoxFit.cover)
+                      : Image(
+                          image: AssetImage('images/placeholder.png'),
+                          width: double.infinity,
+                          height: 150,
+                          fit: BoxFit.cover),
                 ),
                 onTap: () {
                   showBottomSheet(1, context);
@@ -990,64 +1020,95 @@ class _Form1State extends State<Form1> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: increaseSeatingCapacityImage != null
-                      ? Image(image: FileImage(increaseSeatingCapacityImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                      : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                      ? Image(
+                          image: FileImage(increaseSeatingCapacityImage!),
+                          width: double.infinity,
+                          height: 150,
+                          fit: BoxFit.cover)
+                      : Image(
+                          image: AssetImage('images/placeholder.png'),
+                          width: double.infinity,
+                          height: 150,
+                          fit: BoxFit.cover),
                 ),
                 onTap: () {
                   showBottomSheet(2, context);
                 },
               ),
               SizedBox(height: 15),
-              Text('Photo of dhaba name board', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Photo of dhaba name board',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               InkWell(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: dhabaBoardImage != null
-                      ? Image(image: FileImage(dhabaBoardImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                      : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                      ? Image(
+                          image: FileImage(dhabaBoardImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
+                      : Image(
+                          image: AssetImage('images/placeholder.png'),
+                          width: double.infinity,
+                          height: 150,
+                          fit: BoxFit.cover),
                 ),
                 onTap: () {
                   showBottomSheet(3, context);
                 },
               ),
               SizedBox(height: 15),
-              Text('Photo of parking lot', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Photo of parking lot',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               InkWell(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: parkingLoatImage != null
-                      ? Image(image: FileImage(parkingLoatImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                      : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                      ? Image(
+                          image: FileImage(parkingLoatImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
+                      : Image(
+                          image: AssetImage('images/placeholder.png'),
+                          width: double.infinity,
+                          height: 150,
+                          fit: BoxFit.cover),
                 ),
                 onTap: () {
                   showBottomSheet(4, context);
                 },
               ),
               SizedBox(height: 15),
-              Text('Photo of washroom', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Photo of washroom',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               InkWell(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: washroomImage != null
                       ? Image(image: FileImage(washroomImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                      : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                      : Image(
+                          image: AssetImage('images/placeholder.png'),
+                          width: double.infinity,
+                          height: 150,
+                          fit: BoxFit.cover),
                 ),
                 onTap: () {
                   showBottomSheet(5, context);
                 },
               ),
               SizedBox(height: 15),
-              Text('Photo of Dhaba walls interior', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Photo of Dhaba walls interior',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               InkWell(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: dhabaWallsImage != null
-                      ? Image(image: FileImage(dhabaWallsImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                      : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                      ? Image(
+                          image: FileImage(dhabaWallsImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
+                      : Image(
+                          image: AssetImage('images/placeholder.png'),
+                          width: double.infinity,
+                          height: 150,
+                          fit: BoxFit.cover),
                 ),
                 onTap: () {
                   showBottomSheet(6, context);
@@ -1126,14 +1187,16 @@ class _Form1State extends State<Form1> {
                   selectImage(2, imageType);
                   Navigator.pop(context);
                 },
-                child: Text('Gallery', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
+                child:
+                    Text('Gallery', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
             ],
             cancelButton: CupertinoActionSheetAction(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel', style: TextStyle(color: Color(0xfff92d28), fontSize: 16, fontWeight: FontWeight.w600)),
+              child:
+                  Text('Cancel', style: TextStyle(color: Color(0xfff92d28), fontSize: 16, fontWeight: FontWeight.w600)),
             ),
           );
         });

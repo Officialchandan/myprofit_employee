@@ -1,8 +1,8 @@
 // import 'dart:developer';
 
 // import 'package:flutter/material.dart';
-// import 'package:myprofit_employee/model/get_location_response.dart';
-// import 'package:myprofit_employee/provider/api_provider.dart';
+// import 'package:employee/model/get_location_response.dart';
+// import 'package:employee/provider/api_provider.dart';
 
 // class AreaAloted extends StatefulWidget {
 //   AreaAloted({Key? key}) : super(key: key);
@@ -55,10 +55,10 @@ import 'dart:developer';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:myprofit_employee/model/get_location_response.dart';
-import 'package:myprofit_employee/provider/api_provider.dart';
-import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/utils/sharedpref.dart';
+import 'package:employee/model/get_location_response.dart';
+import 'package:employee/provider/api_provider.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/sharedpref.dart';
 
 class LinkedLabelRadio extends StatelessWidget {
   const LinkedLabelRadio({

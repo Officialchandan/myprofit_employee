@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:myprofit_employee/model/vendor_send_notification.dart';
+import 'package:employee/model/vendor_send_notification.dart';
 
 class NotificationStates extends Equatable {
   @override

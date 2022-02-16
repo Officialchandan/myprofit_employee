@@ -2,33 +2,32 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:employee/model/add_chat_papdi.dart';
+import 'package:employee/model/add_intrested_user.dart';
+import 'package:employee/model/addvendor_form.dart';
+import 'package:employee/model/area_aloted_otp.dart';
+import 'package:employee/model/categories_respnse.dart';
+import 'package:employee/model/dhabas_day_response.dart';
+import 'package:employee/model/dhabas_monthly_response.dart';
+import 'package:employee/model/dhabas_week_response.dart';
+import 'package:employee/model/drivers_day_response.dart';
+import 'package:employee/model/drivers_monthly_response.dart';
+import 'package:employee/model/drivers_week_response.dart';
+import 'package:employee/model/get_all_state_response.dart';
+import 'package:employee/model/get_employee_tracket.dart';
+import 'package:employee/model/get_location_response.dart';
+import 'package:employee/model/getcity_by_state_response.dart';
+import 'package:employee/model/getvenordbyid_response.dart';
+import 'package:employee/model/login_response.dart';
+import 'package:employee/model/logout_response.dart';
+import 'package:employee/model/otp_response.dart';
+import 'package:employee/model/update-notification.dart';
+import 'package:employee/model/updatevendordetail_response.dart';
+import 'package:employee/model/user_not_intrested.dart';
+import 'package:employee/model/vendor_send_notification.dart';
+import 'package:employee/provider/server_error.dart';
+import 'package:employee/utils/sharedpref.dart';
 import 'package:http/http.dart' as http;
-import 'package:myprofit_employee/model/add_chat_papdi.dart';
-import 'package:myprofit_employee/model/add_intrested_user.dart';
-import 'package:myprofit_employee/model/addvendor_form.dart';
-import 'package:myprofit_employee/model/area_aloted_otp.dart';
-import 'package:myprofit_employee/model/categories_respnse.dart';
-import 'package:myprofit_employee/model/dhabas_day_response.dart';
-import 'package:myprofit_employee/model/dhabas_monthly_response.dart';
-import 'package:myprofit_employee/model/dhabas_week_response.dart';
-import 'package:myprofit_employee/model/drivers_day_response.dart';
-import 'package:myprofit_employee/model/drivers_monthly_response.dart';
-import 'package:myprofit_employee/model/drivers_week_response.dart';
-import 'package:myprofit_employee/model/get_all_state_response.dart';
-import 'package:myprofit_employee/model/get_employee_tracket.dart';
-import 'package:myprofit_employee/model/get_location_response.dart';
-import 'package:myprofit_employee/model/getcity_by_state_response.dart';
-import 'package:myprofit_employee/model/getvenordbyid_response.dart';
-import 'package:myprofit_employee/model/login_response.dart';
-import 'package:myprofit_employee/model/logout_response.dart';
-import 'package:myprofit_employee/model/otp_response.dart';
-import 'package:myprofit_employee/model/update-notification.dart';
-import 'package:myprofit_employee/model/updatevendordetail_response.dart';
-import 'package:myprofit_employee/model/user_not_intrested.dart';
-import 'package:myprofit_employee/model/vendor_send_notification.dart';
-import 'package:myprofit_employee/provider/server_error.dart';
-import 'package:myprofit_employee/utils/sharedpref.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Dio dio = Dio(baseOptions);
 
@@ -69,8 +68,7 @@ class ApiProvider {
   Future<OtpVerificationResponse> verifyOtp(mobile, otp) async {
     log("chl gyi ${mobile + otp}");
     try {
-      Response res = await dio.post('$baseUrl/user/verifyOTP',
-          data: {"mobile": mobile, "otp": otp});
+      Response res = await dio.post('$baseUrl/user/verifyOTP', data: {"mobile": mobile, "otp": otp});
       log("chl gyi 2${res}");
 
       return OtpVerificationResponse.fromJson(res.toString());
@@ -114,26 +112,26 @@ class ApiProvider {
   Future<GetVendorByIdResponse> getVendorId(id) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
-    //   try {
-    Response res = await dio.post('$baseUrl/getVendorByType',
-        data: ({"vendor_type": id}),
-        options: Options(
-          headers: {"Authorization": "Bearer $token"},
-        ));
-    log("sss${res.data.toString()}");
+    try {
+      Response res = await dio.post('$baseUrl/getVendorByType',
+          data: ({"vendor_type": id}),
+          options: Options(
+            headers: {"Authorization": "Bearer $token"},
+          ));
+      log("sss${res.data.toString()}");
 
-    return GetVendorByIdResponse.fromJson(res.toString());
-    // } catch (error, stacktrace) {
-    //   String message = "";
-    //   if (error is DioError) {
-    //     ServerError e = ServerError.withError(error: error);
-    //     message = e.getErrorMessage();
-    //   } else {
-    //     message = "Something Went wrong";
-    //   }
-    //   print("Exception occurred: $message stackTrace: $stacktrace");
-    //   return GetVendorByIdResponse(success: false, message: message);
-    // }
+      return GetVendorByIdResponse.fromJson(res.toString());
+    } catch (error, stacktrace) {
+      String message = "";
+      if (error is DioError) {
+        ServerError e = ServerError.withError(error: error);
+        message = e.getErrorMessage();
+      } else {
+        message = "Something Went wrong";
+      }
+      print("Exception occurred: $message stackTrace: $stacktrace");
+      return GetVendorByIdResponse(success: false, message: message);
+    }
   }
 
   Future<GetAllStateResponse> getState(id) async {
@@ -186,8 +184,7 @@ class ApiProvider {
     }
   }
 
-  Future<UpdateVendorResponse> updatedetails(
-      id, shopname, ownername, mobile, address, landmark, city, state, pin,
+  Future<UpdateVendorResponse> updatedetails(id, shopname, ownername, mobile, address, landmark, city, state, pin,
       [cat, subcat]) async {
     log("chl gyi }");
     log("chl gyi $id");
@@ -266,14 +263,13 @@ class ApiProvider {
       addvendor["pin"] = pin;
       addvendor["lat"] = lat;
       addvendor["lng"] = lng;
-      addvendor["owner_sign"] = await MultipartFile.fromBytes(ownersign,
-          filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+      addvendor["owner_sign"] =
+          await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
       addvendor["sub_cat_id"] = subcat;
       addvendor["sub_cat_commission"] = subcatcommission;
       addvendor["opening_time"] = opentime;
       addvendor["closing_time"] = closetime;
-      addvendor["device_token"] =
-          await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
+      addvendor["device_token"] = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
       addvendor["custom_field"] = customfield.toString();
       String opendays = "";
       for (int i = 0; i < openingdays.length; i++) {
@@ -494,8 +490,7 @@ class ApiProvider {
     }
   }
 
-  Future<AddIntrestedUserResponse> getIntrestedUser(
-      location_id, name, mobile, email, address, phone, gift) async {
+  Future<AddIntrestedUserResponse> getIntrestedUser(location_id, name, mobile, email, address, phone, gift) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${SharedPref.getStringPreference(SharedPref.VENDORID)}");
@@ -507,8 +502,7 @@ class ApiProvider {
     try {
       Response res = await dio.post('$baseUrl/registerInterestedUser',
           data: ({
-            "employee_id":
-                await SharedPref.getStringPreference(SharedPref.VENDORID),
+            "employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID),
             "location_id": location_id,
             "name": name,
             "mobile": mobile,
@@ -572,10 +566,7 @@ class ApiProvider {
     try {
       Response res = await dio.post(
         '$baseUrl/getCampaignLocation',
-        data: ({
-          "employee_id":
-              await SharedPref.getStringPreference(SharedPref.VENDORID)
-        }),
+        data: ({"employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID)}),
         options: Options(headers: {"Authorization": "Bearer ${token}"}),
       );
       log("====${res.data}");
@@ -596,8 +587,7 @@ class ApiProvider {
     }
   }
 
-  Future<UserNotIntrestedResponse> getUnIntrestedUser(
-      location_id, name, address, reason) async {
+  Future<UserNotIntrestedResponse> getUnIntrestedUser(location_id, name, address, reason) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${await SharedPref.getStringPreference(SharedPref.VENDORID)}");
@@ -609,8 +599,7 @@ class ApiProvider {
     try {
       Response res = await dio.post('$baseUrl/registerNotInterestedUser',
           data: ({
-            "employee_id":
-                await SharedPref.getStringPreference(SharedPref.VENDORID),
+            "employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID),
             "location_id": location_id,
             "name": name,
             "address": address,
@@ -665,8 +654,8 @@ class ApiProvider {
       addvendor["pin"] = pin;
       addvendor["lat"] = lat;
       addvendor["lng"] = lng;
-      addvendor["owner_sign"] = await MultipartFile.fromBytes(ownersign,
-          filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+      addvendor["owner_sign"] =
+          await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
 
       log("addvendor$addvendor");
       FormData requestData = FormData.fromMap(addvendor);
@@ -723,8 +712,7 @@ class ApiProvider {
     try {
       var token = await SharedPref.getStringPreference('token');
       Response res = await dio.post('$baseUrl/getEmployeeSendNotificatonList',
-          data: input,
-          options: Options(headers: {"Authorization": "Bearer ${token}"}));
+          data: input, options: Options(headers: {"Authorization": "Bearer ${token}"}));
 
       return VendorNotificationResponse.fromJson(res.toString());
     } catch (error) {
@@ -744,8 +732,7 @@ class ApiProvider {
     try {
       var token = await SharedPref.getStringPreference('token');
       Response res = await dio.post('$baseUrl/updateSendNotificationStatus',
-          data: input,
-          options: Options(headers: {"Authorization": "Bearer ${token}"}));
+          data: input, options: Options(headers: {"Authorization": "Bearer ${token}"}));
 
       return UpdateNotificationStatus.fromJson(res.toString());
     } catch (error) {

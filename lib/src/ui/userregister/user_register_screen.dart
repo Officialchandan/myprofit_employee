@@ -1,17 +1,17 @@
 import 'dart:developer';
 
+import 'package:employee/model/add_intrested_user.dart';
+import 'package:employee/model/area_aloted_otp.dart';
+import 'package:employee/provider/api_provider.dart';
+import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
+import 'package:employee/src/ui/userregister/user_not_intrested.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/network.dart';
+import 'package:employee/utils/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myprofit_employee/model/add_intrested_user.dart';
-import 'package:myprofit_employee/model/area_aloted_otp.dart';
-import 'package:myprofit_employee/provider/api_provider.dart';
-import 'package:myprofit_employee/src/ui/bottom_navigation/bottom_navigation.dart';
-import 'package:myprofit_employee/src/ui/userregister/user_not_intrested.dart';
-import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/utils/network.dart';
-import 'package:myprofit_employee/utils/validator.dart';
 
 abstract class OnSelectListener {
   onAreaSelect(String areaId);
@@ -21,27 +21,21 @@ class UserRegister extends StatefulWidget {
   final Function(OnSelectListener listener) onTab;
 
   final String? location;
-  UserRegister({Key? key, required this.onTab, this.location})
-      : super(key: key);
+  UserRegister({Key? key, required this.onTab, this.location}) : super(key: key);
 
   @override
   _UserRegisterState createState() => _UserRegisterState();
 }
 
-class _UserRegisterState extends State<UserRegister>
-    implements OnSelectListener {
-  var nameList = [
-    'John Parker',
-    'George Smith',
-    'Devin Coinneach',
-    'Brayden Aaron'
-  ];
+class _UserRegisterState extends State<UserRegister> implements OnSelectListener {
+  var nameList = ['John Parker', 'George Smith', 'Devin Coinneach', 'Brayden Aaron'];
   String? areaId;
 
   _UserRegisterState();
   var userid;
   TextEditingController _name = TextEditingController();
   TextEditingController _emailaddress = TextEditingController();
+  TextEditingController _pincode = TextEditingController();
 
   TextEditingController _mobile = TextEditingController();
   TextEditingController _address = TextEditingController();
@@ -54,13 +48,9 @@ class _UserRegisterState extends State<UserRegister>
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
       if (_otp.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter OTP");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OTP");
       } else {
-        final GetLocationrOtpResponse loginData =
-            await ApiProvider().getOtpIntrestedUser(userid, _otp.text);
+        final GetLocationrOtpResponse loginData = await ApiProvider().getOtpIntrestedUser(userid, _otp.text);
         log("ooooo ${loginData}");
         if (loginData.success == true) {
           Fluttertoast.showToast(
@@ -76,25 +66,19 @@ class _UserRegisterState extends State<UserRegister>
           // Navigator.pop(context);
 
           Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => BottomNavigation()),
-              (Route<dynamic> route) => false);
+              context, MaterialPageRoute(builder: (context) => BottomNavigation()), (Route<dynamic> route) => false);
         } else {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: loginData.success == false
-                ? "OTP is incorrect"
-                : "thanks for login ",
+            msg: loginData.success == false ? "OTP is incorrect" : "thanks for login ",
             // timeInSecForIos: 3
           );
         }
       }
     } else {
       Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on the internet");
+          backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
     }
   }
 
@@ -108,8 +92,7 @@ class _UserRegisterState extends State<UserRegister>
           return ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 400, maxHeight: 150),
             child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               title: RichText(
                 text: TextSpan(
                   text: "OTP Verification\n",
@@ -133,8 +116,7 @@ class _UserRegisterState extends State<UserRegister>
                   hintStyle: GoogleFonts.openSans(
                     fontWeight: FontWeight.w600,
                   ),
-                  contentPadding:
-                      const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
@@ -152,17 +134,14 @@ class _UserRegisterState extends State<UserRegister>
                     padding: const EdgeInsets.all(8.0),
                     textColor: Colors.white,
                     color: ColorPrimary,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     onPressed: () {
                       otpapi(userid);
                     },
                     child: new Text(
                       "Verify",
                       style: GoogleFonts.openSans(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.none),
+                          fontSize: 17, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
                     ),
                   ),
                 ),
@@ -183,66 +162,45 @@ class _UserRegisterState extends State<UserRegister>
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
       if (_name.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter User Name");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Name");
       } else if (_mobile.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Mobile Number 10 digits");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Mobile Number 10 digits");
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter User Address");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Address");
       } else if (_character == -1) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Select On Phone Type");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select On Phone Type");
       } else if (_gift == -1) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Select gift given or not");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select gift given or not");
       } else if (_emailaddress.text.isEmpty) {
         final AddIntrestedUserResponse loginData = await ApiProvider()
-            .getIntrestedUser(areaId, _name.text, _mobile.text,
-                _emailaddress.text, _address.text, _character, _gift);
+            .getIntrestedUser(areaId, _name.text, _mobile.text, _emailaddress.text, _address.text, _character, _gift);
 
         log("ooooo ${loginData}");
         if (loginData.success) {
           userid = loginData.data!.userId;
           _displayDialog(context);
         } else {
-          Fluttertoast.showToast(
-              backgroundColor: ColorPrimary,
-              textColor: Colors.white,
-              msg: loginData.message);
+          Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: loginData.message);
         }
       } else {
         final AddIntrestedUserResponse loginData = await ApiProvider()
-            .getIntrestedUser(areaId, _name.text, _mobile.text,
-                _emailaddress.text, _address.text, _character, _gift);
+            .getIntrestedUser(areaId, _name.text, _mobile.text, _emailaddress.text, _address.text, _character, _gift);
 
         log("ooooo ${loginData}");
         if (loginData.success) {
           userid = loginData.data!.userId;
           _displayDialog(context);
         } else {
-          Fluttertoast.showToast(
-              backgroundColor: ColorPrimary,
-              textColor: Colors.white,
-              msg: loginData.message);
+          Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: loginData.message);
         }
       }
     } else {
       Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on the internet");
+          backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
     }
   }
 
@@ -257,10 +215,7 @@ class _UserRegisterState extends State<UserRegister>
     return WillPopScope(
       onWillPop: () {
         Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => BottomNavigation()),
-            (route) => false);
+            context, MaterialPageRoute(builder: (BuildContext context) => BottomNavigation()), (route) => false);
         return Future.value(false);
       },
       child: SafeArea(
@@ -270,16 +225,12 @@ class _UserRegisterState extends State<UserRegister>
               leading: IconButton(
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BottomNavigation()),
-                      ModalRoute.withName("/"));
+                      context, MaterialPageRoute(builder: (context) => BottomNavigation()), ModalRoute.withName("/"));
                 },
                 icon: Icon(Icons.arrow_back_ios),
               ),
               backgroundColor: Color.fromRGBO(102, 87, 244, 1),
-              title: Text('User Register',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+              title: Text('User Register', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
               centerTitle: true,
             ),
             body: SingleChildScrollView(
@@ -289,10 +240,8 @@ class _UserRegisterState extends State<UserRegister>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Name',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _name,
@@ -304,15 +253,11 @@ class _UserRegisterState extends State<UserRegister>
                       maxLength: 25,
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Enter here',
-                        hintStyle: TextStyle(
-                            color: ColorTextPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -321,31 +266,24 @@ class _UserRegisterState extends State<UserRegister>
                     ),
                     SizedBox(height: 20),
                     Text('Mobile',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _mobile,
                       keyboardType: TextInputType.number,
-                      validator: (numb) =>
-                          Validator.validateMobile(numb!, context),
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       maxLength: 10,
+                      validator: (numb) => Validator.validateMobile(numb!, context),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       autofocus: false,
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Enter here',
-                        hintStyle: TextStyle(
-                            color: ColorTextPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -354,10 +292,8 @@ class _UserRegisterState extends State<UserRegister>
                     ),
                     SizedBox(height: 20),
                     Text('Email Address',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _emailaddress,
@@ -368,15 +304,11 @@ class _UserRegisterState extends State<UserRegister>
                       maxLength: 25,
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Enter here',
-                        hintStyle: TextStyle(
-                            color: ColorTextPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -385,10 +317,8 @@ class _UserRegisterState extends State<UserRegister>
                     ),
                     SizedBox(height: 20),
                     Text('Address',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _address,
@@ -398,15 +328,36 @@ class _UserRegisterState extends State<UserRegister>
                       maxLength: 25,
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding:
-                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Enter here',
-                        hintStyle: TextStyle(
-                            color: ColorTextPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text('Pincode',
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _pincode,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      //autovalidate: true,
+                      maxLength: 6,
+                      decoration: InputDecoration(
+                        counterText: "",
+                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Color.fromRGBO(242, 242, 242, 1),
+                        hintText: 'Enter here',
+                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -415,10 +366,8 @@ class _UserRegisterState extends State<UserRegister>
                     ),
                     SizedBox(height: 20),
                     Text('Which Phone Customer have',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     Row(
                       children: [
                         Container(
@@ -458,10 +407,8 @@ class _UserRegisterState extends State<UserRegister>
                     ),
                     SizedBox(height: 20),
                     Text('is gift given',
-                        style: TextStyle(
-                            color: Color.fromRGBO(48, 48, 48, 1),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     Row(
                       children: [
                         Container(
@@ -541,10 +488,7 @@ class _UserRegisterState extends State<UserRegister>
                           },
                           child: Text(
                             "REGISTER",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600),
+                            style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),

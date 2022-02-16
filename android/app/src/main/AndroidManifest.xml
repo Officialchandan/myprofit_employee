@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.myprofit.myprofit_employee">
+    package="com.myprofit.employee">
 
   <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -13,7 +13,7 @@
                android:value="AIzaSyDoB3iFy_QnGJp62a65YGn9rIaixPyDDjY"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.myprofit.employee.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

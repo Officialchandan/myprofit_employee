@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myprofit_employee/src/ui/add_dhaba/add_dhaba.dart';
+import 'package:employee/src/ui/add_dhaba/add_dhaba.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myprofit_employee/utils/validator.dart';
+import 'package:employee/utils/validator.dart';
 
 class Form2 extends StatefulWidget {
   @override

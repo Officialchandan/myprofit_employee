@@ -3,11 +3,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myprofit_employee/model/vendor_send_notification.dart';
-import 'package:myprofit_employee/src/ui/home/notification_screen/bloc/notification_bloc.dart';
-import 'package:myprofit_employee/src/ui/home/notification_screen/bloc/notification_state.dart';
-import 'package:myprofit_employee/src/ui/home/notification_screen/bloc/notofication_event.dart';
-import 'package:myprofit_employee/utils/sharedpref.dart';
+import 'package:employee/model/vendor_send_notification.dart';
+import 'package:employee/src/ui/home/notification_screen/bloc/notification_bloc.dart';
+import 'package:employee/src/ui/home/notification_screen/bloc/notification_state.dart';
+import 'package:employee/src/ui/home/notification_screen/bloc/notofication_event.dart';
+import 'package:employee/utils/sharedpref.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NotificationScreen extends StatefulWidget {

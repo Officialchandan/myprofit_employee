@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:myprofit_employee/localization/app_translations.dart';
-import 'package:myprofit_employee/localization/application.dart';
+
+import 'package:employee/localization/app_translations.dart';
+import 'package:employee/localization/application.dart';
 import 'package:flutter/material.dart';
 
 class AppTranslationsDelegate extends LocalizationsDelegate<AppTranslations> {

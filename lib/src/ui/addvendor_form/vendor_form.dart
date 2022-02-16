@@ -5,6 +5,21 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:day_picker/day_picker.dart';
+import 'package:employee/model/add_chat_papdi.dart';
+import 'package:employee/model/addvendor_form.dart';
+import 'package:employee/model/categories_respnse.dart';
+import 'package:employee/model/custome_textfeild.dart';
+import 'package:employee/model/get_all_state_response.dart';
+import 'package:employee/model/getcity_by_state_response.dart';
+import 'package:employee/provider/api_provider.dart';
+import 'package:employee/src/ui/added_vendor_list/added_vendor_list.dart';
+import 'package:employee/src/ui/addvendor_form/form.dart';
+import 'package:employee/src/ui/home/home.dart';
+import 'package:employee/src/ui/map/google_maps.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/network.dart';
+import 'package:employee/utils/validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,24 +29,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
-import 'package:myprofit_employee/model/add_chat_papdi.dart';
-import 'package:myprofit_employee/model/custome_textfeild.dart';
-import 'package:myprofit_employee/model/get_all_state_response.dart';
-import 'package:myprofit_employee/model/getcity_by_state_response.dart';
-import 'package:myprofit_employee/src/ui/added_vendor_list/added_vendor_list.dart';
-import 'package:myprofit_employee/src/ui/addvendor_form/form.dart';
-import 'package:myprofit_employee/src/ui/map/google_maps.dart';
-import 'package:myprofit_employee/utils/colors.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
-
-import 'package:myprofit_employee/model/addvendor_form.dart';
-import 'package:myprofit_employee/model/categories_respnse.dart';
-import 'package:myprofit_employee/provider/api_provider.dart';
-import 'package:myprofit_employee/src/ui/home/home.dart';
-
-import 'package:myprofit_employee/utils/network.dart';
-import 'package:myprofit_employee/utils/validator.dart';
-import 'package:day_picker/day_picker.dart';
 
 class VendorForm extends StatefulWidget {
   final int? id;
@@ -67,10 +65,7 @@ class _VendorFormState extends State<VendorForm> {
   DateTime currentDate = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: currentDate,
-        firstDate: DateTime(2015),
-        lastDate: DateTime(2050));
+        context: context, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
     if (pickedDate != null && pickedDate != currentDate)
       setState(() {
         currentDate = pickedDate;
@@ -83,10 +78,7 @@ class _VendorFormState extends State<VendorForm> {
 
   Future<void> _selectDate1(BuildContext context) async {
     final DateTime? pickedDate1 = await showDatePicker(
-        context: context,
-        initialDate: currentDate,
-        firstDate: DateTime(2015),
-        lastDate: DateTime(2050));
+        context: context, initialDate: currentDate, firstDate: DateTime(2015), lastDate: DateTime(2050));
     if (pickedDate1 != null && pickedDate1 != currentDate)
       setState(() {
         currentDate = pickedDate1;
@@ -182,70 +174,40 @@ class _VendorFormState extends State<VendorForm> {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
       if (_shopname.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Shop Name");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Shop Name");
       } else if (_comission.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Comission");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Comission");
       } else if (_ownername.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Owner Name");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Owner Name");
       } else if (_mobile.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Owner Mobile Number");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Owner Mobile Number");
       } else if (_mobile.text.length != 10) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Valid Mobile Number");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Valid Mobile Number");
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Shop Address");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Shop Address");
       } else if (lat == null) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please Select Locator from map in Address Textfeild ");
       } else if (_pincode.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Pincode");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Pincode");
       } else if (_pincode.text.length != 6) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Valid Pincode");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Valid Pincode");
       } else if (_state.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Select Shop State");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Shop State");
       } else if (_city.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Select Shop City");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Shop City");
       } else if (valuesecond == false) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Select Term and Condition");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Term and Condition");
       } else if (imageData == null) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please do Signature in Terms and Condition");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please do Signature in Terms and Condition");
       } else {
         final ChatPapdiResponse loginData = await ApiProvider().addChatPapdi(
             0,
@@ -267,30 +229,21 @@ class _VendorFormState extends State<VendorForm> {
         if (loginData.success == true) {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AddedVendor(title: widget.title!, id: widget.id!)),
+              MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
               (Route<dynamic> route) => false);
-          Fluttertoast.showToast(
-              backgroundColor: ColorPrimary,
-              textColor: Colors.white,
-              msg: "Added Sucsessfully");
+          Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Added Sucsessfully");
         } else {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: loginData.success == false
-                ? loginData.message
-                : "Thanks for login ",
+            msg: loginData.success == false ? loginData.message : "Thanks for login ",
             // timeInSecForIos: 3
           );
         }
       }
     } else {
       Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on the internet");
+          backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
     }
   }
 
@@ -300,94 +253,55 @@ class _VendorFormState extends State<VendorForm> {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
       if (_shopname.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Shop Name");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Shop Name");
       } else if (_comission.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Comission");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Comission");
       } else if (_ownername.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Owner Name");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Owner Name");
       } else if (_mobile.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Owner Mobile Number");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Owner Mobile Number");
       } else if (_mobile.text.length != 10) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Valid Mobile Number");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Valid Mobile Number");
       } else if (_openingtime.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please select opening time");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please select opening time");
       } else if (_closingtime.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please select close time");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please select close time");
       } else if (selecteddays!.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please select opening shop days");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please select opening shop days");
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Shop Address");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Shop Address");
       } else if (lat == null) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please Select Locator from map in Address Textfeild ");
       } else if (_pincode.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Pincode");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Pincode");
       } else if (_pincode.text.length != 6) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter Valid Pincode");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Valid Pincode");
       } else if (_state.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Select Shop State");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Shop State");
       } else if (_city.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Select Shop City");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Shop City");
       } else if (valuesecond == false) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Select Term and Condition");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Term and Condition");
       } else if (imageData == null) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please do Signature in Terms and Condition");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please do Signature in Terms and Condition");
       } else if (subcatlist.isNotEmpty) {
         String savelist = "";
 
         for (int i = 0; i < subcatlist.length; i++) {
           if (subcatlist[i].subController.text.isEmpty) {
             Fluttertoast.showToast(
-                backgroundColor: ColorPrimary,
-                textColor: Colors.white,
-                msg: "Please Enter Other Categories Comission");
+                backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Other Categories Comission");
             savelist = "";
             break;
           } else {
@@ -396,8 +310,7 @@ class _VendorFormState extends State<VendorForm> {
               savelist = savelist + subcatlist[i].subController.text.trim();
             } else {
               log("comiision====>${subcatlist[i].subController.text.trim()}");
-              savelist =
-                  savelist + subcatlist[i].subController.text.trim() + ",";
+              savelist = savelist + subcatlist[i].subController.text.trim() + ",";
             }
           }
         }
@@ -431,18 +344,14 @@ class _VendorFormState extends State<VendorForm> {
           if (loginData.success == true) {
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        AddedVendor(title: widget.title!, id: widget.id!)),
+                MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
                 (Route<dynamic> route) => false);
           } else {
             log("ooooo2 }");
             Fluttertoast.showToast(
                 backgroundColor: ColorPrimary,
                 textColor: Colors.white,
-                msg: loginData.success == false
-                    ? loginData.message
-                    : "loginData.message"
+                msg: loginData.success == false ? loginData.message : "loginData.message"
                 // timeInSecForIos: 3
                 );
           }
@@ -474,21 +383,14 @@ class _VendorFormState extends State<VendorForm> {
         if (loginData.success == true) {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AddedVendor(title: widget.title!, id: widget.id!)),
+              MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
               (Route<dynamic> route) => false);
-          Fluttertoast.showToast(
-              backgroundColor: ColorPrimary,
-              textColor: Colors.white,
-              msg: "Added Sucsessfully");
+          Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Added Sucsessfully");
         } else {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: loginData.success == false
-                ? loginData.message
-                : "Thanks for login ",
+            msg: loginData.success == false ? loginData.message : "Thanks for login ",
             // timeInSecForIos: 3
           );
         }
@@ -552,9 +454,7 @@ class _VendorFormState extends State<VendorForm> {
       // }
     } else {
       Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on the internet");
+          backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
     }
   }
 //bottom sheet
@@ -587,10 +487,7 @@ class _VendorFormState extends State<VendorForm> {
                           padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                           child: Align(
                             child: Text('Terms & Conditions',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
+                                style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
                             alignment: Alignment.center,
                           ),
                         ),
@@ -600,8 +497,7 @@ class _VendorFormState extends State<VendorForm> {
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                             child: GestureDetector(
-                              child:
-                                  Image.asset('images/bg-cross.png', width: 20),
+                              child: Image.asset('images/bg-cross.png', width: 20),
                               onTap: () {
                                 Navigator.pop(context);
                               },
@@ -617,10 +513,7 @@ class _VendorFormState extends State<VendorForm> {
                         child: SingleChildScrollView(
                           child: Text(
                             'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley.',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
+                            style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400),
                           ),
                         ),
                       ),
@@ -628,10 +521,7 @@ class _VendorFormState extends State<VendorForm> {
                     Container(
                       // height: 200,
                       width: 300,
-                      child: SignPad(
-                          data: data,
-                          imageData: imageData,
-                          signaturePadKey: _signaturePadKey),
+                      child: SignPad(data: data, imageData: imageData, signaturePadKey: _signaturePadKey),
                     ),
                     InkWell(
                         child: Container(
@@ -647,24 +537,16 @@ class _VendorFormState extends State<VendorForm> {
                           ),
                           child: Text(
                             "Done",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
+                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                         ),
                         onTap: () async {
                           if (_signaturePadKey.currentState != null) {
                             log("${_signaturePadKey.currentState!.toPathList().length}");
-                            if (_signaturePadKey.currentState!
-                                    .toPathList()
-                                    .length !=
-                                0) {
+                            if (_signaturePadKey.currentState!.toPathList().length != 0) {
                               _handleSaveButtonPressed();
                             } else {
-                              Fluttertoast.showToast(
-                                  msg: "Please do valid Signature",
-                                  backgroundColor: ColorPrimary);
+                              Fluttertoast.showToast(msg: "Please do valid Signature", backgroundColor: ColorPrimary);
                             }
                           } else {
                             Navigator.pop(context);
@@ -682,8 +564,7 @@ class _VendorFormState extends State<VendorForm> {
   Future<void> _handleSaveButtonPressed() async {
     // final ui.Image
     imageData = await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
-    final ByteData? bytes =
-        await imageData!.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? bytes = await imageData!.toByteData(format: ui.ImageByteFormat.png);
     if (bytes != null) {
       data = bytes.buffer.asUint8List();
       //log("data   ${data}");
@@ -746,8 +627,7 @@ class _VendorFormState extends State<VendorForm> {
                           Positioned(
                             right: MediaQuery.of(context).size.width / 80,
                             child: GestureDetector(
-                              child:
-                                  Image.asset('images/bg-cross.png', width: 20),
+                              child: Image.asset('images/bg-cross.png', width: 20),
                               onTap: () {
                                 Navigator.pop(context);
                               },
@@ -761,9 +641,7 @@ class _VendorFormState extends State<VendorForm> {
                         text: TextSpan(
                             text: 'Shukriya sir! Humari',
                             style: TextStyle(
-                                color: Color.fromRGBO(48, 48, 48, 1),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600),
+                                color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600),
                             children: [
                               TextSpan(
                                   text: ' Myprofit ',
@@ -771,9 +649,7 @@ class _VendorFormState extends State<VendorForm> {
                                       color: Color.fromRGBO(102, 87, 244, 1),
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600)),
-                              TextSpan(
-                                  text:
-                                      'team jald hi aapke sampark mai aaegi!'),
+                              TextSpan(text: 'team jald hi aapke sampark mai aaegi!'),
                             ]),
                       ),
                       SizedBox(height: 12),
@@ -797,10 +673,7 @@ class _VendorFormState extends State<VendorForm> {
                           },
                           child: Text(
                             "GO",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
+                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
@@ -852,10 +725,7 @@ class _VendorFormState extends State<VendorForm> {
         log("ggg ${stateData}");
       }
     } else {
-      Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on  internet");
+      Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
     }
     return stateData;
     //_tap = true;
@@ -866,18 +736,14 @@ class _VendorFormState extends State<VendorForm> {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
       print("kai kroge +${id}");
-      GetAllCityByStateResponse getData =
-          await ApiProvider().getCityByState(id);
+      GetAllCityByStateResponse getData = await ApiProvider().getCityByState(id);
       if (getData.success) {
         citydata = getData.data!;
 
         log("ggg ${citydata}");
       }
     } else {
-      Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on  internet");
+      Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
     }
     return citydata;
     //_tap = true;
@@ -919,8 +785,7 @@ class _VendorFormState extends State<VendorForm> {
                   );
                 },
               ),
-              title: Text('${widget.title} Form',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+              title: Text('${widget.title} Form', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
               centerTitle: true,
             ),
             body: StreamBuilder(builder: (context, snapshot) {
@@ -933,15 +798,12 @@ class _VendorFormState extends State<VendorForm> {
                     children: [
                       Text('Shop Name',
                           style: TextStyle(
-                              color: Color.fromRGBO(48, 48, 48, 1),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600)),
+                              color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _shopname,
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[[a-zA-Z0-9 ]')),
+                          FilteringTextInputFormatter.allow(RegExp(r'[[a-zA-Z0-9 ]')),
                         ],
                         autofocus: false,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -951,15 +813,12 @@ class _VendorFormState extends State<VendorForm> {
                         // keyboardType: TextInputType.streetAddress,
                         decoration: InputDecoration(
                           counterText: "",
-                          contentPadding: EdgeInsets.only(
-                              left: 14.0, bottom: 8.0, top: 8.0),
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintText: 'Enter here',
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -970,17 +829,13 @@ class _VendorFormState extends State<VendorForm> {
                       SizedBox(height: 15),
                       Text(' Comission on ${widget.title}',
                           style: TextStyle(
-                              color: Color.fromRGBO(48, 48, 48, 1),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600)),
+                              color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _comission,
-                        keyboardType: TextInputType.numberWithOptions(
-                            decimal: true, signed: false),
+                        keyboardType: TextInputType.numberWithOptions(decimal: true, signed: false),
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[[0-9. ]')),
+                          FilteringTextInputFormatter.allow(RegExp(r'[[0-9. ]')),
                         ],
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         //autovalidate: true,
@@ -989,15 +844,12 @@ class _VendorFormState extends State<VendorForm> {
                         // keyboardType: TextInputType.streetAddress,
                         decoration: InputDecoration(
                           counterText: "",
-                          contentPadding: EdgeInsets.only(
-                              left: 14.0, bottom: 8.0, top: 8.0),
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintText: 'Enter Comission of ${widget.title}',
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -1009,30 +861,24 @@ class _VendorFormState extends State<VendorForm> {
                       ),
                       Text('Owners Name',
                           style: TextStyle(
-                              color: Color.fromRGBO(48, 48, 48, 1),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600)),
+                              color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _ownername,
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[a-zA-Z ]')),
+                          FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
                         ],
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         //autovalidate: true,
                         maxLength: 25,
                         decoration: InputDecoration(
                           counterText: "",
-                          contentPadding: EdgeInsets.only(
-                              left: 14.0, bottom: 8.0, top: 8.0),
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintText: 'Enter here',
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -1042,32 +888,24 @@ class _VendorFormState extends State<VendorForm> {
                       SizedBox(height: 15),
                       Text('Mobile Number ',
                           style: TextStyle(
-                              color: Color.fromRGBO(48, 48, 48, 1),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600)),
+                              color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _mobile,
                         keyboardType: TextInputType.number,
-                        validator: (numb) =>
-                            Validator.validateMobile(numb!, context),
+                        validator: (numb) => Validator.validateMobile(numb!, context),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         maxLength: 10,
                         autofocus: false,
                         decoration: InputDecoration(
                           counterText: "",
-                          contentPadding: EdgeInsets.only(
-                              left: 14.0, bottom: 8.0, top: 8.0),
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintText: 'Enter here',
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -1077,9 +915,7 @@ class _VendorFormState extends State<VendorForm> {
                       SizedBox(height: 15),
                       Text('Timings of Shop ',
                           style: TextStyle(
-                              color: Color.fromRGBO(48, 48, 48, 1),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600)),
+                              color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
                       Row(children: [
                         Container(
@@ -1094,15 +930,12 @@ class _VendorFormState extends State<VendorForm> {
                             autofocus: false,
                             decoration: InputDecoration(
                               counterText: "",
-                              contentPadding: EdgeInsets.only(
-                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                               filled: true,
                               fillColor: Color.fromRGBO(242, 242, 242, 1),
                               hintText: 'Opening timing',
                               hintStyle: TextStyle(
-                                  color: Color.fromRGBO(85, 85, 85, 1),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600),
+                                  color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
@@ -1125,15 +958,12 @@ class _VendorFormState extends State<VendorForm> {
                             autofocus: false,
                             decoration: InputDecoration(
                               counterText: "",
-                              contentPadding: EdgeInsets.only(
-                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                               filled: true,
                               fillColor: Color.fromRGBO(242, 242, 242, 1),
                               hintText: 'Closing timing',
                               hintStyle: TextStyle(
-                                  color: Color.fromRGBO(85, 85, 85, 1),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600),
+                                  color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
@@ -1145,9 +975,7 @@ class _VendorFormState extends State<VendorForm> {
                       SizedBox(height: 15),
                       Text('Select shop open days',
                           style: TextStyle(
-                              color: Color.fromRGBO(48, 48, 48, 1),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600)),
+                              color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
 
                       Padding(
@@ -1167,8 +995,7 @@ class _VendorFormState extends State<VendorForm> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               colors: [Colors.white10, Colors.white10],
-                              tileMode: TileMode
-                                  .repeated, // repeats the gradient over the canvas
+                              tileMode: TileMode.repeated, // repeats the gradient over the canvas
                             ),
                           ),
                           onSelect: (values) {
@@ -1183,9 +1010,7 @@ class _VendorFormState extends State<VendorForm> {
                       SizedBox(height: 15),
                       Text('Address',
                           style: TextStyle(
-                              color: Color.fromRGBO(48, 48, 48, 1),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600)),
+                              color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _address,
@@ -1193,52 +1018,43 @@ class _VendorFormState extends State<VendorForm> {
                         decoration: InputDecoration(
                           suffixIcon: Container(
                             width: 120,
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "Select location",
-                                    style: TextStyle(fontSize: 10),
-                                    maxLines: 2,
-                                  ),
-                                  IconButton(
-                                    onPressed: () async {
-                                      FocusScopeNode currentFocus =
-                                          FocusScope.of(context);
-                                      if (!currentFocus.hasPrimaryFocus) {
-                                        currentFocus.unfocus();
-                                      }
-                                      result1 = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  GoogleMapScreen()));
-                                      log("result ${result1}");
-                                      if (result1 != null) {
-                                        //Map location = result as Map;
-                                        lat = result1["lat"];
-                                        lng = result1["long"];
-                                        //  Fluttertoast.showToast(msg: "$lat");
-                                        log("result1---->${lat}");
-                                      }
-                                    },
-                                    icon: Icon(
-                                      Icons.add_location,
-                                      color: ColorPrimary,
-                                    ),
-                                    tooltip: "Select location",
-                                  ),
-                                ]),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                              Text(
+                                "Select location",
+                                style: TextStyle(fontSize: 10),
+                                maxLines: 2,
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  FocusScopeNode currentFocus = FocusScope.of(context);
+                                  if (!currentFocus.hasPrimaryFocus) {
+                                    currentFocus.unfocus();
+                                  }
+                                  result1 = await Navigator.push(
+                                      context, MaterialPageRoute(builder: (context) => GoogleMapScreen()));
+                                  log("result ${result1}");
+                                  if (result1 != null) {
+                                    //Map location = result as Map;
+                                    lat = result1["lat"];
+                                    lng = result1["long"];
+                                    //  Fluttertoast.showToast(msg: "$lat");
+                                    log("result1---->${lat}");
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.add_location,
+                                  color: ColorPrimary,
+                                ),
+                                tooltip: "Select location",
+                              ),
+                            ]),
                           ),
-                          contentPadding: EdgeInsets.only(
-                              left: 14.0, bottom: 8.0, top: 8.0),
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintText: 'Enter here shop Address',
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -1251,15 +1067,12 @@ class _VendorFormState extends State<VendorForm> {
                         controller: _landmark,
                         autofocus: false,
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(
-                              left: 14.0, bottom: 8.0, top: 8.0),
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintText: 'Enter here Landmark (optional)',
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -1270,25 +1083,19 @@ class _VendorFormState extends State<VendorForm> {
                       TextFormField(
                         controller: _pincode,
                         keyboardType: TextInputType.number,
-                        validator: (numb) =>
-                            Validator.validatePincode(numb!, context),
+                        validator: (numb) => Validator.validatePincode(numb!, context),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         maxLength: 6,
                         autofocus: false,
                         decoration: InputDecoration(
                           counterText: "",
-                          contentPadding: EdgeInsets.only(
-                              left: 14.0, bottom: 8.0, top: 8.0),
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintText: 'Enter here Your Pincode',
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -1307,44 +1114,34 @@ class _VendorFormState extends State<VendorForm> {
                             enableDrag: true,
                             isDismissible: true,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(15.0)),
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
                             ),
                             context: context,
                             builder: (context) {
                               return IntrinsicHeight(
                                 child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.60,
+                                  height: MediaQuery.of(context).size.height * 0.60,
                                   padding: EdgeInsets.only(top: 20, bottom: 0),
                                   child: Column(children: [
                                     Expanded(
                                       child: ListView.builder(
                                           itemCount: stateData.length,
-                                          itemBuilder:
-                                              (BuildContext ctxt, int index) {
+                                          itemBuilder: (BuildContext ctxt, int index) {
                                             return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
                                                     _city.clear();
                                                   });
 
-                                                  getCityId(
-                                                      stateData[index].id);
-                                                  _state.text =
-                                                      stateData[index].name;
-                                                  stateid = stateData[index]
-                                                      .id
-                                                      .toString();
+                                                  getCityId(stateData[index].id);
+                                                  _state.text = stateData[index].name;
+                                                  stateid = stateData[index].id.toString();
                                                   Navigator.pop(context);
                                                 },
                                                 child: Container(
-                                                    height: 30,
-                                                    child: Text(
-                                                        "${stateData[index].name.toUpperCase()}")),
+                                                    height: 30, child: Text("${stateData[index].name.toUpperCase()}")),
                                               ),
                                             );
                                           }),
@@ -1375,17 +1172,13 @@ class _VendorFormState extends State<VendorForm> {
                         controller: _state,
                         autofocus: false,
                         decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.keyboard_arrow_down,
-                              color: ColorPrimary),
-                          contentPadding: EdgeInsets.only(
-                              left: 14.0, bottom: 8.0, top: 8.0),
+                          suffixIcon: Icon(Icons.keyboard_arrow_down, color: ColorPrimary),
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintText: 'Select State',
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -1401,25 +1194,19 @@ class _VendorFormState extends State<VendorForm> {
                           if (citydata.length > 0) {
                             _showModal(context, citydata);
                           } else {
-                            Fluttertoast.showToast(
-                                msg: "Select State from above list",
-                                backgroundColor: ColorPrimary);
+                            Fluttertoast.showToast(msg: "Select State from above list", backgroundColor: ColorPrimary);
                           }
                         },
                         controller: _city,
                         autofocus: false,
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(
-                              left: 14.0, bottom: 8.0, top: 8.0),
-                          suffixIcon: Icon(Icons.keyboard_arrow_down,
-                              color: ColorPrimary),
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                          suffixIcon: Icon(Icons.keyboard_arrow_down, color: ColorPrimary),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintText: 'Select Your city/village',
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600),
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -1434,9 +1221,7 @@ class _VendorFormState extends State<VendorForm> {
                             )
                           : AutoSizeText(
                               'Other Categories (If exists)',
-                              style: TextStyle(
-                                  color: Color.fromRGBO(48, 48, 48, 1),
-                                  fontWeight: FontWeight.w600),
+                              style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontWeight: FontWeight.w600),
                               maxFontSize: 15,
                               minFontSize: 10,
                             ),
@@ -1478,16 +1263,11 @@ class _VendorFormState extends State<VendorForm> {
                                     //     child:
                                     Container(
                                         // width: devicewidth - 30,
-                                        child: MultiSelectDialogField<
-                                            CategoriesResponseData?>(
-                                          buttonIcon: Icon(
-                                              Icons.keyboard_arrow_down,
-                                              color: ColorPrimary),
+                                        child: MultiSelectDialogField<CategoriesResponseData?>(
+                                          buttonIcon: Icon(Icons.keyboard_arrow_down, color: ColorPrimary),
                                           decoration: BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                242, 242, 242, 1),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            color: Color.fromRGBO(242, 242, 242, 1),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
 
                                           key: _multiSelectKey,
@@ -1495,57 +1275,39 @@ class _VendorFormState extends State<VendorForm> {
                                           // maxChildSize: 0.95,
                                           title: GestureDetector(
                                             onTap: () {
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
+                                              FocusManager.instance.primaryFocus?.unfocus();
                                               Navigator.pop(context);
                                             },
                                             child: Text('Other categories',
                                                 style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w600)),
+                                                    color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600)),
                                           ),
                                           buttonText: Text(placeholderText,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                  color: Color.fromRGBO(
-                                                      85, 85, 85, 1),
+                                                  color: Color.fromRGBO(85, 85, 85, 1),
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w600)),
-                                          searchTextStyle: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600),
+                                          searchTextStyle:
+                                              TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600),
                                           cancelText: Text('Cancel',
                                               style: TextStyle(
-                                                  color: Color(0xff6657f4),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600)),
+                                                  color: Color(0xff6657f4), fontSize: 14, fontWeight: FontWeight.w600)),
                                           confirmText: Text('Ok',
                                               style: TextStyle(
-                                                  color: Color(0xff6657f4),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600)),
+                                                  color: Color(0xff6657f4), fontSize: 14, fontWeight: FontWeight.w600)),
                                           items: result!.data!
-                                              .map((category) => MultiSelectItem<
-                                                      CategoriesResponseData>(
-                                                  category,
-                                                  category.categoryName))
+                                              .map((category) => MultiSelectItem<CategoriesResponseData>(
+                                                  category, category.categoryName))
                                               .toList(),
                                           searchable: true,
-                                          initialValue: subcatlist
-                                              .map((e) => e.subCat)
-                                              .toList(),
+                                          initialValue: subcatlist.map((e) => e.subCat).toList(),
 
                                           validator: (values) {
-                                            if (values == null ||
-                                                values.isEmpty) {
+                                            if (values == null || values.isEmpty) {
                                               return "";
                                             }
-                                            List<String> names = values
-                                                .map((e) => e!.categoryName)
-                                                .toList();
+                                            List<String> names = values.map((e) => e!.categoryName).toList();
 
                                             if (names.contains("Frog")) {
                                               return "Frogs are weird!";
@@ -1556,8 +1318,7 @@ class _VendorFormState extends State<VendorForm> {
                                             // SystemChannels.textInput.invokeMethod('TextInput.hide');
                                             // SystemChannels.textInput
                                             //     .invokeMethod('TextInput.hide');
-                                            FocusScopeNode currentFocus =
-                                                FocusScope.of(context);
+                                            FocusScopeNode currentFocus = FocusScope.of(context);
                                             if (!currentFocus.hasPrimaryFocus) {
                                               currentFocus.unfocus();
                                             }
@@ -1566,51 +1327,35 @@ class _VendorFormState extends State<VendorForm> {
                                               placeholderText = "";
                                               subcatlist.clear();
                                               if (values.length == 0) {
-                                                placeholderText =
-                                                    "Please select category";
+                                                placeholderText = "Please select category";
                                               } else {
-                                                for (int i = 0;
-                                                    i < values.length;
-                                                    i++) {
+                                                for (int i = 0; i < values.length; i++) {
                                                   if (i == values.length - 1) {
-                                                    placeholderText =
-                                                        "Please select category";
-                                                    arr = arr +
-                                                        values[i]!
-                                                            .id
-                                                            .toString();
+                                                    placeholderText = "Please select category";
+                                                    arr = arr + values[i]!.id.toString();
                                                   } else {
                                                     // placeholderText = placeholderText +
                                                     //     values[i]!.categoryName +
                                                     //     ", ";
-                                                    arr = arr +
-                                                        (values[i]!
-                                                            .id
-                                                            .toString()) +
-                                                        ",";
+                                                    arr = arr + (values[i]!.id.toString()) + ",";
                                                   }
-                                                  subcatlist
-                                                      .add(SubCat(values[i]!));
+                                                  subcatlist.add(SubCat(values[i]!));
                                                 }
                                               }
                                             });
-                                            _multiSelectKey.currentState!
-                                                .validate();
+                                            _multiSelectKey.currentState!.validate();
                                           },
                                           chipDisplay: MultiSelectChipDisplay(
                                             onTap: (item) {
-                                              FocusScopeNode currentFocus =
-                                                  FocusScope.of(context);
-                                              if (!currentFocus
-                                                  .hasPrimaryFocus) {
+                                              FocusScopeNode currentFocus = FocusScope.of(context);
+                                              if (!currentFocus.hasPrimaryFocus) {
                                                 currentFocus.unfocus();
                                               }
                                               setState(() {
                                                 _selectedCategory3.remove(item);
                                                 log("dddd ${item}");
                                               });
-                                              _multiSelectKey.currentState!
-                                                  .validate();
+                                              _multiSelectKey.currentState!.validate();
                                             },
                                           )..disabled = true,
                                           //  );
@@ -1625,26 +1370,20 @@ class _VendorFormState extends State<VendorForm> {
                         return Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: TextFormField(
-                            keyboardType: TextInputType.numberWithOptions(
-                                decimal: true, signed: false),
+                            keyboardType: TextInputType.numberWithOptions(decimal: true, signed: false),
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[[0-9. ]')),
+                              FilteringTextInputFormatter.allow(RegExp(r'[[0-9. ]')),
                             ],
                             maxLength: 4,
                             controller: subcatlist[index].subController,
                             decoration: InputDecoration(
                               counterText: "",
-                              contentPadding: EdgeInsets.only(
-                                  left: 14.0, bottom: 8.0, top: 8.0),
+                              contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                               filled: true,
                               fillColor: Color.fromRGBO(242, 242, 242, 1),
-                              hintText:
-                                  'Please Enter ${subcatlist[index].subCat.categoryName} Commision',
+                              hintText: 'Please Enter ${subcatlist[index].subCat.categoryName} Commision',
                               hintStyle: TextStyle(
-                                  color: Color.fromRGBO(85, 85, 85, 1),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600),
+                                  color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
@@ -1844,8 +1583,7 @@ class _VendorFormState extends State<VendorForm> {
                       ),
                       users.length != 0
                           ? Container(
-                              height:
-                                  150 * double.parse(users.length.toString()),
+                              height: 150 * double.parse(users.length.toString()),
                               child: ListView.builder(
                                 addAutomaticKeepAlives: true,
                                 itemCount: users.length,
@@ -1880,18 +1618,15 @@ class _VendorFormState extends State<VendorForm> {
                             Row(
                               children: [
                                 Text('Accept all ',
-                                    style: TextStyle(
-                                        color: Color(0xff303030),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600)),
+                                    style:
+                                        TextStyle(color: Color(0xff303030), fontSize: 15, fontWeight: FontWeight.w600)),
                                 InkWell(
                                   child: Text('Terms & Conditions',
                                       style: TextStyle(
                                           color: Color(0xff6657f4),
                                           fontSize: 15,
                                           fontWeight: FontWeight.w600,
-                                          decoration:
-                                              TextDecoration.underline)),
+                                          decoration: TextDecoration.underline)),
                                   onTap: () {
                                     log("img ${data}");
                                     termsConditionsDialog();
@@ -1920,10 +1655,8 @@ class _VendorFormState extends State<VendorForm> {
                                 log("'name kai---->${users[i]!.user.title}");
                                 log("value kai---->${users[i]!.user.description}");
                                 customedata.add({
-                                  '"name"':
-                                      '"${(users[i]!.user.title).toString()}"',
-                                  '"value"':
-                                      '"${(users[i]!.user.description).toString()}"'
+                                  '"name"': '"${(users[i]!.user.title).toString()}"',
+                                  '"value"': '"${(users[i]!.user.description).toString()}"'
                                 });
                               }
                               log("${imageData.toString()}");
@@ -1935,10 +1668,7 @@ class _VendorFormState extends State<VendorForm> {
                             },
                             child: Text(
                               "SUBMIT",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
+                              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                           ),
                         ),
@@ -1966,8 +1696,7 @@ class _VendorFormState extends State<VendorForm> {
         log("${selectedTime.hour}:${selectedTime.minute}");
       });
       setState(() {});
-      _openingtime.text =
-          "${selectedTime.hour}:${selectedTime.minute}".toString();
+      _openingtime.text = "${selectedTime.hour}:${selectedTime.minute}".toString();
     }
   }
 
@@ -1983,8 +1712,7 @@ class _VendorFormState extends State<VendorForm> {
         log("${selectedTime.hour}:${selectedTime.minute}");
       });
       setState(() {});
-      _closingtime.text =
-          "${selectedTime.hour}:${selectedTime.minute}".toString();
+      _closingtime.text = "${selectedTime.hour}:${selectedTime.minute}".toString();
     }
   }
 
@@ -2034,38 +1762,25 @@ class _VendorFormState extends State<VendorForm> {
                   selectImage(1, imageType);
                   Navigator.pop(context);
                 },
-                child: Text('Camera',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600)),
+                child: Text('Camera', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
               CupertinoActionSheetAction(
                 onPressed: () {
                   selectImage(2, imageType);
                   Navigator.pop(context);
                 },
-                child: Text('Gallery',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600)),
+                child:
+                    Text('Gallery', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
             ],
             cancelButton: CupertinoActionSheetAction(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GoogleMapScreen(
-                            id: widget.id, title: widget.title)));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => GoogleMapScreen(id: widget.id, title: widget.title)));
                 // Navigator.pop(context);
               },
-              child: Text('Cancel',
-                  style: TextStyle(
-                      color: Color(0xfff92d28),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600)),
+              child:
+                  Text('Cancel', style: TextStyle(color: Color(0xfff92d28), fontSize: 16, fontWeight: FontWeight.w600)),
             ),
           );
         });
@@ -2159,17 +1874,11 @@ class _SignPadState extends State<SignPad> {
         margin: EdgeInsets.all(10),
         // height: 300,
         // width: devicewidth,
-        decoration: BoxDecoration(
-            border: Border.all(width: 1),
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.white54),
+        decoration:
+            BoxDecoration(border: Border.all(width: 1), borderRadius: BorderRadius.circular(20), color: Colors.white54),
         child: Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            Text('Signature',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600)),
+            Text('Signature', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
             GestureDetector(
               onTap: () {
                 if (imageData == null) {
@@ -2184,11 +1893,7 @@ class _SignPadState extends State<SignPad> {
 
                 // termsConditionsDialog();
               },
-              child: Text('Clear',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600)),
+              child: Text('Clear', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
             ),
           ]),
           imageData == null
@@ -2219,8 +1924,7 @@ class _SignPadState extends State<SignPad> {
 class CityBottomSheet extends StatefulWidget {
   final List<GetAllCityByStateResponseData> citydata;
   final Function(GetAllCityByStateResponseData city) onSelect;
-  CityBottomSheet({required this.citydata, required this.onSelect, Key? key})
-      : super(key: key);
+  CityBottomSheet({required this.citydata, required this.onSelect, Key? key}) : super(key: key);
 
   @override
   _CityBottomSheetState createState() => _CityBottomSheetState();
@@ -2229,8 +1933,7 @@ class CityBottomSheet extends StatefulWidget {
 class _CityBottomSheetState extends State<CityBottomSheet> {
   List<GetAllCityByStateResponseData> citydata = [];
   TextEditingController edtSearch = TextEditingController();
-  StreamController<List<GetAllCityByStateResponseData>> subject =
-      StreamController();
+  StreamController<List<GetAllCityByStateResponseData>> subject = StreamController();
   @override
   void dispose() {
     super.dispose();
@@ -2261,9 +1964,7 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
                 List<GetAllCityByStateResponseData> searchList = [];
 
                 citydata.forEach((element) {
-                  if (element.name
-                      .toLowerCase()
-                      .contains(text.trim().toLowerCase())) {
+                  if (element.name.toLowerCase().contains(text.trim().toLowerCase())) {
                     searchList.add(element);
                   }
                 });
@@ -2291,9 +1992,7 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
 
                                   Navigator.pop(context);
                                 },
-                                child: Container(
-                                    height: 30,
-                                    child: Text("${snap.data![index].name}")),
+                                child: Container(height: 30, child: Text("${snap.data![index].name}")),
                               ),
                             );
                           });
@@ -2425,4 +2124,3 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
 //     }
 //     Navigator.pop(context, entries);
 //   }
-

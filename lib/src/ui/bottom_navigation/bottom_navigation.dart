@@ -1,27 +1,24 @@
 import 'dart:developer';
 
+import 'package:employee/model/get_location_response.dart';
+import 'package:employee/provider/api_provider.dart';
+import 'package:employee/src/ui/drawer/drawer.dart';
+import 'package:employee/src/ui/home/home.dart';
+import 'package:employee/src/ui/performance_tracker/performance_tracker.dart';
+import 'package:employee/src/ui/userregister/user_register_screen.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/network.dart';
+import 'package:employee/utils/sharedpref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myprofit_employee/model/get_location_response.dart';
-import 'package:myprofit_employee/provider/api_provider.dart';
-import 'package:myprofit_employee/src/ui/drawer/drawer.dart';
-
-import 'package:myprofit_employee/src/ui/home/home.dart';
-
-import 'package:myprofit_employee/src/ui/performance_tracker/performance_tracker.dart';
-import 'package:myprofit_employee/src/ui/userregister/user_register_screen.dart';
-import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/utils/network.dart';
-import 'package:myprofit_employee/utils/sharedpref.dart';
 
 class BottomNavigation extends StatefulWidget {
   @override
   _BottomNavigationState createState() => _BottomNavigationState();
 }
 
-class _BottomNavigationState extends State<BottomNavigation>
-    with TickerProviderStateMixin {
+class _BottomNavigationState extends State<BottomNavigation> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   // var titleList = ['Home', 'Driver List', 'Performance Tracker'];
@@ -41,8 +38,7 @@ class _BottomNavigationState extends State<BottomNavigation>
     success = res!.success;
     log("====>${await SharedPref.setIntegerPreference(SharedPref.LOCATION, res!.data![0].id)}");
     log("====>${await SharedPref.getIntegerPreference(SharedPref.LOCATION)}");
-    await SharedPref.setIntegerPreference(
-        SharedPref.LOCATION, res!.data![0].id);
+    await SharedPref.setIntegerPreference(SharedPref.LOCATION, res!.data![0].id);
 
     setState(() {});
   }
@@ -68,29 +64,18 @@ class _BottomNavigationState extends State<BottomNavigation>
         builder: (context) {
           return AlertDialog(
             contentPadding: EdgeInsets.fromLTRB(25, 10, 0, 0),
-            title: Text("Logout",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600)),
+            title: Text("Logout", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600)),
             content: Text("Are you sure you want to logout?",
-                style: TextStyle(
-                    color: Color.fromRGBO(85, 85, 85, 1),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500)),
+                style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 15, fontWeight: FontWeight.w500)),
             actions: [
               MaterialButton(
-                child: Text("Cancel",
-                    style: TextStyle(
-                        color: ColorTextPrimary, fontWeight: FontWeight.w600)),
+                child: Text("Cancel", style: TextStyle(color: ColorTextPrimary, fontWeight: FontWeight.w600)),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               MaterialButton(
-                child: Text("Logout",
-                    style: TextStyle(
-                        color: Color(0xfff4511e), fontWeight: FontWeight.w600)),
+                child: Text("Logout", style: TextStyle(color: Color(0xfff4511e), fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   log("ndndnd");
 
@@ -103,16 +88,12 @@ class _BottomNavigationState extends State<BottomNavigation>
                     //     ModalRoute.withName("/"));
 
                     Fluttertoast.showToast(
-                        backgroundColor: ColorPrimary,
-                        textColor: Colors.white,
-                        msg: "Logout Successfully"
+                        backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Logout Successfully"
                         // timeInSecForIos: 3
                         );
                   } else {
                     Fluttertoast.showToast(
-                        backgroundColor: ColorPrimary,
-                        textColor: Colors.white,
-                        msg: "Please turn on  internet");
+                        backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
                   }
                   // LogOut();
                   // Navigator.push(
@@ -162,28 +143,24 @@ class _BottomNavigationState extends State<BottomNavigation>
         child: Scaffold(
           key: _scaffoldkey,
           drawer: AppDrawer(),
-          body: TabBarView(
-              controller: _tabController,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                Home(onTab: () {
-                  _scaffoldkey.currentState!.openDrawer();
-                }),
-                UserRegister(onTab: (OnSelectListener listener) {
-                  this.listener = listener;
-                }),
-                PerformanceTracker(onTab: () {
-                  _scaffoldkey.currentState!.openDrawer();
-                }),
-              ]),
+          body: TabBarView(controller: _tabController, physics: NeverScrollableScrollPhysics(), children: [
+            Home(onTab: () {
+              _scaffoldkey.currentState!.openDrawer();
+            }),
+            UserRegister(onTab: (OnSelectListener listener) {
+              this.listener = listener;
+            }),
+            PerformanceTracker(onTab: () {
+              _scaffoldkey.currentState!.openDrawer();
+            }),
+          ]),
           bottomNavigationBar: TabBar(
             controller: _tabController,
             // indicatorWeight: 10,
             // indicatorColor: Colors.black,
             // automaticIndicatorColorAdjustment: true,
             indicator: UnderlineTabIndicator(
-              borderSide:
-                  BorderSide(width: 3, color: Color.fromRGBO(102, 87, 244, 1)),
+              borderSide: BorderSide(width: 3, color: Color.fromRGBO(102, 87, 244, 1)),
               insets: EdgeInsets.fromLTRB(30, 0, 30, 70),
             ),
             onTap: (index) {
@@ -242,25 +219,20 @@ class _BottomNavigationState extends State<BottomNavigation>
     showModalBottomSheet(
         isDismissible: false,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
         builder: (BuildContext context) {
           return Container(
               padding: EdgeInsets.only(top: 10),
               height: 250,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
               child: Column(children: [
                 Row(
                   children: [
                     SizedBox(
                       width: 20,
                     ),
-                    Container(
-                        height: 30,
-                        width: 30,
-                        child: Image.asset("images/category1.png")),
+                    Container(height: 30, width: 30, child: Image.asset("images/category1.png")),
                     Text(
                       "   Select Area",
                       style: TextStyle(
@@ -281,8 +253,7 @@ class _BottomNavigationState extends State<BottomNavigation>
                               return Column(children: [
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.pop(
-                                        context, res!.data![index].id);
+                                    Navigator.pop(context, res!.data![index].id);
                                     // Navigator.pushAndRemoveUntil(
                                     //     context,
                                     //     MaterialPageRoute(
@@ -297,9 +268,7 @@ class _BottomNavigationState extends State<BottomNavigation>
                                   child: ListTile(
                                     title: Text(
                                       "${res!.data![index].locationName}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),

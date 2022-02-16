@@ -1,15 +1,13 @@
 import 'dart:developer';
 
+import 'package:employee/model/user_not_intrested.dart';
+import 'package:employee/provider/api_provider.dart';
+import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myprofit_employee/model/user_not_intrested.dart';
-import 'package:myprofit_employee/provider/api_provider.dart';
-import 'package:myprofit_employee/src/ui/bottom_navigation/bottom_navigation.dart';
-import 'package:myprofit_employee/src/ui/userregister/user_register_screen.dart';
-import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/utils/network.dart';
-import 'package:myprofit_employee/utils/validator.dart';
 
 class UserNotInterested extends StatefulWidget {
   final String? location;
@@ -21,6 +19,7 @@ class UserNotInterested extends StatefulWidget {
 
 class _UserNotInterestedState extends State<UserNotInterested> {
   TextEditingController _name = TextEditingController();
+  TextEditingController _pincode = TextEditingController();
 
   TextEditingController _address = TextEditingController();
   TextEditingController _reason = TextEditingController();
@@ -30,42 +29,26 @@ class _UserNotInterestedState extends State<UserNotInterested> {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
       if (_name.text.isEmpty) {
-        Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter User Name");
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Name");
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary,
-            textColor: Colors.white,
-            msg: "Please Enter User Address");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Address");
       } else {
-        final UserNotIntrestedResponse loginData = await ApiProvider()
-            .getUnIntrestedUser(
-                widget.location, _name.text, _address.text, _reason.text);
+        final UserNotIntrestedResponse loginData =
+            await ApiProvider().getUnIntrestedUser(widget.location, _name.text, _address.text, _reason.text);
 
         log("ooooo ${loginData}");
         if (loginData.success) {
-          Fluttertoast.showToast(
-              backgroundColor: ColorPrimary,
-              textColor: Colors.white,
-              msg: loginData.message);
+          Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: loginData.message);
           Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => BottomNavigation()),
-              (Route<dynamic> route) => false);
+              context, MaterialPageRoute(builder: (context) => BottomNavigation()), (Route<dynamic> route) => false);
         } else {
-          Fluttertoast.showToast(
-              backgroundColor: ColorPrimary,
-              textColor: Colors.white,
-              msg: loginData.message);
+          Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: loginData.message);
         }
       }
     } else {
       Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on the internet");
+          backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
     }
   }
 
@@ -83,8 +66,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                 icon: Icon(
                   Icons.arrow_back_ios,
                 )),
-            title: Text('User Register',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+            title: Text('User Register', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
             centerTitle: true,
           ),
           body: SingleChildScrollView(
@@ -94,10 +76,8 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Name',
-                      style: TextStyle(
-                          color: Color.fromRGBO(48, 48, 48, 1),
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600)),
+                      style:
+                          TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),
                   TextFormField(
                     controller: _name,
@@ -109,15 +89,11 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                     maxLength: 25,
                     decoration: InputDecoration(
                       counterText: "",
-                      contentPadding:
-                          EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                      contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                       filled: true,
                       fillColor: Color.fromRGBO(242, 242, 242, 1),
                       hintText: 'Enter here',
-                      hintStyle: TextStyle(
-                          color: ColorTextPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                      hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
@@ -126,10 +102,8 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                   ),
                   SizedBox(height: 20),
                   Text('Address',
-                      style: TextStyle(
-                          color: Color.fromRGBO(48, 48, 48, 1),
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600)),
+                      style:
+                          TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),
                   TextFormField(
                     controller: _address,
@@ -141,26 +115,46 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                     maxLength: 25,
                     decoration: InputDecoration(
                       counterText: "",
-                      contentPadding:
-                          EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                      contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                       filled: true,
                       fillColor: Color.fromRGBO(242, 242, 242, 1),
                       hintText: 'Enter here',
-                      hintStyle: TextStyle(
-                          color: ColorTextPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                      hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
                     ),
                   ),
+                  SizedBox(height: 20),
+                  Text('Pincode',
+                      style:
+                          TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: _pincode,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    //autovalidate: true,
+                    maxLength: 6,
+                    decoration: InputDecoration(
+                      counterText: "",
+                      contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                      filled: true,
+                      fillColor: Color.fromRGBO(242, 242, 242, 1),
+                      hintText: 'Enter here',
+                      hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   Text('Reason',
-                      style: TextStyle(
-                          color: Color.fromRGBO(48, 48, 48, 1),
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600)),
+                      style:
+                          TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),
                   TextFormField(
                     controller: _reason,
@@ -175,15 +169,11 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                     minLines: 5,
                     decoration: InputDecoration(
                       counterText: "",
-                      contentPadding:
-                          EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                      contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                       filled: true,
                       fillColor: Color.fromRGBO(242, 242, 242, 1),
                       hintText: 'Enter here',
-                      hintStyle: TextStyle(
-                          color: ColorTextPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                      hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
@@ -210,10 +200,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                         },
                         child: Text(
                           "SUBMIT",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600),
+                          style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),

@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:employee/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:myprofit_employee/utils/colors.dart';
 
 class GoogleMapScreen extends StatefulWidget {
   final int? id;
@@ -18,6 +18,7 @@ class GoogleMapScreen extends StatefulWidget {
 class _GoogleMapScreenState extends State<GoogleMapScreen> {
   Set<Marker> _marker = {};
   GoogleMapController? mapcontroller;
+
   void onMapCreated(GoogleMapController controller) {
     // setState(() {
     mapcontroller = controller;
@@ -41,10 +42,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       LatLng(latitude, longitude),
     ));
     setState(() {
-      _marker.add(Marker(
-          markerId: MarkerId('id-1'),
-          position: LatLng(latitude, longitude),
-          infoWindow: InfoWindow(title: "")));
+      _marker.add(
+          Marker(markerId: MarkerId('id-1'), position: LatLng(latitude, longitude), infoWindow: InfoWindow(title: "")));
       CameraPosition(target: LatLng(latitude, longitude), zoom: 20);
     });
   }
@@ -92,10 +91,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
               },
               child: Text(
                 "Done",
-                style: TextStyle(
-                    color: ColorPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600),
+                style: TextStyle(color: ColorPrimary, fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -121,8 +117,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             },
             onMapCreated: onMapCreated,
             markers: _marker,
-            initialCameraPosition:
-                CameraPosition(target: LatLng(22.7196, 75.8577), zoom: 20)),
+            initialCameraPosition: CameraPosition(target: LatLng(22.7196, 75.8577), zoom: 20)),
       ),
     );
   }

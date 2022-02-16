@@ -3,27 +3,21 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:employee/model/categories_respnse.dart';
+import 'package:employee/model/get_all_state_response.dart';
+import 'package:employee/model/getcity_by_state_response.dart';
+import 'package:employee/model/getvenordbyid_response.dart';
+import 'package:employee/model/updatevendordetail_response.dart';
+import 'package:employee/provider/api_provider.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/network.dart';
+import 'package:employee/utils/validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
-import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
-import 'package:myprofit_employee/model/categories_respnse.dart';
-import 'package:myprofit_employee/model/get_all_state_response.dart';
-import 'package:myprofit_employee/model/getcity_by_state_response.dart';
-import 'package:myprofit_employee/model/getvenordbyid_response.dart';
-import 'package:myprofit_employee/model/updatevendordetail_response.dart';
-import 'package:myprofit_employee/provider/api_provider.dart';
-
-import 'package:myprofit_employee/src/ui/home/home.dart';
-import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/utils/network.dart';
-import 'package:myprofit_employee/utils/validator.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 class UpdateVendorDetail extends StatefulWidget {
@@ -39,8 +33,7 @@ class UpdateVendorDetail extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _UpdateVendorDetailState createState() =>
-      _UpdateVendorDetailState(this.vendordata, this.title, this.id);
+  _UpdateVendorDetailState createState() => _UpdateVendorDetailState(this.vendordata, this.title, this.id);
 }
 
 //select-category
@@ -241,10 +234,8 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   //terms-conditions-dialog
 
   Future<void> _handleSaveButtonPressed() async {
-    final ui.Image imageData =
-        await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
-    final ByteData? bytes =
-        await imageData.toByteData(format: ui.ImageByteFormat.png);
+    final ui.Image imageData = await _signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
+    final ByteData? bytes = await imageData.toByteData(format: ui.ImageByteFormat.png);
     if (bytes != null) {
       data = bytes.buffer.asUint8List();
       log("data   ${data}");
@@ -306,10 +297,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
         log("ggg ${stateData}");
       }
     } else {
-      Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on  internet");
+      Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
     }
     return stateData;
     //_tap = true;
@@ -320,18 +308,14 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
       print("kai kroge +${id}");
-      GetAllCityByStateResponse getData =
-          await ApiProvider().getCityByState(id);
+      GetAllCityByStateResponse getData = await ApiProvider().getCityByState(id);
       if (getData.success) {
         citydata = getData.data!;
 
         log("ggg ${citydata}");
       }
     } else {
-      Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on  internet");
+      Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
     }
     return citydata;
     //_tap = true;
@@ -358,8 +342,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               );
             },
           ),
-          title: Text(' ${widget.title} Shop Details',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+          title: Text(' ${widget.title} Shop Details', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -368,10 +351,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Shop Name',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 readOnly: true,
@@ -384,15 +364,11 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(
                   counterText: "",
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -401,10 +377,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               ),
               SizedBox(height: 15),
               Text('Owners name',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 inputFormatters: [
@@ -416,15 +389,11 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 readOnly: true,
                 decoration: InputDecoration(
                   counterText: "",
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -433,10 +402,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               ),
               SizedBox(height: 15),
               Text('Mobile Number ',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 controller: _mobile,
@@ -448,15 +414,11 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 maxLength: 10,
                 decoration: InputDecoration(
                   counterText: "",
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -465,10 +427,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               ),
               SizedBox(height: 15),
               Text('Address',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 readOnly: true,
@@ -482,15 +441,11 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                   //     color: ColorPrimary,
                   //   ),
                   // ),
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here shop Address',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -499,25 +454,18 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               ),
               SizedBox(height: 10),
               Text('Landmark',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 controller: _landmark,
                 readOnly: true,
                 autofocus: false,
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'landmark was not given by Vendor',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -526,25 +474,18 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               ),
               SizedBox(height: 10),
               Text('Pincode',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 controller: _pincode,
                 readOnly: true,
                 autofocus: false,
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here Landmark (optional)',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -553,25 +494,18 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               ),
               SizedBox(height: 10),
               Text('City',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 controller: _city,
                 readOnly: true,
                 autofocus: false,
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here Landmark (optional)',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -580,25 +514,18 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               ),
               SizedBox(height: 10),
               Text('State',
-                  style: TextStyle(
-                      color: Color.fromRGBO(48, 48, 48, 1),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 controller: _state,
                 readOnly: true,
                 autofocus: false,
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
                   fillColor: Color.fromRGBO(242, 242, 242, 1),
                   hintText: 'Enter here Landmark (optional)',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(85, 85, 85, 1),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
+                  hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -809,30 +736,30 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               //             ))),
               SizedBox(height: 15),
               SizedBox(height: 15),
-              Align(
-                alignment: Alignment.center,
-                child: ButtonTheme(
-                  minWidth: 200,
-                  // ignore: deprecated_member_use
-                  child: RaisedButton(
-                    padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                    color: Color.fromRGBO(102, 87, 244, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      "SUBMIT",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
-              ),
+              // Align(
+              //   alignment: Alignment.center,
+              //   child: ButtonTheme(
+              //     minWidth: 200,
+              //     // ignore: deprecated_member_use
+              //     child: RaisedButton(
+              //       padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+              //       color: Color.fromRGBO(102, 87, 244, 1),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(10),
+              //       ),
+              //       onPressed: () {
+              //         Navigator.pop(context);
+              //       },
+              //       child: Text(
+              //         "SUBMIT",
+              //         style: TextStyle(
+              //             color: Colors.white,
+              //             fontSize: 16,
+              //             fontWeight: FontWeight.w600),
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -852,33 +779,23 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                   selectImage(1, imageType);
                   Navigator.pop(context);
                 },
-                child: Text('Camera',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600)),
+                child: Text('Camera', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
               CupertinoActionSheetAction(
                 onPressed: () {
                   selectImage(2, imageType);
                   Navigator.pop(context);
                 },
-                child: Text('Gallery',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600)),
+                child:
+                    Text('Gallery', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
             ],
             cancelButton: CupertinoActionSheetAction(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel',
-                  style: TextStyle(
-                      color: Color(0xfff92d28),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600)),
+              child:
+                  Text('Cancel', style: TextStyle(color: Color(0xfff92d28), fontSize: 16, fontWeight: FontWeight.w600)),
             ),
           );
         });

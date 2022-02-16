@@ -1,17 +1,16 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:employee/model/getvenordbyid_response.dart';
+import 'package:employee/provider/api_provider.dart';
+import 'package:employee/src/ui/addvendor_form/vendor_form.dart';
+import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
+import 'package:employee/src/ui/editvendor_details/edit_vendor_detail.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myprofit_employee/model/get_all_state_response.dart';
-import 'package:myprofit_employee/model/getvenordbyid_response.dart';
-import 'package:myprofit_employee/provider/api_provider.dart';
-import 'package:myprofit_employee/src/ui/addvendor_form/vendor_form.dart';
-import 'package:myprofit_employee/src/ui/bottom_navigation/bottom_navigation.dart';
-import 'package:myprofit_employee/src/ui/editvendor_details/edit_vendor_detail.dart';
-import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/utils/network.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AddedVendor extends StatefulWidget {
@@ -25,17 +24,10 @@ class AddedVendor extends StatefulWidget {
 
 class _AddedVendorState extends State<AddedVendor> {
   // var t = widget.title;
-  var footwearListText = [
-    'Shoe Fly',
-    'Sole Mates',
-    'Hot Heels Boutique',
-    'FootCandy Shoes',
-    'Kickass Kicks'
-  ];
+  var footwearListText = ['Shoe Fly', 'Sole Mates', 'Hot Heels Boutique', 'FootCandy Shoes', 'Kickass Kicks'];
   var datas = [];
   _AddedVendorState(String title, int id);
-  final PublishSubject<List<GetVendorByIdResponseData>> subject =
-      PublishSubject();
+  final PublishSubject<List<GetVendorByIdResponseData>> subject = PublishSubject();
 
   // GetVendorByIdResponse? loginData;
   List<GetVendorByIdResponseData> loginData = [];
@@ -70,10 +62,7 @@ class _AddedVendorState extends State<AddedVendor> {
         log("ggg ${loginData}");
       }
     } else {
-      Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on  internet");
+      Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
     }
     return loginData;
     //_tap = true;
@@ -87,10 +76,7 @@ class _AddedVendorState extends State<AddedVendor> {
     return WillPopScope(
       onWillPop: () {
         Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => BottomNavigation()),
-            (route) => false);
+            context, MaterialPageRoute(builder: (BuildContext context) => BottomNavigation()), (route) => false);
         return Future.value(false);
       },
       child: SafeArea(
@@ -104,19 +90,13 @@ class _AddedVendorState extends State<AddedVendor> {
                       icon: const Icon(Icons.arrow_back_ios),
                       iconSize: 20,
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    BottomNavigation()),
-                            (route) => false);
+                        Navigator.pushAndRemoveUntil(context,
+                            MaterialPageRoute(builder: (BuildContext context) => BottomNavigation()), (route) => false);
                       },
                     );
                   },
                 ),
-                title: Text('${widget.title}',
-                    style:
-                        TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+                title: Text('${widget.title}', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
                 // centerTitle: true,
                 actions: [
                   // loginData.isEmpty
@@ -165,8 +145,7 @@ class _AddedVendorState extends State<AddedVendor> {
                             Positioned(
                               top: -2,
                               right: -5,
-                              child: Image.asset('images/w-plus.png',
-                                  width: 40, fit: BoxFit.cover),
+                              child: Image.asset('images/w-plus.png', width: 40, fit: BoxFit.cover),
                             ),
                           ],
                         ),
@@ -267,9 +246,7 @@ class _AddedVendorState extends State<AddedVendor> {
                           fillColor: Colors.transparent,
                           hintText: 'Search Shops',
                           hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600),
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 12, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(7),
                             borderSide: BorderSide.none,
@@ -282,10 +259,7 @@ class _AddedVendorState extends State<AddedVendor> {
 
                             log("ram ${loginData.length}");
                             for (int i = 0; i < loginData.length; i++) {
-                              if (loginData[i]
-                                  .name
-                                  .toLowerCase()
-                                  .contains(text.toLowerCase())) {
+                              if (loginData[i].name.toLowerCase().contains(text.toLowerCase())) {
                                 print("Container -->$text");
                                 searchList.add(loginData[i]);
                                 log("ram ${loginData[i].name}");
@@ -307,8 +281,7 @@ class _AddedVendorState extends State<AddedVendor> {
                       child: StreamBuilder<List<GetVendorByIdResponseData>>(
                           stream: subject.stream,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
                               return Center(child: CircularProgressIndicator());
                             }
                             if (snapshot.hasError) {
@@ -340,20 +313,16 @@ class _AddedVendorState extends State<AddedVendor> {
                                             //     left: 10,
                                             //     right: 10
                                             ),
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16, vertical: 8),
+                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                         decoration: BoxDecoration(
                                           color: Colors.transparent,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15)),
+                                          borderRadius: BorderRadius.all(Radius.circular(15)),
                                         ),
                                         child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
+                                              borderRadius: BorderRadius.circular(5),
                                               child: Image.network(
                                                 "${snapshot.data![index].vendorImage}",
                                                 width: 65,
@@ -365,41 +334,85 @@ class _AddedVendorState extends State<AddedVendor> {
                                               width: 10,
                                             ),
                                             Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text(snapshot.data![index].name,
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600)),
+                                                Container(
+                                                  width: MediaQuery.of(context).size.width * 0.68,
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text(snapshot.data![index].name,
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 16,
+                                                              fontWeight: FontWeight.w600)),
+                                                      Container(
+                                                        height: 18,
+                                                        child: Center(
+                                                            child: snapshot.data![index].isActive == 0
+                                                                ? Text(
+                                                                    "  Pending  ",
+                                                                    style: TextStyle(
+                                                                      fontSize: 12,
+                                                                      fontWeight: FontWeight.bold,
+                                                                      color: Color(0xfff69444),
+                                                                    ),
+                                                                  )
+                                                                : snapshot.data![index].isActive == 1
+                                                                    ? Text(
+                                                                        "  Approved  ",
+                                                                        style: TextStyle(
+                                                                          fontSize: 12,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Color(0xff41a81b),
+                                                                        ),
+                                                                      )
+                                                                    : snapshot.data![index].isActive == 2
+                                                                        ? Text(
+                                                                            "  Rejected  ",
+                                                                            style: TextStyle(
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Color(0xffec3b3b),
+                                                                            ),
+                                                                          )
+                                                                        : Text(
+                                                                            "  Rejected  ",
+                                                                            style: TextStyle(
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Color(0xffec3b3b),
+                                                                            ),
+                                                                          )),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(15),
+                                                            color: snapshot.data![index].isActive == 0
+                                                                ? Color(0xfffcdfc7)
+                                                                : snapshot.data![index].isActive == 1
+                                                                    ? Color(0xffc6e5ba)
+                                                                    : snapshot.data![index].isActive == 2
+                                                                        ? Color(0xfff8b2b2)
+                                                                        : Color(0xfff8b2b2)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
                                                 SizedBox(height: 5),
-                                                Text(
-                                                    '+91 ${snapshot.data![index].ownerMobile}',
+                                                Text('+91 ${snapshot.data![index].ownerMobile}',
                                                     style: TextStyle(
-                                                        color:
-                                                            Color(0xff555555),
+                                                        color: Color(0xff555555),
                                                         fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w600)),
+                                                        fontWeight: FontWeight.w600)),
                                                 SizedBox(height: 5),
                                                 Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
+                                                  mainAxisAlignment: MainAxisAlignment.start,
                                                   children: [
-                                                    Image.asset(
-                                                        'images/g-pin.png',
-                                                        width: 13),
-                                                    Text(
-                                                        ' ${snapshot.data![index].address}',
+                                                    Image.asset('images/g-pin.png', width: 13),
+                                                    Text(' ${snapshot.data![index].address}',
                                                         style: TextStyle(
-                                                            color: Color(
-                                                                0xff555555),
+                                                            color: Color(0xff555555),
                                                             fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600)),
+                                                            fontWeight: FontWeight.w600)),
                                                   ],
                                                 ),
                                               ],
@@ -413,22 +426,18 @@ class _AddedVendorState extends State<AddedVendor> {
                                       )
                                     ]),
                                     onTap: () {
-                                      FocusScope.of(context)
-                                          .requestFocus(new FocusNode());
-                                      FocusScopeNode currentFocus =
-                                          FocusScope.of(context);
+                                      FocusScope.of(context).requestFocus(new FocusNode());
+                                      FocusScopeNode currentFocus = FocusScope.of(context);
                                       if (!currentFocus.hasPrimaryFocus) {
                                         currentFocus.unfocus();
                                       }
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  UpdateVendorDetail(
-                                                      title: widget.title,
-                                                      id: widget.id,
-                                                      vendordata: snapshot
-                                                          .data![index])));
+                                              builder: (context) => UpdateVendorDetail(
+                                                  title: widget.title,
+                                                  id: widget.id,
+                                                  vendordata: snapshot.data![index])));
                                     },
                                   );
                                 });

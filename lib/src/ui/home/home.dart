@@ -3,23 +3,20 @@ import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:employee/model/categories_respnse.dart';
+import 'package:employee/model/getvenordbyid_response.dart';
+import 'package:employee/model/notfication_list.dart';
+import 'package:employee/provider/api_provider.dart';
+import 'package:employee/provider/server_error.dart';
+import 'package:employee/src/ui/add_dhaba/add_dhaba.dart';
+import 'package:employee/src/ui/added_vendor_list/added_vendor_list.dart';
+import 'package:employee/src/ui/login/login.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/network.dart';
+import 'package:employee/utils/sharedpref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myprofit_employee/model/categories_respnse.dart';
-import 'package:myprofit_employee/model/getvenordbyid_response.dart';
-import 'package:myprofit_employee/model/notfication_list.dart';
-import 'package:myprofit_employee/provider/api_provider.dart';
-import 'package:myprofit_employee/provider/server_error.dart';
-import 'package:myprofit_employee/src/ui/add_dhaba/add_dhaba.dart';
-import 'package:myprofit_employee/src/ui/added_vendor_list/added_vendor_list.dart';
-import 'package:myprofit_employee/src/ui/addvendor_form/vendor_form.dart';
-
-import 'package:myprofit_employee/src/ui/login/login.dart';
-import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/utils/network.dart';
-import 'package:myprofit_employee/utils/sharedpref.dart';
-
 import 'package:rxdart/rxdart.dart';
 
 import 'notification_screen/notification_screen.dart';
@@ -105,8 +102,7 @@ class _HomeState extends State<Home> {
   }
 
   route() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Login()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   @override
@@ -133,28 +129,22 @@ class _HomeState extends State<Home> {
         //Navigator.pop(context);
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => AddedVendor(title: title, id: id)),
+          MaterialPageRoute(builder: (context) => AddedVendor(title: title, id: id)),
         );
         // }
-      } else {
-        if (id == 1) {
-        } else {
-          //Navigator.pop(context);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => VendorForm(title: title, id: id)));
-        }
       }
+      // else {
+      //   if (id == 1) {
+      //   } else {
+      //     //Navigator.pop(context);
+      //     Navigator.push(context, MaterialPageRoute(builder: (context) => VendorForm(title: title, id: id)));
+      //   }
+      // }
 
       // SharedPref.setStringPreference(SharedPref.USERSTATUS, loginData.status);
 
     } else {
-      Fluttertoast.showToast(
-          backgroundColor: ColorPrimary,
-          textColor: Colors.white,
-          msg: "Please turn on  internet");
+      Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
     }
     _tap = true;
     return loginData;
@@ -167,8 +157,7 @@ class _HomeState extends State<Home> {
         "http://employee.tekzee.in/api/v1/getNotificatonList",
         options: Options(headers: {"Authorization": "Bearer ${token}"}),
       );
-      NotificationListResponse count =
-          NotificationListResponse.fromJson(res.toString());
+      NotificationListResponse count = NotificationListResponse.fromJson(res.toString());
       notificationList = count.data!;
       setState(() {});
       return count;
@@ -231,10 +220,8 @@ class _HomeState extends State<Home> {
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Search Category',
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(85, 85, 85, 1),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600),
+                    hintStyle:
+                        TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 12, fontWeight: FontWeight.w600),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
                       borderSide: BorderSide.none,
@@ -247,9 +234,7 @@ class _HomeState extends State<Home> {
 
                       log("ram ${result!.data!}");
                       for (int i = 0; i < result!.data!.length; i++) {
-                        if (result!.data![i].categoryName
-                            .toLowerCase()
-                            .contains(text.toLowerCase())) {
+                        if (result!.data![i].categoryName.toLowerCase().contains(text.toLowerCase())) {
                           print("Container -->$text");
                           searchList.add(result!.data![i]);
                           log("ram ${result!.data![i].categoryName}");
@@ -264,8 +249,7 @@ class _HomeState extends State<Home> {
                     }
                   },
                 )
-              : Text('Home',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+              : Text('Home', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
           centerTitle: true,
           actions: [
             searching
@@ -294,10 +278,7 @@ class _HomeState extends State<Home> {
                     Icons.notifications,
                   ),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NotificationScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()));
                   },
                 ),
                 notificationList.isNotEmpty
@@ -395,8 +376,7 @@ class _HomeState extends State<Home> {
                         fit: BoxFit.contain),
                   );
                 },
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    Icon(
+                progressIndicatorBuilder: (context, url, downloadProgress) => Icon(
                   Icons.image,
                   color: ColorPrimary,
                 ),
@@ -407,8 +387,7 @@ class _HomeState extends State<Home> {
                 transform: Matrix4.translationValues(0, -2, 0),
                 child: AutoSizeText(
                   "${category[index].categoryName}",
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.w600),
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
                   minFontSize: 12,
                   maxFontSize: 14,
                 ),
@@ -429,20 +408,15 @@ class _HomeState extends State<Home> {
                     if (_tap == true) {
                       _tap = false;
                       if (category[index].id == 12) {
-                        getVendorId(
-                            category[index].id, category[index].categoryName);
+                        getVendorId(category[index].id, category[index].categoryName);
                       } else {
-                        getVendorId(
-                            category[index].id, category[index].categoryName);
+                        getVendorId(category[index].id, category[index].categoryName);
                       }
                     }
                   },
                   child: Text(
                     "Add Form",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600),
+                    style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

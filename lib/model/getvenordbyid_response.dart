@@ -15,19 +15,16 @@ class GetVendorByIdResponse {
   String message;
   List<GetVendorByIdResponseData>? data;
 
-  factory GetVendorByIdResponse.fromJson(String str) =>
-      GetVendorByIdResponse.fromMap(json.decode(str));
+  factory GetVendorByIdResponse.fromJson(String str) => GetVendorByIdResponse.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory GetVendorByIdResponse.fromMap(Map<String, dynamic> json) =>
-      GetVendorByIdResponse(
+  factory GetVendorByIdResponse.fromMap(Map<String, dynamic> json) => GetVendorByIdResponse(
         success: json["success"],
         message: json["message"],
         data: json["data"] == null
             ? []
-            : List<GetVendorByIdResponseData>.from(
-                json["data"].map((x) => GetVendorByIdResponseData.fromMap(x))),
+            : List<GetVendorByIdResponseData>.from(json["data"].map((x) => GetVendorByIdResponseData.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -53,6 +50,11 @@ class GetVendorByIdResponseData {
     required this.ownerName,
     required this.ownerMobile,
     required this.ownerSign,
+    required this.openingTime,
+    required this.closingTime,
+    required this.openingDays,
+    required this.isActive,
+    required this.customField,
     required this.cityName,
     required this.stateName,
     required this.vendorImage,
@@ -73,18 +75,21 @@ class GetVendorByIdResponseData {
   String ownerName;
   String ownerMobile;
   String ownerSign;
+  String openingTime;
+  String closingTime;
+  String openingDays;
+  int isActive;
+  String customField;
   String cityName;
   String stateName;
   String vendorImage;
   List<SubCategory> subCategory;
 
-  factory GetVendorByIdResponseData.fromJson(String str) =>
-      GetVendorByIdResponseData.fromMap(json.decode(str));
+  factory GetVendorByIdResponseData.fromJson(String str) => GetVendorByIdResponseData.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory GetVendorByIdResponseData.fromMap(Map<String, dynamic> json) =>
-      GetVendorByIdResponseData(
+  factory GetVendorByIdResponseData.fromMap(Map<String, dynamic> json) => GetVendorByIdResponseData(
         id: json["id"],
         categoryType: json["category_type"],
         name: json["name"],
@@ -99,11 +104,15 @@ class GetVendorByIdResponseData {
         ownerName: json["owner_name"] == null ? "" : json["owner_name"],
         ownerMobile: json["owner_mobile"] == null ? "" : json["owner_mobile"],
         ownerSign: json["owner_sign"],
+        openingTime: json["opening_time"] == null ? "" : json["opening_time"],
+        closingTime: json["closing_time"] == null ? "" : json["closing_time"],
+        openingDays: json["opening_days"] == null ? "" : json["opening_days"],
+        isActive: json["is_active"] == null ? "" : json["is_active"],
+        customField: json["custom_field"] == null ? "" : json["custom_field"],
         cityName: json["city_name"],
         stateName: json["state_name"],
         vendorImage: json["vendor_image"],
-        subCategory: List<SubCategory>.from(
-            json["sub_category"].map((x) => SubCategory.fromMap(x))),
+        subCategory: List<SubCategory>.from(json["sub_category"].map((x) => SubCategory.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -121,6 +130,11 @@ class GetVendorByIdResponseData {
         "owner_name": ownerName,
         "owner_mobile": ownerMobile,
         "owner_sign": ownerSign,
+        "opening_time": openingTime == null ? null : openingTime,
+        "closing_time": closingTime == null ? null : closingTime,
+        "opening_days": openingDays == null ? null : openingDays,
+        "is_active": isActive == null ? null : isActive,
+        "custom_field": customField == null ? null : customField,
         "city_name": cityName,
         "state_name": stateName,
         "vendor_image": vendorImage,
@@ -139,8 +153,7 @@ class SubCategory {
   String commission;
   int commissionStatus;
 
-  factory SubCategory.fromJson(String str) =>
-      SubCategory.fromMap(json.decode(str));
+  factory SubCategory.fromJson(String str) => SubCategory.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 

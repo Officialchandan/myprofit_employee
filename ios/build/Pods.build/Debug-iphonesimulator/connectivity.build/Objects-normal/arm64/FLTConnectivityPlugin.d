@@ -1,7 +1,7 @@
 dependencies: \
   /Users/mac/fluttersdk/flutter/.pub-cache/hosted/pub.dartlang.org/connectivity-3.0.6/ios/Classes/FLTConnectivityPlugin.m \
-  /Users/mac/Documents/vaibhav/myprofit_employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/build/Pods.build/Debug-iphonesimulator/connectivity.build/module.modulemap \
-  /Users/mac/Documents/vaibhav/myprofit_employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/Pods/Target\ Support\ Files/connectivity/connectivity-prefix.pch \
+  /Users/mac/Documents/vaibhav/employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/build/Pods.build/Debug-iphonesimulator/connectivity.build/module.modulemap \
+  /Users/mac/Documents/vaibhav/employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/Pods/Target\ Support\ Files/connectivity/connectivity-prefix.pch \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator14.3.sdk/usr/include/mach-o/compact_unwind_encoding.modulemap \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator14.3.sdk/usr/include/mach-o/dyld.modulemap \
   /Users/mac/fluttersdk/flutter/.pub-cache/hosted/pub.dartlang.org/connectivity-3.0.6/ios/Classes/FLTConnectivityPlugin.h \
@@ -22,6 +22,6 @@ dependencies: \
   /Users/mac/fluttersdk/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_x86_64-simulator/Flutter.framework/Headers/FlutterMacros.h \
   /Users/mac/fluttersdk/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_x86_64-simulator/Flutter.framework/Headers/FlutterAppDelegate.h \
   /Users/mac/fluttersdk/flutter/bin/cache/artifacts/engine/ios/Flutter.xcframework/ios-arm64_x86_64-simulator/Flutter.framework/Headers/Flutter.h \
-  /Users/mac/Documents/vaibhav/myprofit_employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/build/Pods.build/Debug-iphonesimulator/Reachability.build/module.modulemap \
-  /Users/mac/Documents/vaibhav/myprofit_employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/Pods/Reachability/Reachability.h \
-  /Users/mac/Documents/vaibhav/myprofit_employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/Pods/Target\ Support\ Files/Reachability/Reachability-umbrella.h
+  /Users/mac/Documents/vaibhav/employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/build/Pods.build/Debug-iphonesimulator/Reachability.build/module.modulemap \
+  /Users/mac/Documents/vaibhav/employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/Pods/Reachability/Reachability.h \
+  /Users/mac/Documents/vaibhav/employee-develop-08085e1b47f3eb48215b806918091f11d4f999ca/ios/Pods/Target\ Support\ Files/Reachability/Reachability-umbrella.h

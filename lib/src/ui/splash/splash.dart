@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:myprofit_employee/src/ui/bottom_navigation/bottom_navigation.dart';
-import 'package:myprofit_employee/src/ui/login/login.dart';
+import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
+import 'package:employee/src/ui/login/login.dart';
+import 'package:employee/utils/sharedpref.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myprofit_employee/utils/sharedpref.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -24,16 +25,18 @@ class _SplashState extends State<Splash> {
   void getLogin() async {
     var logs = await SharedPref.getBooleanPreference(SharedPref.LOGIN);
     log("${logs}");
-    if (logs == true) {
-      Timer(
-          Duration(seconds: 3),
-          () => Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => BottomNavigation())));
+    var permission = await Permission.location.request();
+    if (permission.isGranted) {
+      if (logs == true) {
+        Timer(Duration(seconds: 3),
+            () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation())));
+      } else {
+        Timer(Duration(seconds: 3),
+            () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login())));
+      }
     } else {
-      Timer(
-          Duration(seconds: 3),
-          () => Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Login())));
+      await openAppSettings();
+      getLogin();
     }
   }
 

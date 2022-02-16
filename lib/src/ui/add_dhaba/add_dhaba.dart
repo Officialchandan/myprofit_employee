@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:myprofit_employee/src/ui/form1/form1.dart';
-import 'package:myprofit_employee/utils/colors.dart';
+import 'package:employee/src/ui/form1/form1.dart';
+import 'package:employee/utils/colors.dart';
 
 class AddDhaba extends StatefulWidget {
   @override

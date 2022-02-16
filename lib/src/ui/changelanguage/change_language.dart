@@ -1,10 +1,9 @@
 import 'dart:developer';
-import 'package:myprofit_employee/localization/app_translations.dart';
-import 'package:myprofit_employee/src/ui/splash/splash.dart';
-import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/utils/sharedpref.dart';
-import 'package:myprofit_employee/widget/app_bar.dart';
 
+import 'package:employee/localization/app_translations.dart';
+import 'package:employee/src/ui/splash/splash.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/sharedpref.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -34,7 +33,6 @@ class _ChangeLanGuageState extends State<ChangeLanGuage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(102, 87, 244, 1),
         leading: Builder(
@@ -51,7 +49,6 @@ class _ChangeLanGuageState extends State<ChangeLanGuage> {
         title: Text('Change Language', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
         centerTitle: true,
       ),
-
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height * 0.90,
@@ -100,23 +97,16 @@ class _ChangeLanGuageState extends State<ChangeLanGuage> {
                                         style: GoogleFonts.openSans(
                                             fontSize: 20,
                                             letterSpacing: 0.0,
-                                            color: toggle == "en"
-                                                ? Colors.white
-                                                : Colors.black,
+                                            color: toggle == "en" ? Colors.white : Colors.black,
                                             fontWeight: FontWeight.w600,
                                             decoration: TextDecoration.none),
                                       ),
                                     ),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(75),
-                                      color: toggle == "en"
-                                          ? ColorPrimary
-                                          : Colors.white,
+                                      color: toggle == "en" ? ColorPrimary : Colors.white,
                                       boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            spreadRadius: 10,
-                                            blurRadius: 0),
+                                        BoxShadow(color: Colors.grey.shade300, spreadRadius: 10, blurRadius: 0),
                                       ],
                                     ),
                                     height: 100,
@@ -140,23 +130,16 @@ class _ChangeLanGuageState extends State<ChangeLanGuage> {
                                         'हिंदी',
                                         style: GoogleFonts.openSans(
                                             fontSize: 20,
-                                            color: toggle == "hi"
-                                                ? Colors.white
-                                                : Colors.black,
+                                            color: toggle == "hi" ? Colors.white : Colors.black,
                                             fontWeight: FontWeight.w600,
                                             decoration: TextDecoration.none),
                                       ),
                                     ),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(75),
-                                      color: toggle == "hi"
-                                          ? ColorPrimary
-                                          : Colors.white,
+                                      color: toggle == "hi" ? ColorPrimary : Colors.white,
                                       boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            spreadRadius: 10,
-                                            blurRadius: 0),
+                                        BoxShadow(color: Colors.grey.shade300, spreadRadius: 10, blurRadius: 0),
                                       ],
                                     ),
                                     height: 100,
@@ -184,27 +167,20 @@ class _ChangeLanGuageState extends State<ChangeLanGuage> {
                       textColor: Colors.white,
                       color: ColorPrimary,
                       disabledColor: Colors.grey[300],
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       onPressed: lang == toggle
                           ? null
                           : () async {
                               await AppTranslations.load(Locale("$toggle"));
                               log("$toggle");
-                              SharedPref.setStringPreference(
-                                  SharedPref.SELECTEDLANG, "$toggle");
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Splash()),
+                              SharedPref.setStringPreference(SharedPref.SELECTEDLANG, "$toggle");
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Splash()),
                                   (Route<dynamic> route) => false);
                             },
                       child: new Text(
                         "Update",
                         style: GoogleFonts.openSans(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                            decoration: TextDecoration.none),
+                            fontSize: 17, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
                       ),
                     ),
                   ),

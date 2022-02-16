@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myprofit_employee/localization/app_translations.dart';
-import 'package:myprofit_employee/src/ui/login/login.dart';
-import 'package:myprofit_employee/utils/sharedpref.dart';
+import 'package:employee/localization/app_translations.dart';
+import 'package:employee/src/ui/login/login.dart';
+import 'package:employee/utils/sharedpref.dart';
 
 class SelectLanguage extends StatefulWidget {
   @override

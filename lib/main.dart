@@ -1,16 +1,17 @@
 import 'dart:developer';
+
 import 'package:dio/dio.dart';
+import 'package:employee/provider/NavigationService.dart';
+import 'package:employee/src/ui/home/home.dart';
+import 'package:employee/src/ui/splash/splash.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/sharedpref.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:myprofit_employee/provider/NavigationService.dart';
-import 'package:myprofit_employee/src/ui/home/home.dart';
-import 'package:myprofit_employee/src/ui/splash/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myprofit_employee/utils/colors.dart';
-import 'package:myprofit_employee/utils/sharedpref.dart';
 
 import 'provider/api_provider.dart';
 
@@ -19,8 +20,7 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
     "high_importance_channel", "High Importance Notification",
     importance: Importance.high, playSound: true);
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
@@ -82,14 +82,13 @@ Future<void> main() async {
     AndroidNotification? android = message.notification?.android;
     if (notification != null && android != null) {
       log("notification aya");
-      Navigator.push(navigationService.navigatorKey.currentContext!,
-          MaterialPageRoute(builder: (_) => Home(onTab: () {})));
+      Navigator.push(
+          navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => Home(onTab: () {})));
     }
   });
 
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
   CircularProgressIndicator();
 
@@ -98,8 +97,7 @@ Future<void> main() async {
     badge: true,
     sound: true,
   );
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(MyApp());
 }
