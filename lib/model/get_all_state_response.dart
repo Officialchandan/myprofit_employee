@@ -15,17 +15,14 @@ class GetAllStateResponse {
   String message;
   List<GetAllStateResponseData>? data;
 
-  factory GetAllStateResponse.fromJson(String str) =>
-      GetAllStateResponse.fromMap(json.decode(str));
+  factory GetAllStateResponse.fromJson(String str) => GetAllStateResponse.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory GetAllStateResponse.fromMap(Map<String, dynamic> json) =>
-      GetAllStateResponse(
+  factory GetAllStateResponse.fromMap(Map<String, dynamic> json) => GetAllStateResponse(
         success: json["success"],
         message: json["message"],
-        data: List<GetAllStateResponseData>.from(
-            json["data"].map((x) => GetAllStateResponseData.fromMap(x))),
+        data: List<GetAllStateResponseData>.from(json["data"].map((x) => GetAllStateResponseData.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -38,25 +35,23 @@ class GetAllStateResponse {
 class GetAllStateResponseData {
   GetAllStateResponseData({
     required this.id,
-    required this.name,
+    required this.statename,
   });
 
   int id;
-  String name;
+  String statename;
 
-  factory GetAllStateResponseData.fromJson(String str) =>
-      GetAllStateResponseData.fromMap(json.decode(str));
+  factory GetAllStateResponseData.fromJson(String str) => GetAllStateResponseData.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory GetAllStateResponseData.fromMap(Map<String, dynamic> json) =>
-      GetAllStateResponseData(
+  factory GetAllStateResponseData.fromMap(Map<String, dynamic> json) => GetAllStateResponseData(
         id: json["id"],
-        name: json["name"],
+        statename: json["state_name"],
       );
 
   Map<String, dynamic> toMap() => {
         "id": id,
-        "name": name,
+        "state_name": statename,
       };
 }

@@ -25,11 +25,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
+
+import '../../../model/add_vendor_otp.dart';
+import '../../../model/get_state_city_bypincode.dart';
 
 class VendorForm extends StatefulWidget {
   final int? id;
@@ -60,7 +64,7 @@ class _VendorFormState extends State<VendorForm> {
   File? image;
   Uint8List? data;
   ui.Image? imageData;
-
+  AddVendorResponse? saveVendordetail;
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime currentDate = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
@@ -126,7 +130,7 @@ class _VendorFormState extends State<VendorForm> {
   double? lat, lng;
   TextEditingController _shopname = TextEditingController();
   TextEditingController _ownername = TextEditingController();
-
+  TextEditingController _otp = TextEditingController();
   TextEditingController _mobile = TextEditingController();
   TextEditingController _comission = TextEditingController();
   TextEditingController _openingtime = TextEditingController();
@@ -295,6 +299,9 @@ class _VendorFormState extends State<VendorForm> {
       } else if (imageData == null) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please do Signature in Terms and Condition");
+      } else if (validationShopImage == null) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Upload Document First");
       } else if (subcatlist.isNotEmpty) {
         String savelist = "";
 
@@ -331,6 +338,7 @@ class _VendorFormState extends State<VendorForm> {
               lat,
               lng,
               data,
+              validationShopImage!,
               arr,
               savelist,
               _openingtime.text,
@@ -342,10 +350,9 @@ class _VendorFormState extends State<VendorForm> {
           // log("ooooo ${savelist}");
           // log("ooooo ${arr}");
           if (loginData.success == true) {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
-                (Route<dynamic> route) => false);
+            saveVendordetail = loginData;
+            // Fluttertoast.showToast(msg: "${saveVendordetail!.message}");
+            _displayDialog(context, _mobile.text);
           } else {
             log("ooooo2 }");
             Fluttertoast.showToast(
@@ -371,6 +378,7 @@ class _VendorFormState extends State<VendorForm> {
             lat,
             lng,
             data,
+            validationShopImage!,
             arr,
             comiisionarray,
             _openingtime.text,
@@ -381,10 +389,13 @@ class _VendorFormState extends State<VendorForm> {
         log("ooooo ${comiisionarray}");
         log("ooooo ${arr}");
         if (loginData.success == true) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
-              (Route<dynamic> route) => false);
+          saveVendordetail = loginData;
+          // Fluttertoast.showToast(msg: "${saveVendordetail!.message}");
+          _displayDialog(context, _mobile.text);
+          // Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
+          //     (Route<dynamic> route) => false);
           Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Added Sucsessfully");
         } else {
           Fluttertoast.showToast(
@@ -395,63 +406,6 @@ class _VendorFormState extends State<VendorForm> {
           );
         }
       }
-      //signaturePadKey!.currentState!.toPathList().length
-      // else if (subcatlist.isNotEmpty) {
-      //   for (int i = 0; i < subcatlist.length; i++) {
-      //     if (subcatlist[i].subController.text.isEmpty) {
-      //       Fluttertoast.showToast(
-      //           backgroundColor: ColorPrimary,
-      //           textColor: Colors.white,
-      //           msg: "Please Enter SubCategories comission");
-      //     }
-      // else {
-      //   for (int i = 0; i < subcatlist.length; i++) {
-      //     if (i == subcatlist.length - 1) {
-      //       comiisionarray = comiisionarray +
-      //           double.parse(subcatlist[i].subController.text.trim())
-      //               .toStringAsPrecision(2);
-      //     } else {
-      //       comiisionarray = comiisionarray +
-      //           double.parse(subcatlist[i].subController.text.trim())
-      //               .toStringAsPrecision(2) +
-      //           ",";
-      //     }
-      //   }
-      //   final AddVendorResponse loginData = await ApiProvider().addVendor(
-      //       "${widget.id}",
-      //       _shopname.text,
-      //       _ownername.text,
-      //       _comission.text,
-      //       _mobile.text,
-      //       _address.text,
-      //       lat,
-      //       lng,
-      //       data,
-      //       arr,
-      //       comiisionarray);
-      //   log("ooooo ${loginData}");
-      //   log("ooooo ${comiisionarray}");
-      //   log("ooooo ${arr}");
-      //   if (loginData.success == true) {
-      //     Navigator.pushAndRemoveUntil(
-      //         context,
-      //         MaterialPageRoute(
-      //             builder: (context) =>
-      //                 AddFootwear(title: widget.title, id: widget.id)),
-      //         (Route<dynamic> route) => false);
-      //   } else {
-      //     Fluttertoast.showToast(
-      //       backgroundColor: ColorPrimary,
-      //       textColor: Colors.white,
-      //       msg: loginData.success == false
-      //           ? "Please select Terms and condition"
-      //           : "thanks for login ",
-      //       // timeInSecForIos: 3
-      //     );
-      //   }
-      // }
-      //   }
-      // }
     } else {
       Fluttertoast.showToast(
           backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
@@ -713,7 +667,10 @@ class _VendorFormState extends State<VendorForm> {
   }
 
   GetAllStateResponse? getData;
+  GetAllStateCityByPincodeResponse? getcitystate;
   List<GetAllStateResponseData> stateData = [];
+  List<GetAllStateCityByPincodeData> statePincodeData = [];
+
   Future<List<GetAllStateResponseData>> getStateId(id) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
@@ -728,6 +685,31 @@ class _VendorFormState extends State<VendorForm> {
       Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
     }
     return stateData;
+    //_tap = true;
+  }
+
+  Future<List<GetAllStateCityByPincodeData>> getStateCityIdByPincode(pincode) async {
+    if (await Network.isConnected()) {
+      SystemChannels.textInput.invokeMethod("TextInput.hide");
+      print("kai kroge +${pincode}");
+      getcitystate = await ApiProvider().getStatebypincode(pincode);
+
+      if (getcitystate!.success) {
+        statePincodeData = getcitystate!.data!;
+        _city.text = statePincodeData[0].cityName.toString();
+        cityid = statePincodeData[0].cityId.toString();
+        _state.text = statePincodeData[0].stateName.toString();
+        stateid = statePincodeData[0].stateId.toString();
+
+        log("ggg ${statePincodeData}");
+        setState(() {});
+      } else {
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "${getcitystate!.message}");
+      }
+    } else {
+      Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
+    }
+    return statePincodeData;
     //_tap = true;
   }
 
@@ -1086,6 +1068,11 @@ class _VendorFormState extends State<VendorForm> {
                         validator: (numb) => Validator.validatePincode(numb!, context),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        onChanged: ((texts) {
+                          if (texts.length == 6) {
+                            getStateCityIdByPincode(_pincode.text);
+                          }
+                        }),
                         maxLength: 6,
                         autofocus: false,
                         decoration: InputDecoration(
@@ -1132,16 +1119,26 @@ class _VendorFormState extends State<VendorForm> {
                                               child: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    _city.clear();
+                                                    log("==?${_state.text}");
+                                                    log("===?${stateData[index].statename}");
+                                                    if (_state.text == stateData[index].statename) {
+                                                      log("${_state.text}");
+                                                      log("${stateData[index].statename}");
+                                                    } else {
+                                                      _city.clear();
+                                                      cityid = "";
+                                                      _pincode.clear();
+                                                    }
                                                   });
 
                                                   getCityId(stateData[index].id);
-                                                  _state.text = stateData[index].name;
+                                                  _state.text = stateData[index].statename;
                                                   stateid = stateData[index].id.toString();
                                                   Navigator.pop(context);
                                                 },
                                                 child: Container(
-                                                    height: 30, child: Text("${stateData[index].name.toUpperCase()}")),
+                                                    height: 30,
+                                                    child: Text("${stateData[index].statename.toUpperCase()}")),
                                               ),
                                             );
                                           }),
@@ -1191,8 +1188,10 @@ class _VendorFormState extends State<VendorForm> {
                         readOnly: true,
                         onTap: () {
                           log("${citydata.length}");
+
                           if (citydata.length > 0) {
                             _showModal(context, citydata);
+                          } else if (_city.text.isNotEmpty) {
                           } else {
                             Fluttertoast.showToast(msg: "Select State from above list", backgroundColor: ColorPrimary);
                           }
@@ -1395,33 +1394,53 @@ class _VendorFormState extends State<VendorForm> {
 
                       SizedBox(height: 15),
                       // Text('Photo of the place where MyProfit board is to be placed',
-                      //     style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                      //     style: TextStyle(
+                      //         color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       // SizedBox(height: 10),
-                      // InkWell(Fselect
+                      // InkWell(
                       //   child: ClipRRect(
                       //     borderRadius: BorderRadius.circular(10),
                       //     child: myProfitBoardImage != null
-                      //         ? Image(image: FileImage(myProfitBoardImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                      //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                      //         ? Image(
+                      //             image: FileImage(myProfitBoardImage!),
+                      //             width: double.infinity,
+                      //             height: 150,
+                      //             fit: BoxFit.cover)
+                      //         : Image(
+                      //             image: AssetImage('images/placeholder.png'),
+                      //             width: double.infinity,
+                      //             height: 150,
+                      //             fit: BoxFit.cover),
                       //   ),
                       //   onTap: () {
                       //     showBottomSheet(5, context);
                       //   },
                       // ),
                       // SizedBox(height: 15),
-                      // Text('Documents for validation of Shop', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-                      // SizedBox(height: 10),
-                      // InkWell(
-                      //   child: ClipRRect(
-                      //     borderRadius: BorderRadius.circular(10),
-                      //     child: validationShopImage != null
-                      //         ? Image(image: FileImage(validationShopImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                      //         : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
-                      //   ),
-                      //   onTap: () {
-                      //     showBottomSheet(6, context);
-                      //   },
-                      // ),
+                      Text('Documents for validation of Shop',
+                          style: TextStyle(
+                              color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                      SizedBox(height: 10),
+                      InkWell(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: validationShopImage != null
+                                ? Image(
+                                    image: FileImage(validationShopImage!),
+                                    width: double.infinity,
+                                    height: 250,
+                                    fit: BoxFit.cover)
+                                : Image(
+                                    image: AssetImage('images/placeholder.png'),
+                                    width: double.infinity,
+                                    height: 150,
+                                    fit: BoxFit.cover),
+                          ),
+                          onTap: () {
+                            log("$validationShopImage");
+
+                            showBottomSheet(2, context);
+                          }),
                       //     Container(
                       //       child: Column(
                       // mainAxisAlignment: MainAxisAlignment.center,
@@ -1557,6 +1576,8 @@ class _VendorFormState extends State<VendorForm> {
                       //     if (persons != null) persons.forEach(print);
                       //   },
                       // ),
+
+                      SizedBox(height: 15),
                       Align(
                         alignment: Alignment.centerRight,
                         child: Container(
@@ -1727,7 +1748,13 @@ class _VendorFormState extends State<VendorForm> {
         return CityBottomSheet(
           citydata: citydata,
           onSelect: (GetAllCityByStateResponseData city) {
-            _city.text = city.name;
+            log("${_city.text}");
+            log("${city.cityName}");
+            if (_city.text == city.cityName) {
+            } else {
+              _pincode.clear();
+            }
+            _city.text = city.cityName;
             cityid = city.id.toString();
           },
         );
@@ -1804,7 +1831,7 @@ class _VendorFormState extends State<VendorForm> {
         validationShopImage = File(pickedFile.path);
         break;
     }
-
+    log("$imageType");
     setState(() {});
   }
 
@@ -1828,6 +1855,119 @@ class _VendorFormState extends State<VendorForm> {
     });
   }
 //image-picker
+
+  _displayDialog(BuildContext context, mobile) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              title: RichText(
+                text: TextSpan(
+                  text: "OTP Verification\n",
+                  style: GoogleFonts.openSans(
+                    fontSize: 25.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: "Please verify your OTP on ${mobile}",
+                      style: GoogleFonts.openSans(
+                        fontSize: 14.0,
+                        color: ColorTextPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              content: TextField(
+                controller: _otp,
+                cursorColor: ColorPrimary,
+                keyboardType: TextInputType.number,
+                //inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                decoration: InputDecoration(
+                  filled: true,
+
+                  // fillColor: Colors.black,
+                  hintText: "Enter OTP",
+                  hintStyle: GoogleFonts.openSans(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  contentPadding: const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                Center(
+                  child: MaterialButton(
+                    minWidth: MediaQuery.of(context).size.width * 0.60,
+                    height: 50,
+                    padding: const EdgeInsets.all(8.0),
+                    textColor: Colors.white,
+                    color: ColorPrimary,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    onPressed: () {
+                      loginApiOtpCall(saveVendordetail!.data!.vendorId.toString(), _otp.text);
+                    },
+                    child: new Text(
+                      "Verify",
+                      style: GoogleFonts.openSans(
+                          fontSize: 17, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  color: Colors.transparent,
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  loginApiOtpCall(vendorid, otp) async {
+    if (await Network.isConnected()) {
+      SystemChannels.textInput.invokeMethod("TextInput.hide");
+
+      if (_otp.text.isEmpty) {
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OTP");
+      } else {
+        log("ooooo $vendorid");
+        log("ooooo $otp");
+        final AddVendorOtpResponse loginData = await ApiProvider().addVendorVerifyOtp(vendorid, otp);
+        log("ooooo ${loginData}");
+
+        if (loginData.success == true) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
+              (Route<dynamic> route) => false);
+        } else {
+          Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: loginData.success == false ? "OTP is incorrect" : "thanks for login ",
+            // timeInSecForIos: 3
+          );
+        }
+      }
+    } else {
+      Fluttertoast.showToast(
+          backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
+    }
+  }
 }
 
 class SubCat {
@@ -1964,7 +2104,7 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
                 List<GetAllCityByStateResponseData> searchList = [];
 
                 citydata.forEach((element) {
-                  if (element.name.toLowerCase().contains(text.trim().toLowerCase())) {
+                  if (element.cityName.toLowerCase().contains(text.trim().toLowerCase())) {
                     searchList.add(element);
                   }
                 });
@@ -1992,7 +2132,7 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
 
                                   Navigator.pop(context);
                                 },
-                                child: Container(height: 30, child: Text("${snap.data![index].name}")),
+                                child: Container(height: 30, child: Text("${snap.data![index].cityName}")),
                               ),
                             );
                           });

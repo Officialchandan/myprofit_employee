@@ -5,53 +5,54 @@
 import 'dart:convert';
 
 class GetAllCityByStateResponse {
-    GetAllCityByStateResponse({
-        required this.success,
-        required this.message,
-        this.data,
-    });
+  GetAllCityByStateResponse({
+    required this.success,
+    required this.message,
+    this.data,
+  });
 
-    bool success;
-    String message;
-    List<GetAllCityByStateResponseData>? data;
+  bool success;
+  String message;
+  List<GetAllCityByStateResponseData>? data;
 
-    factory GetAllCityByStateResponse.fromJson(String str) => GetAllCityByStateResponse.fromMap(json.decode(str));
+  factory GetAllCityByStateResponse.fromJson(String str) => GetAllCityByStateResponse.fromMap(json.decode(str));
 
-    String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap());
 
-    factory GetAllCityByStateResponse.fromMap(Map<String, dynamic> json) => GetAllCityByStateResponse(
+  factory GetAllCityByStateResponse.fromMap(Map<String, dynamic> json) => GetAllCityByStateResponse(
         success: json["success"],
         message: json["message"],
-        data: List<GetAllCityByStateResponseData>.from(json["data"].map((x) => GetAllCityByStateResponseData.fromMap(x))),
-    );
+        data:
+            List<GetAllCityByStateResponseData>.from(json["data"].map((x) => GetAllCityByStateResponseData.fromMap(x))),
+      );
 
-    Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toMap() => {
         "success": success,
         "message": message,
         "data": List<dynamic>.from(data!.map((x) => x.toMap())),
-    };
+      };
 }
 
 class GetAllCityByStateResponseData {
-    GetAllCityByStateResponseData({
-        required this.id,
-        required this.name,
-    });
+  GetAllCityByStateResponseData({
+    required this.id,
+    required this.cityName,
+  });
 
-    int id;
-    String name;
+  int id;
+  String cityName;
 
-    factory GetAllCityByStateResponseData.fromJson(String str) => GetAllCityByStateResponseData.fromMap(json.decode(str));
+  factory GetAllCityByStateResponseData.fromJson(String str) => GetAllCityByStateResponseData.fromMap(json.decode(str));
 
-    String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap());
 
-    factory GetAllCityByStateResponseData.fromMap(Map<String, dynamic> json) => GetAllCityByStateResponseData(
+  factory GetAllCityByStateResponseData.fromMap(Map<String, dynamic> json) => GetAllCityByStateResponseData(
         id: json["id"],
-        name: json["name"],
-    );
+        cityName: json["city_name"],
+      );
 
-    Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toMap() => {
         "id": id,
-        "name": name,
-    };
+        "city_name": cityName,
+      };
 }

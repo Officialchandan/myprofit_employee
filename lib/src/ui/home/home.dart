@@ -1,13 +1,11 @@
+import 'dart:collection';
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 import 'package:employee/model/categories_respnse.dart';
 import 'package:employee/model/getvenordbyid_response.dart';
-import 'package:employee/model/notfication_list.dart';
 import 'package:employee/provider/api_provider.dart';
-import 'package:employee/provider/server_error.dart';
 import 'package:employee/src/ui/add_dhaba/add_dhaba.dart';
 import 'package:employee/src/ui/added_vendor_list/added_vendor_list.dart';
 import 'package:employee/src/ui/login/login.dart';
@@ -19,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../model/vendor_send_notification.dart';
 import 'notification_screen/notification_screen.dart';
 
 class Home extends StatefulWidget {
@@ -58,47 +57,38 @@ class _HomeState extends State<Home> {
   String searchText = "";
   bool searching = false;
   int? id;
-  List<NotificationListData> notificationList = [];
+  List<VendorNotificationData> notificationList = [];
+  int? notifiicationlistlength;
   final PublishSubject<List<CategoriesResponseData>> subject = PublishSubject();
   List<GetVendorByIdResponseData> loginData = [];
   @override
   void initState() {
     super.initState();
     getCategories();
-    getNotificationCount();
+    getNotifications();
+
     _tap = true;
-    // getVendorId(id);
-    // subject.stream
-    //     .debounceTime(Duration(milliseconds: 50))
-    //     .listen((searchText) async {
-    //   this.searchText = searchText;
-    //   if (await Network.isConnected()) {
-    //     if (searchText.isNotEmpty) {
-    //       print("searchText -->$searchText");
-    //       searchList.clear();
-    //       log("ram ${result!.data!}");
-    //       for (int i = 0; i < result!.data!.length; i++) {
-    //         if (result!.data![i].categoryName
-    //             .toLowerCase()
-    //             .contains(searchText.toLowerCase())) {
-    //           print("Container -->$searchText");
-    //           searchList.add(result!.data![i]);
-    //           log("ram ${result!.data![i].categoryName}");
-    //         } else {
-    //           print("Container -->data not found");
-    //         }
-    //       }
-    //     } else {
-    //       Fluttertoast.showToast(msg: "msg", backgroundColor: ColorPrimary);
-    //       print("Container -->data not found2");
-    //       searchList.clear();
-    //     }
-    //   } else {
-    //     Fluttertoast.showToast(
-    //         msg: "Please check Your Internet", backgroundColor: ColorPrimary);
-    //   }
-    //   // setState(() {});
-    // });
+  }
+
+  getNotifications() async {
+    log("message");
+    String userId = await SharedPref.getStringPreference(SharedPref.VENDORID);
+    Map input = HashMap();
+    input["employee_id"] = userId;
+    log("$input");
+    if (await Network.isConnected()) {
+      VendorNotificationResponse response = await ApiProvider().getNotifications(input);
+      log("=======:> ${response.message}");
+      if (response.success) {
+        notificationList = response.data!;
+        log("=======>$notificationList");
+        notifiicationlistlength = response.data!.length;
+      } else {
+        Fluttertoast.showToast(msg: "${response.message}", backgroundColor: ColorPrimary);
+      }
+      log("=======>$notifiicationlistlength");
+      setState(() {});
+    }
   }
 
   route() {
@@ -150,29 +140,29 @@ class _HomeState extends State<Home> {
     return loginData;
   }
 
-  Future<NotificationListResponse> getNotificationCount() async {
-    try {
-      var token = await SharedPref.getStringPreference('token');
-      Response res = await dio.get(
-        "http://employee.tekzee.in/api/v1/getNotificatonList",
-        options: Options(headers: {"Authorization": "Bearer ${token}"}),
-      );
-      NotificationListResponse count = NotificationListResponse.fromJson(res.toString());
-      notificationList = count.data!;
-      setState(() {});
-      return count;
-    } catch (error) {
-      String message = "";
-      if (error is DioError) {
-        ServerError e = ServerError.withError(error: error);
-        message = e.getErrorMessage();
-      } else {
-        message = "Please try again later!";
-      }
-      print("Exception occurred: $message stackTrace: $error");
-      return NotificationListResponse(success: false, message: message);
-    }
-  }
+  // Future<NotificationListResponse> getNotificationCount() async {
+  //   try {
+  //     var token = await SharedPref.getStringPreference('token');
+  //     Response res = await dio.get(
+  //       "http://employee.tekzee.in/api/v1/getNotificatonList",
+  //       options: Options(headers: {"Authorization": "Bearer ${token}"}),
+  //     );
+  //     NotificationListResponse count = NotificationListResponse.fromJson(res.toString());
+  //     notificationList = count.data!;
+  //     setState(() {});
+  //     return count;
+  //   } catch (error) {
+  //     String message = "";
+  //     if (error is DioError) {
+  //       ServerError e = ServerError.withError(error: error);
+  //       message = e.getErrorMessage();
+  //     } else {
+  //       message = "Please try again later!";
+  //     }
+  //     print("Exception occurred: $message stackTrace: $error");
+  //     return NotificationListResponse(success: false, message: message);
+  //   }
+  // }
 
   getCategories() async {
     if (await Network.isConnected()) {
@@ -278,7 +268,8 @@ class _HomeState extends State<Home> {
                     Icons.notifications,
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()));
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => NotificationScreen(data: notificationList)));
                   },
                 ),
                 notificationList.isNotEmpty
@@ -299,7 +290,7 @@ class _HomeState extends State<Home> {
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
                                 child: Text(
-                                  notificationList.length.toString(),
+                                  notifiicationlistlength.toString(),
                                   textDirection: TextDirection.ltr,
                                   style: TextStyle(
                                     color: ColorPrimary,

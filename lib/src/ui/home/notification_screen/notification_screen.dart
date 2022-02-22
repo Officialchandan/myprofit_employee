@@ -1,17 +1,18 @@
 import 'dart:collection';
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:employee/model/vendor_send_notification.dart';
 import 'package:employee/src/ui/home/notification_screen/bloc/notification_bloc.dart';
 import 'package:employee/src/ui/home/notification_screen/bloc/notification_state.dart';
 import 'package:employee/src/ui/home/notification_screen/bloc/notofication_event.dart';
 import 'package:employee/utils/sharedpref.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class NotificationScreen extends StatefulWidget {
-  NotificationScreen({Key? key}) : super(key: key);
+  List<VendorNotificationData> data;
+  NotificationScreen({Key? key, required this.data}) : super(key: key);
 
   @override
   _NotificationScreenState createState() => _NotificationScreenState();
@@ -22,8 +23,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   void initState() {
     super.initState();
-
-    getNotifications();
+    log("=>${widget.data}");
   }
 
   @override
@@ -109,9 +109,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
-                            color: data[index].isRead == 1
-                                ? Colors.grey
-                                : Colors.black87,
+                            color: data[index].isRead == 1 ? Colors.grey : Colors.black87,
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
@@ -131,9 +129,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: TextStyle(
-                            color: data[index].isRead == 1
-                                ? Colors.grey
-                                : Colors.black87,
+                            color: data[index].isRead == 1 ? Colors.grey : Colors.black87,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
@@ -148,12 +144,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        DateFormat.jm()
-                            .format(DateTime.parse(data[index].createdAt)),
+                        DateFormat.jm().format(DateTime.parse(data[index].createdAt)),
                         style: TextStyle(
-                            color: data[index].isRead == 1
-                                ? Colors.grey
-                                : Colors.black54,
+                            color: data[index].isRead == 1 ? Colors.grey : Colors.black54,
                             fontSize: 12,
                             fontWeight: FontWeight.bold),
                       ),

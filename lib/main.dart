@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:employee/provider/NavigationService.dart';
 import 'package:employee/src/ui/home/home.dart';
 import 'package:employee/src/ui/splash/splash.dart';
-import 'package:employee/utils/colors.dart';
 import 'package:employee/utils/sharedpref.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -32,7 +31,7 @@ fcmToken() async {
   try {
     log("device token${await firebaseMessaging.getToken()}");
     String? tok = await firebaseMessaging.getToken();
-
+    log("====>$tok");
     SharedPref.setStringPreference(SharedPref.DEVICETOKEN, tok!);
   } catch (e) {
     log("error");
@@ -62,16 +61,16 @@ Future<void> main() async {
     log("notification title ${message.notification!.title}");
     log("notification body ${message.notification!.body}");
     log("===>$android");
-    if (notification != null && android != null) {
-      flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(channel.id, channel.name,
-                color: ColorPrimary, playSound: true, icon: "logo"),
-          ));
-    }
+    // if (notification != null && android != null) {
+    //   flutterLocalNotificationsPlugin.show(
+    //       notification.hashCode,
+    //       notification.title,
+    //       notification.body,
+    //       NotificationDetails(
+    //         android: AndroidNotificationDetails(channel.id, channel.name,
+    //             color: ColorPrimary, playSound: true, icon: "logo"),
+    //       ));
+    // }
     // Navigator.push(navigationService.navigatorKey.currentContext!,
     //     MaterialPageRoute(builder: (_) => MoneyDueScreen()));
   });
@@ -87,10 +86,9 @@ Future<void> main() async {
     }
   });
 
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-  CircularProgressIndicator();
+  // await flutterLocalNotificationsPlugin
+  //     .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+  //     ?.createNotificationChannel(channel);
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,

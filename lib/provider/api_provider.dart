@@ -1,9 +1,11 @@
 import 'dart:collection';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:employee/model/add_chat_papdi.dart';
 import 'package:employee/model/add_intrested_user.dart';
+import 'package:employee/model/add_vendor_otp.dart';
 import 'package:employee/model/addvendor_form.dart';
 import 'package:employee/model/area_aloted_otp.dart';
 import 'package:employee/model/categories_respnse.dart';
@@ -28,6 +30,8 @@ import 'package:employee/model/vendor_send_notification.dart';
 import 'package:employee/provider/server_error.dart';
 import 'package:employee/utils/sharedpref.dart';
 import 'package:http/http.dart' as http;
+
+import '../model/get_state_city_bypincode.dart';
 
 Dio dio = Dio(baseOptions);
 
@@ -131,6 +135,31 @@ class ApiProvider {
       }
       print("Exception occurred: $message stackTrace: $stacktrace");
       return GetVendorByIdResponse(success: false, message: message);
+    }
+  }
+
+  Future<GetAllStateCityByPincodeResponse> getStatebypincode(pincode) async {
+    log("chl gyi");
+    var token = await SharedPref.getStringPreference('token');
+    try {
+      Response res = await dio.post('$baseUrl/getCityStateByPincode',
+          data: ({"pincode": pincode}),
+          options: Options(
+            headers: {"Authorization": "Bearer $token"},
+          ));
+      log("sss${res.data.toString()}");
+
+      return GetAllStateCityByPincodeResponse.fromJson(res.toString());
+    } catch (error, stacktrace) {
+      String message = "";
+      if (error is DioError) {
+        ServerError e = ServerError.withError(error: error);
+        message = e.getErrorMessage();
+      } else {
+        message = "Something Went wrong";
+      }
+      print("Exception occurred: $message stackTrace: $stacktrace");
+      return GetAllStateCityByPincodeResponse(success: false, message: message);
     }
   }
 
@@ -241,6 +270,7 @@ class ApiProvider {
     lat,
     lng,
     ownersign,
+    File owneridproof,
     subcat,
     subcatcommission,
     opentime,
@@ -265,12 +295,19 @@ class ApiProvider {
       addvendor["lng"] = lng;
       addvendor["owner_sign"] =
           await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+      log("yha tak to agyy      ====>1");
+      //log("${owneridproof.length}");
+      addvendor["owner_id_proof"] = await MultipartFile.fromFile(owneridproof.path,
+          filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+
       addvendor["sub_cat_id"] = subcat;
       addvendor["sub_cat_commission"] = subcatcommission;
       addvendor["opening_time"] = opentime;
       addvendor["closing_time"] = closetime;
+      log("yha tak to agyy      ====>${await SharedPref.getStringPreference(SharedPref.DEVICETOKEN)}");
       addvendor["device_token"] = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
       addvendor["custom_field"] = customfield.toString();
+
       String opendays = "";
       for (int i = 0; i < openingdays.length; i++) {
         opendays += openingdays[i] + ",";
@@ -298,6 +335,31 @@ class ApiProvider {
       }
       print("Exception occurred: $message stackTrace: $error");
       return AddVendorResponse(success: false, message: message);
+    }
+  }
+
+  Future<AddVendorOtpResponse> addVendorVerifyOtp(id, otp) async {
+    log("chl gyi ${id + otp}");
+    var token = await SharedPref.getStringPreference('token');
+    try {
+      Response res = await dio.post('$baseUrl/addVendorForm_verifyOTP',
+          data: {"vendor_id": id, "otp": otp},
+          options: Options(
+            headers: {"Authorization": "Bearer $token"},
+          ));
+      log("chl gyi 2${res}");
+
+      return AddVendorOtpResponse.fromJson(res.toString());
+    } catch (error, stacktrace) {
+      String message = "";
+      if (error is DioError) {
+        ServerError e = ServerError.withError(error: error);
+        message = e.getErrorMessage();
+      } else {
+        message = "Something Went wrong";
+      }
+      print("Exception occurred: $message stackTrace: $error");
+      return AddVendorOtpResponse(success: false, message: message);
     }
   }
 
@@ -640,62 +702,35 @@ class ApiProvider {
     ownersign,
   ) async {
     //log("chl gyi ${mobile + otp}");
-    try {
-      Map<String, dynamic> addvendor = HashMap<String, dynamic>();
-      addvendor["category_type"] = category;
-      addvendor["shop_name"] = shopname;
-      addvendor["owner_name"] = ownername;
-      addvendor["vendor_commission"] = commission;
-      addvendor["owner_mobile"] = ownermobile;
-      addvendor["address"] = address;
-      addvendor["landmark"] = landmark;
-      addvendor["city"] = city;
-      addvendor["state"] = state;
-      addvendor["pin"] = pin;
-      addvendor["lat"] = lat;
-      addvendor["lng"] = lng;
-      addvendor["owner_sign"] =
-          await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+    // try {
+    Map<String, dynamic> addvendor = HashMap<String, dynamic>();
+    addvendor["category_type"] = category;
+    addvendor["shop_name"] = shopname;
+    addvendor["owner_name"] = ownername;
+    addvendor["vendor_commission"] = commission;
+    addvendor["owner_mobile"] = ownermobile;
+    addvendor["address"] = address;
+    addvendor["landmark"] = landmark;
+    addvendor["city"] = city;
+    addvendor["state"] = state;
+    addvendor["pin"] = pin;
+    addvendor["lat"] = lat;
+    addvendor["lng"] = lng;
+    addvendor["owner_sign"] =
+        await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
 
-      log("addvendor$addvendor");
-      FormData requestData = FormData.fromMap(addvendor);
-      var token = await SharedPref.getStringPreference('token');
-      Response res = await dio.post('$baseUrl/chatPapdiRegistration',
-          data: requestData,
-          options: Options(
-            headers: {"Authorization": "Bearer ${token}"},
-          ));
-      log("chl gyi 2===========>$res");
-
-      return ChatPapdiResponse.fromJson(res.toString());
-    } catch (error, stacktrace) {
-      String message = "";
-      if (error is DioError) {
-        ServerError e = ServerError.withError(error: error);
-        message = e.getErrorMessage();
-      } else {
-        message = "Something Went wrong";
-      }
-      print("Exception occurred: $message stackTrace: $error");
-      return ChatPapdiResponse(success: false, message: message);
-    }
-  }
-
-  Future<GetEmployeTrackerResponse> getEmployeTracker() async {
-    log("chl gyi 2}");
-    print(await SharedPref.getStringPreference('token'));
+    log("addvendor$addvendor");
+    FormData requestData = FormData.fromMap(addvendor);
     var token = await SharedPref.getStringPreference('token');
-    //try {
-    Response res = await dio.get(
-      '$baseUrl/getEmployeeTracker',
-      options: Options(headers: {"Authorization": "Bearer ${token}"}),
-    );
-    log("d");
-    log("${res}");
+    Response res = await dio.post('$baseUrl/chatPapdiRegistration',
+        data: requestData,
+        options: Options(
+          headers: {"Authorization": "Bearer ${token}"},
+        ));
+    log("chl gyi 2===========>$res");
 
-    return GetEmployeTrackerResponse.fromJson(res.toString());
+    return ChatPapdiResponse.fromJson(res.toString());
     // } catch (error, stacktrace) {
-    //   log("chl gyi 2}");
     //   String message = "";
     //   if (error is DioError) {
     //     ServerError e = ServerError.withError(error: error);
@@ -703,29 +738,56 @@ class ApiProvider {
     //   } else {
     //     message = "Something Went wrong";
     //   }
-    //   print("Exception occurred: $message stackTrace: $stacktrace");
-    //   return GetEmployeTrackerResponse(success: false, message: message);
+    //   print("Exception occurred: $message stackTrace: $error");
+    //   return ChatPapdiResponse(success: false, message: message);
     // }
   }
 
-  Future<VendorNotificationResponse> getNotifications(Map input) async {
+  Future<GetEmployeTrackerResponse> getEmployeTracker() async {
+    log("chl gyi 2}");
+    print(await SharedPref.getStringPreference('token'));
+    var token = await SharedPref.getStringPreference('token');
     try {
-      var token = await SharedPref.getStringPreference('token');
-      Response res = await dio.post('$baseUrl/getEmployeeSendNotificatonList',
-          data: input, options: Options(headers: {"Authorization": "Bearer ${token}"}));
+      Response res = await dio.get(
+        '$baseUrl/getEmployeeTracker',
+        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+      );
+      log("d");
+      log("${res}");
 
-      return VendorNotificationResponse.fromJson(res.toString());
-    } catch (error) {
+      return GetEmployeTrackerResponse.fromJson(res.toString());
+    } catch (error, stacktrace) {
+      log("chl gyi 2}");
       String message = "";
       if (error is DioError) {
         ServerError e = ServerError.withError(error: error);
         message = e.getErrorMessage();
       } else {
-        message = "Please try again later!";
+        message = "Something Went wrong";
       }
-      print("Exception occurred: $message stackTrace: $error");
-      return VendorNotificationResponse(success: false, message: message);
+      print("Exception occurred: $message stackTrace: $stacktrace");
+      return GetEmployeTrackerResponse(success: false, message: message);
     }
+  }
+
+  Future<VendorNotificationResponse> getNotifications(Map input) async {
+    //try {
+    var token = await SharedPref.getStringPreference('token');
+    Response res = await dio.post('$baseUrl/getEmployeeSendNotificatonList',
+        data: input, options: Options(headers: {"Authorization": "Bearer ${token}"}));
+
+    return VendorNotificationResponse.fromJson(res.toString());
+    // } catch (error) {
+    //   String message = "";
+    //   if (error is DioError) {
+    //     ServerError e = ServerError.withError(error: error);
+    //     message = e.getErrorMessage();
+    //   } else {
+    //     message = "Please try again later!";
+    //   }
+    //   print("Exception occurred: $message stackTrace: $error");
+    //   return VendorNotificationResponse(success: false, message: message);
+    // }
   }
 
   Future<UpdateNotificationStatus> markAsReadNotification(Map input) async {
