@@ -341,9 +341,10 @@ class ApiProvider {
   Future<AddVendorOtpResponse> addVendorVerifyOtp(id, otp) async {
     log("chl gyi ${id + otp}");
     var token = await SharedPref.getStringPreference('token');
+    var dtoken = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
     try {
       Response res = await dio.post('$baseUrl/addVendorForm_verifyOTP',
-          data: {"vendor_id": id, "otp": otp},
+          data: {"vendor_id": id, "otp": otp, "device_token": dtoken},
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ));
@@ -686,21 +687,8 @@ class ApiProvider {
     }
   }
 
-  Future<ChatPapdiResponse> addChatPapdi(
-    category,
-    shopname,
-    ownername,
-    commission,
-    ownermobile,
-    address,
-    landmark,
-    city,
-    state,
-    pin,
-    lat,
-    lng,
-    ownersign,
-  ) async {
+  Future<ChatPapdiResponse> addChatPapdi(category, shopname, ownername, commission, ownermobile, address, landmark,
+      city, state, pin, lat, lng, ownersign, document) async {
     //log("chl gyi ${mobile + otp}");
     // try {
     Map<String, dynamic> addvendor = HashMap<String, dynamic>();
@@ -718,7 +706,8 @@ class ApiProvider {
     addvendor["lng"] = lng;
     addvendor["owner_sign"] =
         await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
-
+    addvendor["owner_id_proof"] = await MultipartFile.fromFile(document.path,
+        filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
     log("addvendor$addvendor");
     FormData requestData = FormData.fromMap(addvendor);
     var token = await SharedPref.getStringPreference('token');
@@ -771,7 +760,7 @@ class ApiProvider {
   }
 
   Future<VendorNotificationResponse> getNotifications(Map input) async {
-    //try {
+    // try {
     var token = await SharedPref.getStringPreference('token');
     Response res = await dio.post('$baseUrl/getEmployeeSendNotificatonList',
         data: input, options: Options(headers: {"Authorization": "Bearer ${token}"}));
@@ -787,7 +776,7 @@ class ApiProvider {
     //   }
     //   print("Exception occurred: $message stackTrace: $error");
     //   return VendorNotificationResponse(success: false, message: message);
-    // }
+    //}
   }
 
   Future<UpdateNotificationStatus> markAsReadNotification(Map input) async {

@@ -61,6 +61,8 @@ class _HomeState extends State<Home> {
   int? notifiicationlistlength;
   final PublishSubject<List<CategoriesResponseData>> subject = PublishSubject();
   List<GetVendorByIdResponseData> loginData = [];
+  int count = 0, isReadCount = 0, totalnotification = 0;
+
   @override
   void initState() {
     super.initState();
@@ -81,8 +83,21 @@ class _HomeState extends State<Home> {
       log("=======:> ${response.message}");
       if (response.success) {
         notificationList = response.data!;
+
         log("=======>$notificationList");
         notifiicationlistlength = response.data!.length;
+        log("=====>${isReadCount}");
+        log("====>${count}");
+
+        response.data!.forEach((element) {
+          log("=====>${element.isRead}");
+          if (element.isRead == 0) {
+            isReadCount++;
+          }
+          setState(() {
+            count = isReadCount - totalnotification;
+          });
+        });
       } else {
         Fluttertoast.showToast(msg: "${response.message}", backgroundColor: ColorPrimary);
       }
@@ -268,8 +283,13 @@ class _HomeState extends State<Home> {
                     Icons.notifications,
                   ),
                   onPressed: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => NotificationScreen(data: notificationList)));
+                    Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => NotificationScreen(data: notificationList)))
+                        .then((value) {
+                      setState(() {
+                        count -= value as int;
+                      });
+                    });
                   },
                 ),
                 notificationList.isNotEmpty
@@ -290,7 +310,7 @@ class _HomeState extends State<Home> {
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
                                 child: Text(
-                                  notifiicationlistlength.toString(),
+                                  count.toString(),
                                   textDirection: TextDirection.ltr,
                                   style: TextStyle(
                                     color: ColorPrimary,

@@ -65,6 +65,7 @@ class _VendorFormState extends State<VendorForm> {
   Uint8List? data;
   ui.Image? imageData;
   AddVendorResponse? saveVendordetail;
+  ChatPapdiResponse? savechatdetail;
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime currentDate = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
@@ -209,6 +210,9 @@ class _VendorFormState extends State<VendorForm> {
       } else if (valuesecond == false) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Term and Condition");
+      } else if (validationShopImage == null) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Upload Document First");
       } else if (imageData == null) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please do Signature in Terms and Condition");
@@ -226,15 +230,19 @@ class _VendorFormState extends State<VendorForm> {
             _pincode.text,
             lat,
             lng,
-            data);
+            data,
+            validationShopImage!);
         log("ooooo ${loginData}");
         log("ooooo ${comiisionarray}");
         log("ooooo ${arr}");
         if (loginData.success == true) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
-              (Route<dynamic> route) => false);
+          savechatdetail = loginData;
+          // Fluttertoast.showToast(msg: "${saveVendordetail!.message}");
+          _displayDialog(context, _mobile.text, 0);
+          // Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
+          //     (Route<dynamic> route) => false);
           Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Added Sucsessfully");
         } else {
           Fluttertoast.showToast(
@@ -352,7 +360,7 @@ class _VendorFormState extends State<VendorForm> {
           if (loginData.success == true) {
             saveVendordetail = loginData;
             // Fluttertoast.showToast(msg: "${saveVendordetail!.message}");
-            _displayDialog(context, _mobile.text);
+            _displayDialog(context, _mobile.text, 1);
           } else {
             log("ooooo2 }");
             Fluttertoast.showToast(
@@ -391,7 +399,7 @@ class _VendorFormState extends State<VendorForm> {
         if (loginData.success == true) {
           saveVendordetail = loginData;
           // Fluttertoast.showToast(msg: "${saveVendordetail!.message}");
-          _displayDialog(context, _mobile.text);
+          _displayDialog(context, _mobile.text, 1);
           // Navigator.pushAndRemoveUntil(
           //     context,
           //     MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
@@ -1437,6 +1445,7 @@ class _VendorFormState extends State<VendorForm> {
                                     fit: BoxFit.cover),
                           ),
                           onTap: () {
+                            FocusScope.of(context).unfocus();
                             log("$validationShopImage");
 
                             showBottomSheet(2, context);
@@ -1650,6 +1659,7 @@ class _VendorFormState extends State<VendorForm> {
                                           decoration: TextDecoration.underline)),
                                   onTap: () {
                                     log("img ${data}");
+                                    FocusScope.of(context).unfocus();
                                     termsConditionsDialog();
                                   },
                                 ),
@@ -1856,7 +1866,7 @@ class _VendorFormState extends State<VendorForm> {
   }
 //image-picker
 
-  _displayDialog(BuildContext context, mobile) async {
+  _displayDialog(BuildContext context, mobile, status) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -1917,7 +1927,11 @@ class _VendorFormState extends State<VendorForm> {
                     color: ColorPrimary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     onPressed: () {
-                      loginApiOtpCall(saveVendordetail!.data!.vendorId.toString(), _otp.text);
+                      if (status == 1) {
+                        registerVendorOtpCall(saveVendordetail!.data!.vendorId.toString(), _otp.text);
+                      } else {
+                        registerVendorOtpCall(savechatdetail!.data!.vendorId.toString(), _otp.text);
+                      }
                     },
                     child: new Text(
                       "Verify",
@@ -1937,7 +1951,7 @@ class _VendorFormState extends State<VendorForm> {
         });
   }
 
-  loginApiOtpCall(vendorid, otp) async {
+  registerVendorOtpCall(vendorid, otp) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 

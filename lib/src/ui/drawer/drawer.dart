@@ -70,7 +70,23 @@ class _AppDrawerState extends State<AppDrawer> {
           );
         });
   }
+
   //logout-dialog
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getdata();
+  }
+
+  String name = "", mobile = "";
+  void getdata() async {
+    name = await SharedPref.getStringPreference(SharedPref.NAME);
+    mobile = await SharedPref.getStringPreference(SharedPref.MOBILE);
+    log("==>$name");
+    log("==>$mobile");
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +99,26 @@ class _AppDrawerState extends State<AppDrawer> {
             children: [
               Container(
                 padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                child: Image.asset("images/logo.png", width: 170, height: 170),
+                child: Column(children: [
+                  Image.asset("images/logo.png", width: 170, height: 170),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    "$name",
+                    style: TextStyle(color: ColorPrimary, fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text("+91 $mobile",
+                      style: TextStyle(
+                        color: ColorTextPrimary,
+                        fontSize: 16,
+                      ))
+                ]),
               ),
+
               Container(
                 decoration: BoxDecoration(
                   border: Border(bottom: BorderSide(width: 0.7, color: Color(0xffcdcdcd))),
