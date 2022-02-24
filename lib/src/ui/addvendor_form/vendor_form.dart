@@ -1642,6 +1642,8 @@ class _VendorFormState extends State<VendorForm> {
                               onChanged: (bool? value) {
                                 setState(() {
                                   this.valuesecond = value!;
+                                  FocusScope.of(context).unfocus();
+                                  termsConditionsDialog();
                                 });
                               },
                             ),
