@@ -228,9 +228,10 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
               child: Column(children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: 20,
+                      width: 5,
                     ),
                     Container(height: 30, width: 30, child: Image.asset("images/category1.png")),
                     Text(
@@ -239,7 +240,24 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
-                    )
+                    ),
+                    SizedBox(
+                      width: 120,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -280,7 +298,7 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                       )
                     : res != null
                         ? Center(
-                            child: Text("Data Not Found"),
+                            child: Text("Area not allocated"),
                           )
                         : Center(child: CircularProgressIndicator()),
               ]));

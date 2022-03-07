@@ -553,7 +553,8 @@ class ApiProvider {
     }
   }
 
-  Future<AddIntrestedUserResponse> getIntrestedUser(location_id, name, mobile, email, address, phone, gift) async {
+  Future<AddIntrestedUserResponse> getIntrestedUser(
+      location_id, name, mobile, email, address, phone, pincode, gift) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${SharedPref.getStringPreference(SharedPref.VENDORID)}");
@@ -572,6 +573,7 @@ class ApiProvider {
             "email": email,
             "address": address,
             "is_smartphone": phone,
+            "pincode": pincode,
             "is_gift_given": gift,
           }),
           options: Options(
@@ -650,7 +652,7 @@ class ApiProvider {
     }
   }
 
-  Future<UserNotIntrestedResponse> getUnIntrestedUser(location_id, name, address, reason) async {
+  Future<UserNotIntrestedResponse> getUnIntrestedUser(location_id, name, address, pincode, reason) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${await SharedPref.getStringPreference(SharedPref.VENDORID)}");
@@ -666,6 +668,7 @@ class ApiProvider {
             "location_id": location_id,
             "name": name,
             "address": address,
+            "pincode": pincode,
             "reason": reason,
           }),
           options: Options(

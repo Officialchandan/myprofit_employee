@@ -27,6 +27,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
@@ -155,10 +156,10 @@ class _VendorFormState extends State<VendorForm> {
     DayInWeek(
       "Sun",
     ),
+    DayInWeek("Mon", isSelected: true),
     DayInWeek(
-      "Mon",
+      "Tue",
     ),
-    DayInWeek("Tue", isSelected: true),
     DayInWeek(
       "Wed",
     ),
@@ -321,7 +322,7 @@ class _VendorFormState extends State<VendorForm> {
             break;
           } else {
             if (i == subcatlist.length - 1) {
-              log("comiision====>${double.parse(subcatlist[i].subController.text.trim())}");
+              log("comiision====>${double.parse(subcatlist[i].subController.text.trim().toString())}");
               savelist = savelist + subcatlist[i].subController.text.trim();
             } else {
               log("comiision====>${subcatlist[i].subController.text.trim()}");
@@ -449,7 +450,7 @@ class _VendorFormState extends State<VendorForm> {
                           padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                           child: Align(
                             child: Text('Terms & Conditions',
-                                style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
+                                style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600)),
                             alignment: Alignment.center,
                           ),
                         ),
@@ -457,7 +458,7 @@ class _VendorFormState extends State<VendorForm> {
                           top: 10,
                           right: MediaQuery.of(context).size.width / 80,
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                             child: GestureDetector(
                               child: Image.asset('images/bg-cross.png', width: 20),
                               onTap: () {
@@ -786,7 +787,7 @@ class _VendorFormState extends State<VendorForm> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Shop Name',
+                      Text('Shop Name *',
                           style: TextStyle(
                               color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
@@ -798,7 +799,7 @@ class _VendorFormState extends State<VendorForm> {
                         autofocus: false,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         //autovalidate: true,
-                        maxLength: 25,
+                        maxLength: 40,
 
                         // keyboardType: TextInputType.streetAddress,
                         decoration: InputDecoration(
@@ -806,7 +807,7 @@ class _VendorFormState extends State<VendorForm> {
                           contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
-                          hintText: 'Enter here',
+                          hintText: 'Enter Shop Name',
                           hintStyle: TextStyle(
                               color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
@@ -817,39 +818,53 @@ class _VendorFormState extends State<VendorForm> {
                       ),
 
                       SizedBox(height: 15),
-                      Text(' Comission on ${widget.title}',
+                      Text(' Comission on ${widget.title} *',
                           style: TextStyle(
                               color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
-                      TextFormField(
-                        controller: _comission,
-                        keyboardType: TextInputType.numberWithOptions(decimal: true, signed: false),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[[0-9. ]')),
-                        ],
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        //autovalidate: true,
-                        maxLength: 4,
-                        autofocus: false,
-                        // keyboardType: TextInputType.streetAddress,
-                        decoration: InputDecoration(
-                          counterText: "",
-                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                          filled: true,
-                          fillColor: Color.fromRGBO(242, 242, 242, 1),
-                          hintText: 'Enter Comission of ${widget.title}',
-                          hintStyle: TextStyle(
-                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
+                      Row(children: [
+                        Container(
+                          width: devicewidth * 0.40,
+                          child: TextFormField(
+                            controller: _comission,
+                            keyboardType: TextInputType.numberWithOptions(decimal: true, signed: false),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,5}')),
+                            ],
+
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                            //autovalidate: true,
+                            maxLength: 5,
+                            autofocus: false,
+                            // keyboardType: TextInputType.streetAddress,
+                            decoration: InputDecoration(
+                              counterText: "",
+                              contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                              filled: true,
+                              fillColor: Color.fromRGBO(242, 242, 242, 1),
+                              hintText: 'Enter Comission ',
+                              hintStyle: TextStyle(
+                                  color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Image.asset(
+                          "images/percentage.png",
+                          scale: 1.5,
+                        )
+                      ]),
                       SizedBox(
                         height: 15,
                       ),
-                      Text('Owners Name',
+                      Text('Owners Name *',
                           style: TextStyle(
                               color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
@@ -860,13 +875,13 @@ class _VendorFormState extends State<VendorForm> {
                         ],
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         //autovalidate: true,
-                        maxLength: 25,
+                        maxLength: 40,
                         decoration: InputDecoration(
                           counterText: "",
                           contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
-                          hintText: 'Enter here',
+                          hintText: 'Enter Owners Name',
                           hintStyle: TextStyle(
                               color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
@@ -876,7 +891,7 @@ class _VendorFormState extends State<VendorForm> {
                         ),
                       ),
                       SizedBox(height: 15),
-                      Text('Mobile Number ',
+                      Text('Mobile Number  *',
                           style: TextStyle(
                               color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
@@ -893,7 +908,7 @@ class _VendorFormState extends State<VendorForm> {
                           contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
-                          hintText: 'Enter here',
+                          hintText: 'Enter Mobile Number',
                           hintStyle: TextStyle(
                               color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
@@ -903,7 +918,7 @@ class _VendorFormState extends State<VendorForm> {
                         ),
                       ),
                       SizedBox(height: 15),
-                      Text('Timings of Shop ',
+                      Text('Timings of Shop  *',
                           style: TextStyle(
                               color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
@@ -1004,8 +1019,10 @@ class _VendorFormState extends State<VendorForm> {
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _address,
+                        maxLength: 40,
                         autofocus: false,
                         decoration: InputDecoration(
+                          counterText: "",
                           suffixIcon: Container(
                             width: 120,
                             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -1042,7 +1059,7 @@ class _VendorFormState extends State<VendorForm> {
                           contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
-                          hintText: 'Enter here shop Address',
+                          hintText: 'Enter shop Address',
                           hintStyle: TextStyle(
                               color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
@@ -1056,11 +1073,13 @@ class _VendorFormState extends State<VendorForm> {
                       TextFormField(
                         controller: _landmark,
                         autofocus: false,
+                        maxLength: 40,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
+                          counterText: "",
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
-                          hintText: 'Enter here Landmark (optional)',
+                          hintText: 'Enter Landmark (optional)',
                           hintStyle: TextStyle(
                               color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
@@ -1088,7 +1107,7 @@ class _VendorFormState extends State<VendorForm> {
                           contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
-                          hintText: 'Enter here Your Pincode',
+                          hintText: 'Enter Your Pincode',
                           hintStyle: TextStyle(
                               color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(
@@ -1211,6 +1230,7 @@ class _VendorFormState extends State<VendorForm> {
                           suffixIcon: Icon(Icons.keyboard_arrow_down, color: ColorPrimary),
                           filled: true,
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          counterText: "",
                           hintText: 'Select Your city/village',
                           hintStyle: TextStyle(
                               color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
@@ -1379,9 +1399,9 @@ class _VendorFormState extends State<VendorForm> {
                           child: TextFormField(
                             keyboardType: TextInputType.numberWithOptions(decimal: true, signed: false),
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r'[[0-9. ]')),
+                              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,5}')),
                             ],
-                            maxLength: 4,
+                            maxLength: 5,
                             controller: subcatlist[index].subController,
                             decoration: InputDecoration(
                               counterText: "",
@@ -1437,7 +1457,7 @@ class _VendorFormState extends State<VendorForm> {
                                     image: FileImage(validationShopImage!),
                                     width: double.infinity,
                                     height: 250,
-                                    fit: BoxFit.cover)
+                                    fit: BoxFit.contain)
                                 : Image(
                                     image: AssetImage('images/placeholder.png'),
                                     width: double.infinity,
@@ -1613,7 +1633,7 @@ class _VendorFormState extends State<VendorForm> {
                       ),
                       users.length != 0
                           ? Container(
-                              height: 150 * double.parse(users.length.toString()),
+                              height: 130,
                               child: ListView.builder(
                                 addAutomaticKeepAlives: true,
                                 itemCount: users.length,
@@ -1643,7 +1663,6 @@ class _VendorFormState extends State<VendorForm> {
                                 setState(() {
                                   this.valuesecond = value!;
                                   FocusScope.of(context).unfocus();
-                                  termsConditionsDialog();
                                 });
                               },
                             ),
@@ -1719,17 +1738,23 @@ class _VendorFormState extends State<VendorForm> {
 
   _selectTime(BuildContext context) async {
     final TimeOfDay? timeOfDay = await showTimePicker(
-        context: context,
-        initialTime: selectedTime,
-        initialEntryMode: TimePickerEntryMode.dial,
-        helpText: " select shop open time");
+      context: context,
+      initialTime: selectedTime,
+      initialEntryMode: TimePickerEntryMode.dial,
+      helpText: " select shop open time",
+    );
+
     if (timeOfDay != null && timeOfDay != selectedTime) {
       setState(() {
         selectedTime = timeOfDay;
+        DateTime tempDate =
+            DateFormat("hh:mm").parse(selectedTime.hour.toString() + ":" + selectedTime.minute.toString());
+        var dateFormat = DateFormat("h:mm a"); // you can change the format here
+        print(dateFormat.format(tempDate));
+
         log("${selectedTime.hour}:${selectedTime.minute}");
+        _openingtime.text = dateFormat.format(tempDate);
       });
-      setState(() {});
-      _openingtime.text = "${selectedTime.hour}:${selectedTime.minute}".toString();
     }
   }
 
@@ -1737,15 +1762,20 @@ class _VendorFormState extends State<VendorForm> {
     final TimeOfDay? timeOfDay1 = await showTimePicker(
         context: context,
         initialTime: selectedTime,
-        initialEntryMode: TimePickerEntryMode.dial,
+        initialEntryMode: TimePickerEntryMode.input,
         helpText: " select shop close time");
     if (timeOfDay1 != null && timeOfDay1 != selectedTime) {
       setState(() {
         selectedTime = timeOfDay1;
         log("${selectedTime.hour}:${selectedTime.minute}");
+        DateTime tempDate =
+            DateFormat("hh:mm").parse(selectedTime.hour.toString() + ":" + selectedTime.minute.toString());
+        var dateFormat = DateFormat("h:mm a"); // you can change the format here
+        print(dateFormat.format(tempDate));
+
+        log("${selectedTime.hour}:${selectedTime.minute}");
+        _closingtime.text = dateFormat.format(tempDate);
       });
-      setState(() {});
-      _closingtime.text = "${selectedTime.hour}:${selectedTime.minute}".toString();
     }
   }
 
@@ -1814,8 +1844,7 @@ class _VendorFormState extends State<VendorForm> {
             ],
             cancelButton: CupertinoActionSheetAction(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => GoogleMapScreen(id: widget.id, title: widget.title)));
+                Navigator.pop(context);
                 // Navigator.pop(context);
               },
               child:
@@ -2033,7 +2062,7 @@ class _SignPadState extends State<SignPad> {
         decoration:
             BoxDecoration(border: Border.all(width: 1), borderRadius: BorderRadius.circular(20), color: Colors.white54),
         child: Column(children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             Text('Signature', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
             GestureDetector(
               onTap: () {
@@ -2114,6 +2143,7 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
             autofocus: false,
             decoration: InputDecoration(
               hintText: "Search your City...",
+              counterText: "",
             ),
             onChanged: (text) {
               if (text.isNotEmpty) {

@@ -53,12 +53,11 @@
 // }
 import 'dart:developer';
 
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:employee/model/get_location_response.dart';
 import 'package:employee/provider/api_provider.dart';
 import 'package:employee/utils/colors.dart';
 import 'package:employee/utils/sharedpref.dart';
+import 'package:flutter/material.dart';
 
 class LinkedLabelRadio extends StatelessWidget {
   const LinkedLabelRadio({
@@ -125,8 +124,7 @@ class _AreaAlotedState extends State<AreaAloted> {
     success = res!.success;
     log("====>${await SharedPref.setIntegerPreference(SharedPref.LOCATION, res!.data![0].id)}");
     log("====>${await SharedPref.getIntegerPreference(SharedPref.LOCATION)}");
-    await SharedPref.setIntegerPreference(
-        SharedPref.LOCATION, res!.data![0].id);
+    await SharedPref.setIntegerPreference(SharedPref.LOCATION, res!.data![0].id);
     _isRadioSelected = res!.data![0].id;
     setState(() {});
   }
@@ -157,7 +155,7 @@ class _AreaAlotedState extends State<AreaAloted> {
                     })
             : res != null
                 ? Center(
-                    child: Text("Data Not Found"),
+                    child: Text("Area not allocated"),
                   )
                 : Center(child: CircularProgressIndicator()),
       ),

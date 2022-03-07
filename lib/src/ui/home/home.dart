@@ -98,9 +98,7 @@ class _HomeState extends State<Home> {
             count = isReadCount - totalnotification;
           });
         });
-      } else {
-        Fluttertoast.showToast(msg: "${response.message}", backgroundColor: ColorPrimary);
-      }
+      } else {}
       log("=======>$notifiicationlistlength");
       setState(() {});
     }
@@ -137,14 +135,13 @@ class _HomeState extends State<Home> {
           MaterialPageRoute(builder: (context) => AddedVendor(title: title, id: id)),
         );
         // }
+      } else {
+        if (id == 1) {
+        } else {
+          //Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddedVendor(title: title, id: id)));
+        }
       }
-      // else {
-      //   if (id == 1) {
-      //   } else {
-      //     //Navigator.pop(context);
-      //     Navigator.push(context, MaterialPageRoute(builder: (context) => VendorForm(title: title, id: id)));
-      //   }
-      // }
 
       // SharedPref.setStringPreference(SharedPref.USERSTATUS, loginData.status);
 

@@ -33,9 +33,11 @@ class _UserNotInterestedState extends State<UserNotInterested> {
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Address");
+      } else if (_pincode.text.isEmpty) {
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Pincode");
       } else {
-        final UserNotIntrestedResponse loginData =
-            await ApiProvider().getUnIntrestedUser(widget.location, _name.text, _address.text, _reason.text);
+        final UserNotIntrestedResponse loginData = await ApiProvider()
+            .getUnIntrestedUser(widget.location, _name.text, _address.text, _pincode.text, _reason.text);
 
         log("ooooo ${loginData}");
         if (loginData.success) {

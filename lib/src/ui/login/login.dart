@@ -199,6 +199,7 @@ class _LoginState extends State<Login> {
           SharedPref.setStringPreference(
               SharedPref.NAME, (loginData.data!.firstName + " " + loginData.data!.lastName).toString());
           SharedPref.setStringPreference(SharedPref.MOBILE, mobile.toString());
+
           print("fffff");
           print(await SharedPref.getBooleanPreference(SharedPref.LOGIN));
 

@@ -169,6 +169,8 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Address");
+      } else if (_pincode.text.isEmpty) {
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Pincode");
       } else if (_character == -1) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select On Phone Type");
@@ -176,8 +178,8 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select gift given or not");
       } else if (_emailaddress.text.isEmpty) {
-        final AddIntrestedUserResponse loginData = await ApiProvider()
-            .getIntrestedUser(areaId, _name.text, _mobile.text, _emailaddress.text, _address.text, _character, _gift);
+        final AddIntrestedUserResponse loginData = await ApiProvider().getIntrestedUser(
+            areaId, _name.text, _mobile.text, _emailaddress.text, _address.text, _character, _pincode.text, _gift);
 
         log("ooooo ${loginData}");
         if (loginData.success) {
@@ -187,8 +189,8 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
           Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: loginData.message);
         }
       } else {
-        final AddIntrestedUserResponse loginData = await ApiProvider()
-            .getIntrestedUser(areaId, _name.text, _mobile.text, _emailaddress.text, _address.text, _character, _gift);
+        final AddIntrestedUserResponse loginData = await ApiProvider().getIntrestedUser(
+            areaId, _name.text, _mobile.text, _emailaddress.text, _address.text, _character, _pincode.text, _gift);
 
         log("ooooo ${loginData}");
         if (loginData.success) {
