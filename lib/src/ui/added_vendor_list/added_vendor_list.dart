@@ -338,13 +338,13 @@ class _AddedVendorState extends State<AddedVendor> {
                                                         Container(
                                                           height: 18,
                                                           child: Center(
-                                                              child: searchList[index].isActive == 0
+                                                              child: searchList[index].isActive == 2
                                                                   ? Text(
                                                                       "  Pending  ",
                                                                       style: TextStyle(
                                                                         fontSize: 12,
                                                                         fontWeight: FontWeight.bold,
-                                                                        color: Color(0xfff69444),
+                                                                        color: PendingTextColor,
                                                                       ),
                                                                     )
                                                                   : searchList[index].isActive == 1
@@ -353,16 +353,16 @@ class _AddedVendorState extends State<AddedVendor> {
                                                                           style: TextStyle(
                                                                             fontSize: 12,
                                                                             fontWeight: FontWeight.bold,
-                                                                            color: Color(0xff41a81b),
+                                                                            color: ApproveTextColor,
                                                                           ),
                                                                         )
-                                                                      : searchList[index].isActive == 2
+                                                                      : searchList[index].isActive == 0
                                                                           ? Text(
                                                                               "  Rejected  ",
                                                                               style: TextStyle(
                                                                                 fontSize: 12,
                                                                                 fontWeight: FontWeight.bold,
-                                                                                color: Color(0xffec3b3b),
+                                                                                color: RejectedBoxTextColor,
                                                                               ),
                                                                             )
                                                                           : Text(
@@ -370,18 +370,18 @@ class _AddedVendorState extends State<AddedVendor> {
                                                                               style: TextStyle(
                                                                                 fontSize: 12,
                                                                                 fontWeight: FontWeight.bold,
-                                                                                color: Color(0xffec3b3b),
+                                                                                color: RejectedBoxTextColor,
                                                                               ),
                                                                             )),
                                                           decoration: BoxDecoration(
                                                               borderRadius: BorderRadius.circular(15),
                                                               color: searchList[index].isActive == 0
-                                                                  ? Color(0xfffcdfc7)
+                                                                  ? RejectedTextBgColor
                                                                   : searchList[index].isActive == 1
-                                                                      ? Color(0xffc6e5ba)
+                                                                      ? ApproveTextBgColor
                                                                       : searchList[index].isActive == 2
-                                                                          ? Color(0xfff8b2b2)
-                                                                          : Color(0xfff8b2b2)),
+                                                                          ? RejectedBoxBgColor
+                                                                          : RejectedBoxBgColor),
                                                         )
                                                       ],
                                                     ),

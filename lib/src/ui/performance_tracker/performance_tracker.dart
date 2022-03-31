@@ -22,10 +22,14 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
   getDailyDriver() async {
     DriverWeeklyResponse result = await ApiProvider().getWeeklyDrivers();
     tracker = await ApiProvider().getEmployeTracker();
+    a = tracker!.data!.registeredVendors;
+    b = tracker!.data!.registeredCustomer;
+    c = tracker!.data!.notInterestedCustomer;
     setState(() {});
     print(tracker);
   }
 
+  String a = "0", b = "0", c = "0";
   @override
   initState() {
     // TODO: implement initState
@@ -84,7 +88,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                            "${tracker!.data!.registeredVendors}",
+                            "$a",
                             style: GoogleFonts.openSans(
                               fontSize: 18,
                               color: ColorPrimary,
@@ -129,7 +133,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                            "${tracker!.data!.registeredCustomer}",
+                            "$b",
                             style: GoogleFonts.openSans(
                               fontSize: 18,
                               color: ColorPrimary,
@@ -174,7 +178,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                            "${tracker!.data!.notInterestedCustomer}",
+                            "$c",
                             style: GoogleFonts.openSans(
                               fontSize: 18,
                               color: ColorPrimary,

@@ -241,7 +241,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Name',
+                    Text('Name *',
                         style:
                             TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
@@ -267,7 +267,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text('Mobile',
+                    Text('Mobile *',
                         style:
                             TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
@@ -293,7 +293,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text('Email Address',
+                    Text('Email Address (Optional)',
                         style:
                             TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
@@ -301,7 +301,9 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       controller: _emailaddress,
                       validator: (numb) => Validator.emailValidator(numb!),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r"[a-z A-Z,.\-]")),
+                      ],
                       //autovalidate: true,
                       maxLength: 25,
                       decoration: InputDecoration(
@@ -318,7 +320,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text('Address',
+                    Text('Address *',
                         style:
                             TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
@@ -328,6 +330,9 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       //autovalidate: true,
                       maxLength: 25,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r"[a-z A-Z,.\-]")),
+                      ],
                       decoration: InputDecoration(
                         counterText: "",
                         contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
@@ -342,7 +347,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text('Pincode',
+                    Text('Pincode *',
                         style:
                             TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
@@ -367,7 +372,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text('Which Phone Customer have',
+                    Text('Which Phone Customer have *',
                         style:
                             TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     Row(
@@ -408,7 +413,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       ],
                     ),
                     SizedBox(height: 20),
-                    Text('is gift given',
+                    Text('Is gift given *',
                         style:
                             TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     Row(

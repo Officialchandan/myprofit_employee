@@ -77,7 +77,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Name',
+                  Text('Name *',
                       style:
                           TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),
@@ -103,14 +103,14 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text('Address',
+                  Text('Address *',
                       style:
                           TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),
                   TextFormField(
                     controller: _address,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+                      FilteringTextInputFormatter.allow(RegExp(r"[a-z A-Z,.\-]")),
                     ],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     //autovalidate: true,
@@ -129,7 +129,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text('Pincode',
+                  Text('Pincode *',
                       style:
                           TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),
@@ -154,7 +154,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text('Reason',
+                  Text('Reason (Optional)',
                       style:
                           TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),

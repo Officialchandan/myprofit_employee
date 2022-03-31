@@ -1013,7 +1013,7 @@ class _VendorFormState extends State<VendorForm> {
                       ),
 
                       SizedBox(height: 15),
-                      Text('Address',
+                      Text('Address *',
                           style: TextStyle(
                               color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
@@ -1021,6 +1021,9 @@ class _VendorFormState extends State<VendorForm> {
                         controller: _address,
                         maxLength: 40,
                         autofocus: false,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r"[a-z A-Z,.\-]")),
+                        ],
                         decoration: InputDecoration(
                           counterText: "",
                           suffixIcon: Container(
@@ -1074,6 +1077,9 @@ class _VendorFormState extends State<VendorForm> {
                         controller: _landmark,
                         autofocus: false,
                         maxLength: 40,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r"[a-z A-Z,.\-]")),
+                        ],
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           filled: true,
@@ -1445,7 +1451,7 @@ class _VendorFormState extends State<VendorForm> {
                       //   },
                       // ),
                       // SizedBox(height: 15),
-                      Text('Documents for validation of Shop',
+                      Text('Documents for validation of Shop *',
                           style: TextStyle(
                               color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),

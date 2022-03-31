@@ -1,0 +1,4 @@
+keyStore path android/app/src/main/assets/employee.jks
+keyStore password 123456
+key ALIAS myprofit_employee
+ALIAS password 123456
