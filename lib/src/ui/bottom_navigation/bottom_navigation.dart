@@ -22,7 +22,7 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   // var titleList = ['Home', 'Driver List', 'Performance Tracker'];
-
+  bool checked = false;
   late List<Widget> listScreens;
   late TabController _tabController;
   //  _TabContainerState(page);
@@ -269,27 +269,47 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                             itemCount: res!.data!.length,
                             itemBuilder: (context, index) {
                               return Column(children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context, res!.data![index].id);
-                                    // Navigator.pushAndRemoveUntil(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) => UserRegister(
-                                    //               onTab: () {},
-                                    //               location:
-                                    //                   (res!.data![index].id)
-                                    //                       .toString(),
-                                    //             )),
-                                    //     (Route<dynamic> route) => false);
-                                  },
-                                  child: ListTile(
-                                    title: Text(
-                                      "${res!.data![index].locationName}",
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                    ),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //Navigator.pop(context, res!.data![index].id);
+                                // Navigator.pushAndRemoveUntil(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => UserRegister(
+                                //               onTab: () {},
+                                //               location:
+                                //                   (res!.data![index].id)
+                                //                       .toString(),
+                                //             )),
+                                //     (Route<dynamic> route) => false);
+                                // },
+                                // child:
+                                ListTile(
+                                  title: Text(
+                                    "${res!.data![index].locationName}",
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  ),
+                                  trailing: Checkbox(
+                                    activeColor: ColorPrimary,
+                                    value: res!.data![index].checked,
+                                    onChanged: (value) {
+                                      if (value == true) {
+                                        res!.data!.forEach((element) {
+                                          element.checked = false;
+
+                                          setState(() {});
+                                        });
+
+                                        res!.data![index].checked = value!;
+                                      }
+                                      if (value == false) {
+                                        res!.data![index].checked = value!;
+                                      }
+                                      Navigator.pop(context, res!.data![index].id);
+                                    },
                                   ),
                                 ),
+                                //   ),
                                 Divider(
                                   thickness: 1,
                                 )

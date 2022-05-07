@@ -111,7 +111,7 @@ class GetVendorByIdResponseData {
         customField: json["custom_field"] == null ? "" : json["custom_field"],
         cityName: json["city_name"],
         stateName: json["state_name"],
-        vendorImage: json["vendor_image"],
+        vendorImage: json["vendor_image"] == null ? "" : json["vendor_image"],
         subCategory: List<SubCategory>.from(json["sub_category"].map((x) => SubCategory.fromMap(x))),
       );
 

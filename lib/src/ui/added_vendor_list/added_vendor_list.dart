@@ -273,7 +273,11 @@ class _AddedVendorState extends State<AddedVendor> {
                                             searchList.add(loginData[i]);
                                             log("ram ${loginData[i].name}");
                                           } else {
-                                            print("Container -->data not found orign");
+                                            Center(
+                                              child: Image.asset("images/no_data.gif"),
+                                            );
+                                            Fluttertoast.showToast(
+                                                msg: "Data Not Found", backgroundColor: ColorPrimary);
                                           }
                                         }
                                         setState(() {});
@@ -312,12 +316,19 @@ class _AddedVendorState extends State<AddedVendor> {
                                             children: [
                                               ClipRRect(
                                                 borderRadius: BorderRadius.circular(5),
-                                                child: Image.network(
-                                                  "${searchList[index].vendorImage}",
-                                                  width: 65,
-                                                  height: 65,
-                                                  fit: BoxFit.cover,
-                                                ),
+                                                child: searchList[index].vendorImage.isEmpty
+                                                    ? Image.asset(
+                                                        "images/placeholder.png",
+                                                        width: 65,
+                                                        height: 65,
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : Image.network(
+                                                        "${searchList[index].vendorImage}",
+                                                        width: 65,
+                                                        height: 65,
+                                                        fit: BoxFit.cover,
+                                                      ),
                                               ),
                                               SizedBox(
                                                 width: 10,

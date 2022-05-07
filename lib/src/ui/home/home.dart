@@ -15,6 +15,7 @@ import 'package:employee/utils/sharedpref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../model/vendor_send_notification.dart';
@@ -101,6 +102,8 @@ class _HomeState extends State<Home> {
       } else {}
       log("=======>$notifiicationlistlength");
       setState(() {});
+    } else {
+      _displayDialogInternet(context);
     }
   }
 
@@ -280,13 +283,15 @@ class _HomeState extends State<Home> {
                     Icons.notifications,
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => NotificationScreen(data: notificationList)))
-                        .then((value) {
-                      setState(() {
-                        count -= value as int;
-                      });
-                    });
+                    notificationList.isNotEmpty
+                        ? Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => NotificationScreen(data: notificationList)))
+                            .then((value) {
+                            setState(() {
+                              count -= value as int;
+                            });
+                          })
+                        : Fluttertoast.showToast(msg: "No Notification!", backgroundColor: ColorPrimary);
                   },
                 ),
                 notificationList.isNotEmpty
@@ -330,7 +335,7 @@ class _HomeState extends State<Home> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               }
-
+              //  if(snapshot.connectionState == ConnectionState.)
               if (snapshot.hasError) {
                 return Center(
                   child: Text("Data Not Found "),
@@ -428,6 +433,61 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
+            ),
+          );
+        });
+  }
+
+  _displayDialogInternet(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              title: RichText(
+                text: TextSpan(
+                  text: "Check Your Internet Connectivity",
+                  style: GoogleFonts.openSans(
+                    fontSize: 14.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                Center(
+                  child: MaterialButton(
+                    minWidth: MediaQuery.of(context).size.width * 0.40,
+                    height: 50,
+                    padding: const EdgeInsets.all(8.0),
+                    textColor: Colors.white,
+                    color: ColorPrimary,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    onPressed: () async {
+                      if (await Network.isConnected()) {
+                        getCategories();
+                        getNotifications();
+                        Navigator.pop(context);
+                      } else {
+                        Fluttertoast.showToast(
+                            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
+                      }
+                    },
+                    child: new Text(
+                      "Ok",
+                      style: GoogleFonts.openSans(
+                          fontSize: 17, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  color: Colors.transparent,
+                )
+              ],
             ),
           );
         });

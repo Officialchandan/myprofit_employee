@@ -15,26 +15,22 @@ class GetAlotedAreaResponse {
   String message;
   List<GetAlotedAreaData>? data;
 
-  factory GetAlotedAreaResponse.fromJson(String str) =>
-      GetAlotedAreaResponse.fromMap(json.decode(str));
+  factory GetAlotedAreaResponse.fromJson(String str) => GetAlotedAreaResponse.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory GetAlotedAreaResponse.fromMap(Map<String, dynamic> json) =>
-      GetAlotedAreaResponse(
+  factory GetAlotedAreaResponse.fromMap(Map<String, dynamic> json) => GetAlotedAreaResponse(
         success: json["success"] == null ? null : json["success"],
         message: json["message"] == null ? null : json["message"],
         data: json["data"] == null
             ? null
-            : List<GetAlotedAreaData>.from(
-                json["data"].map((x) => GetAlotedAreaData.fromMap(x))),
+            : List<GetAlotedAreaData>.from(json["data"].map((x) => GetAlotedAreaData.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
         "success": success == null ? null : success,
         "message": message == null ? null : message,
-        "data":
-            data == null ? [] : List<dynamic>.from(data!.map((x) => x.toMap())),
+        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toMap())),
       };
 }
 
@@ -48,19 +44,15 @@ class GetAlotedAreaData {
   int id;
   int employeeId;
   String locationName;
-
-  factory GetAlotedAreaData.fromJson(String str) =>
-      GetAlotedAreaData.fromMap(json.decode(str));
+  bool checked = false;
+  factory GetAlotedAreaData.fromJson(String str) => GetAlotedAreaData.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory GetAlotedAreaData.fromMap(Map<String, dynamic> json) =>
-      GetAlotedAreaData(
+  factory GetAlotedAreaData.fromMap(Map<String, dynamic> json) => GetAlotedAreaData(
         id: json["id"] == null ? null : json["id"],
         employeeId: json["employee_id"] == null ? null : json["employee_id"],
-        locationName: json["location_name"] == null
-            ? ""
-            : json["location_name"].toString(),
+        locationName: json["location_name"] == null ? "" : json["location_name"].toString(),
       );
 
   Map<String, dynamic> toMap() => {

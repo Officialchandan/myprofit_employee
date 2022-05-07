@@ -26,10 +26,12 @@ import 'package:employee/model/otp_response.dart';
 import 'package:employee/model/update-notification.dart';
 import 'package:employee/model/updatevendordetail_response.dart';
 import 'package:employee/model/user_not_intrested.dart';
+import 'package:employee/model/validate_app_version.dart';
 import 'package:employee/model/vendor_send_notification.dart';
 import 'package:employee/provider/server_error.dart';
 import 'package:employee/utils/sharedpref.dart';
 import 'package:http/http.dart' as http;
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../model/get_state_city_bypincode.dart';
 
@@ -44,7 +46,8 @@ BaseOptions baseOptions = BaseOptions(
 
 class ApiProvider {
   var client = http.Client();
-  var baseUrl = "http://employee.tekzee.in/api/v1";
+  //var baseUrl = "http://employee.tekzee.in/api/v1";
+  var baseUrl = "http://employee.myprofitinc.com/api/v1";
 
   Future<LoginResponse> login(mobile) async {
     log("chl gyi");
@@ -70,9 +73,14 @@ class ApiProvider {
   }
 
   Future<OtpVerificationResponse> verifyOtp(mobile, otp) async {
-    log("chl gyi ${mobile + otp}");
+    String token = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
+    log("chl gyi ${mobile + otp + token}");
     try {
-      Response res = await dio.post('$baseUrl/user/verifyOTP', data: {"mobile": mobile, "otp": otp});
+      Response res = await dio.post('$baseUrl/user/verifyOTP', data: {
+        "mobile": mobile,
+        "otp": otp,
+        "device_token": token,
+      });
       log("chl gyi 2${res}");
 
       return OtpVerificationResponse.fromJson(res.toString());
@@ -86,6 +94,30 @@ class ApiProvider {
       }
       print("Exception occurred: $message stackTrace: $error");
       return OtpVerificationResponse(success: false, message: message);
+    }
+  }
+
+  Future<ValidateAppVersionResponse> validateAppVersion() async {
+    try {
+      PackageInfo _packageInfo = await PackageInfo.fromPlatform();
+      Map<String, dynamic> input = {
+        "app_name": "employee_app",
+        "app_version": "${_packageInfo.version}",
+        "device_type": Platform.isAndroid ? "1" : "2"
+      };
+      Response res = await dio.post('$baseUrl/validateAppVersion', data: input);
+
+      return ValidateAppVersionResponse.fromJson(res.toString());
+    } catch (error) {
+      String message = "";
+      if (error is DioError) {
+        ServerError e = ServerError.withError(error: error);
+        message = e.getErrorMessage();
+      } else {
+        message = "Something Went wrong";
+      }
+      print("Exception occurred: $message stackTrace: $error");
+      return ValidateAppVersionResponse(success: false, message: message);
     }
   }
 
@@ -116,26 +148,26 @@ class ApiProvider {
   Future<GetVendorByIdResponse> getVendorId(id) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
-    try {
-      Response res = await dio.post('$baseUrl/getVendorByType',
-          data: ({"vendor_type": id}),
-          options: Options(
-            headers: {"Authorization": "Bearer $token"},
-          ));
-      log("sss${res.data.toString()}");
+    //  try {
+    Response res = await dio.post('$baseUrl/getVendorByType',
+        data: ({"vendor_type": id}),
+        options: Options(
+          headers: {"Authorization": "Bearer $token"},
+        ));
+    log("sss${res.data.toString()}");
 
-      return GetVendorByIdResponse.fromJson(res.toString());
-    } catch (error, stacktrace) {
-      String message = "";
-      if (error is DioError) {
-        ServerError e = ServerError.withError(error: error);
-        message = e.getErrorMessage();
-      } else {
-        message = "Something Went wrong";
-      }
-      print("Exception occurred: $message stackTrace: $stacktrace");
-      return GetVendorByIdResponse(success: false, message: message);
-    }
+    return GetVendorByIdResponse.fromJson(res.toString());
+    // } catch (error, stacktrace) {
+    //   String message = "";
+    //   if (error is DioError) {
+    //     ServerError e = ServerError.withError(error: error);
+    //     message = e.getErrorMessage();
+    //   } else {
+    //     message = "Something Went wrong";
+    //   }
+    //   print("Exception occurred: $message stackTrace: $stacktrace");
+    //   return GetVendorByIdResponse(success: false, message: message);
+    // }
   }
 
   Future<GetAllStateCityByPincodeResponse> getStatebypincode(pincode) async {

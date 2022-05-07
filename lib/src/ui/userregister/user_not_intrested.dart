@@ -110,7 +110,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                   TextFormField(
                     controller: _address,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r"[a-z A-Z,.\-]")),
+                      FilteringTextInputFormatter.allow(RegExp(r"[A-Za-z0-9'\.\-\s\,\\\/]")),
                     ],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     //autovalidate: true,

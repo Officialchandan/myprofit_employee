@@ -4,8 +4,7 @@ class Validator {
   static RegExp emailRegex = new RegExp(
       r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
-  static RegExp passwordRegex =
-      RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+  static RegExp passwordRegex = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
 
   static String? emailValidator(String email) {
     if (email.isEmpty) {
@@ -21,6 +20,17 @@ class Validator {
   //mobile-validator
   static String? validatename(String value, BuildContext context) {
     String patttern = r'([a-zA-Z ])';
+    RegExp regExp = new RegExp(patttern);
+    if (value.length == 0) {
+      return "please enter  Name";
+    } else if (!regExp.hasMatch(value)) {
+      return "please enter Valid Name";
+    }
+    return null;
+  }
+
+  static String? validateAddres(String value, BuildContext context) {
+    String patttern = r'([a-zA-Z ][0-9][\])';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
       return "please enter  Name";

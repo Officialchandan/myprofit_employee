@@ -72,11 +72,12 @@ dependencies:
   firebase_core:
   flutter_local_notifications:
   firebase_messaging:
-
+  # web view
+  webview_flutter:
   #image view
   cached_network_image:
 
-
+  package_info_plus:
   #day picker
   day_picker: 2.1.0
 dev_dependencies: 

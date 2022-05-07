@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:employee/model/logout_response.dart';
 import 'package:employee/provider/api_provider.dart';
 import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
-import 'package:employee/src/ui/company_information/company_information.dart';
 import 'package:employee/src/ui/login/login.dart';
 import 'package:employee/src/ui/scripts/scripts.dart';
 import 'package:employee/utils/colors.dart';
 import 'package:employee/utils/network.dart';
 import 'package:employee/utils/sharedpref.dart';
+import 'package:employee/utils/webView_Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -157,27 +157,31 @@ class _AppDrawerState extends State<AppDrawer> {
                 ),
                 child: ListTile(
                   leading: Container(width: 20, child: Image.asset('images/s3.png', width: 20)),
-                  title: Text("Company Information",
+                  title: Text("About Us",
                       style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600)),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CompanyInformation()),
+                      MaterialPageRoute(
+                          builder: (context) => WebViewScreen(
+                                title: "Privacy Policy",
+                                url: "http://employee.myprofitinc.com/aboutus",
+                              )),
                     );
                   },
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(width: 0.7, color: Color(0xffcdcdcd))),
-                ),
-                child: ListTile(
-                  leading: Container(width: 20, child: Image.asset('images/s4.png', width: 20)),
-                  title:
-                      Text("Rate Us", style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600)),
-                ),
-              ),
+              // Container(
+              //   decoration: BoxDecoration(
+              //     border: Border(bottom: BorderSide(width: 0.7, color: Color(0xffcdcdcd))),
+              //   ),
+              //   child: ListTile(
+              //     leading: Container(width: 20, child: Image.asset('images/s4.png', width: 20)),
+              //     title:
+              //         Text("Rate Us", style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600)),
+              //   ),
+              // ),
               // Container(
               //   decoration: BoxDecoration(
               //     border: Border(

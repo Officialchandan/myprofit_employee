@@ -50,7 +50,7 @@ class OtpVerificationResponseData {
   String firstName;
   String lastName;
   String profileImage;
-  int isActive;
+  String isActive;
   String pin;
   String city;
   String state;
@@ -67,7 +67,7 @@ class OtpVerificationResponseData {
         firstName: json["first_name"] == null ? "" : json["first_name"],
         lastName: json["last_name"] == null ? "" : json["last_name"],
         profileImage: json["profile_image"] == null ? "" : json["profile_image"],
-        isActive: json["is_active"] == null ? null : json["is_active"],
+        isActive: json["is_active"] == null ? "" : json["is_active"].toString(),
         pin: json["pin"] == null ? "" : json["pin"],
         city: json["city"] == null ? "" : json["city"],
         state: json["state"] == null ? "" : json["state"],

@@ -301,9 +301,9 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       controller: _emailaddress,
                       validator: (numb) => Validator.emailValidator(numb!),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r"[a-z A-Z,.\-]")),
-                      ],
+                      // inputFormatters: [
+                      //   FilteringTextInputFormatter.allow(RegExp(r"[a-z A-Z,.\-]")),
+                      // ],
                       //autovalidate: true,
                       maxLength: 25,
                       decoration: InputDecoration(
@@ -331,7 +331,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       //autovalidate: true,
                       maxLength: 25,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r"[a-z A-Z,.\-]")),
+                        FilteringTextInputFormatter.allow(RegExp(r"[A-Za-z0-9'\.\-\s\,\\\/]")),
                       ],
                       decoration: InputDecoration(
                         counterText: "",

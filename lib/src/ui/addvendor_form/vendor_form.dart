@@ -1022,18 +1022,24 @@ class _VendorFormState extends State<VendorForm> {
                         maxLength: 40,
                         autofocus: false,
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r"[a-z A-Z,.\-]")),
+                          FilteringTextInputFormatter.allow(RegExp(r"[A-Za-z0-9'\.\-\s\,\\\/]")),
                         ],
                         decoration: InputDecoration(
                           counterText: "",
                           suffixIcon: Container(
                             width: 120,
                             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                              Text(
-                                "Select location",
-                                style: TextStyle(fontSize: 10),
-                                maxLines: 2,
-                              ),
+                              lat == null
+                                  ? Text(
+                                      "Select location",
+                                      style: TextStyle(fontSize: 10),
+                                      maxLines: 2,
+                                    )
+                                  : Text(
+                                      "location ${lat!.toStringAsFixed(2)}",
+                                      style: TextStyle(fontSize: 10),
+                                      maxLines: 2,
+                                    ),
                               IconButton(
                                 onPressed: () async {
                                   FocusScopeNode currentFocus = FocusScope.of(context);
@@ -1053,7 +1059,7 @@ class _VendorFormState extends State<VendorForm> {
                                 },
                                 icon: Icon(
                                   Icons.add_location,
-                                  color: ColorPrimary,
+                                  color: lat == null ? ColorPrimary : Colors.green,
                                 ),
                                 tooltip: "Select location",
                               ),
@@ -1864,10 +1870,10 @@ class _VendorFormState extends State<VendorForm> {
     PickedFile pickedFile;
     if (source == 1) {
       // ignore: deprecated_member_use
-      pickedFile = (await ImagePicker().getImage(source: ImageSource.camera))!;
+      pickedFile = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality: 70))!;
     } else {
       // ignore: deprecated_member_use
-      pickedFile = (await ImagePicker().getImage(source: ImageSource.gallery))!;
+      pickedFile = (await ImagePicker().getImage(source: ImageSource.gallery, imageQuality: 70))!;
     }
 
     switch (imageType) {

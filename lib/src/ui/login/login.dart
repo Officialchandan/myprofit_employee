@@ -91,10 +91,11 @@ class _LoginState extends State<Login> {
                 controller: _textFieldController,
                 cursorColor: ColorPrimary,
                 keyboardType: TextInputType.number,
+                maxLength: 6,
                 //inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
                   filled: true,
-
+                  counterText: "",
                   // fillColor: Colors.black,
                   hintText: "Enter OTP",
                   hintStyle: GoogleFonts.openSans(
@@ -159,7 +160,7 @@ class _LoginState extends State<Login> {
       print("kai kroge +");
       if (mobileController.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please enter MobileNumber");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please enter Mobile Number");
       } else {
         final loginData = await ApiProvider().login(mobile);
         // SharedPref.setStringPrefe  rence(SharedPref.USERSTATUS, loginData.status);

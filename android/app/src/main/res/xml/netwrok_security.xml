@@ -1,6 +1,7 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
 
+        <domain includeSubdomains="true">employee.myprofitinc.com</domain>
         <domain includeSubdomains="true">employee.tekzee.in</domain>
 <!--        <domain includeSubdomains="true">52.59.56.185</domain>-->
 

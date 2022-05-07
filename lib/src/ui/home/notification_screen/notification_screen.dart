@@ -56,7 +56,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
             color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: showNotifications(widget.data),
+              child: widget.data.isEmpty
+                  ? Center(
+                      child: Text("No Notification!"),
+                    )
+                  : showNotifications(widget.data),
             ),
           ),
         ),
