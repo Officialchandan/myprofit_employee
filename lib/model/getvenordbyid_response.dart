@@ -50,6 +50,7 @@ class GetVendorByIdResponseData {
     required this.ownerName,
     required this.ownerMobile,
     required this.ownerSign,
+    required this.ownerIdProof,
     required this.openingTime,
     required this.closingTime,
     required this.openingDays,
@@ -75,6 +76,7 @@ class GetVendorByIdResponseData {
   String ownerName;
   String ownerMobile;
   String ownerSign;
+  String ownerIdProof;
   String openingTime;
   String closingTime;
   String openingDays;
@@ -82,7 +84,8 @@ class GetVendorByIdResponseData {
   String customField;
   String cityName;
   String stateName;
-  String vendorImage;
+  List<VendorImage> vendorImage;
+
   List<SubCategory> subCategory;
 
   factory GetVendorByIdResponseData.fromJson(String str) => GetVendorByIdResponseData.fromMap(json.decode(str));
@@ -104,6 +107,7 @@ class GetVendorByIdResponseData {
         ownerName: json["owner_name"] == null ? "" : json["owner_name"],
         ownerMobile: json["owner_mobile"] == null ? "" : json["owner_mobile"],
         ownerSign: json["owner_sign"],
+        ownerIdProof: json["owner_id_proof"] == null ? "" : json["owner_id_proof"].toString(),
         openingTime: json["opening_time"] == null ? "" : json["opening_time"],
         closingTime: json["closing_time"] == null ? "" : json["closing_time"],
         openingDays: json["opening_days"] == null ? "" : json["opening_days"],
@@ -111,7 +115,9 @@ class GetVendorByIdResponseData {
         customField: json["custom_field"] == null ? "" : json["custom_field"],
         cityName: json["city_name"],
         stateName: json["state_name"],
-        vendorImage: json["vendor_image"] == null ? "" : json["vendor_image"],
+        vendorImage: json["vendor_image"] == null
+            ? []
+            : List<VendorImage>.from(json["vendor_image"].map((x) => VendorImage.fromMap(x))),
         subCategory: List<SubCategory>.from(json["sub_category"].map((x) => SubCategory.fromMap(x))),
       );
 
@@ -130,6 +136,7 @@ class GetVendorByIdResponseData {
         "owner_name": ownerName,
         "owner_mobile": ownerMobile,
         "owner_sign": ownerSign,
+        "owner_id_proof": ownerIdProof == null ? null : ownerIdProof,
         "opening_time": openingTime == null ? null : openingTime,
         "closing_time": closingTime == null ? null : closingTime,
         "opening_days": openingDays == null ? null : openingDays,
@@ -167,5 +174,25 @@ class SubCategory {
         "cat_id": catId,
         "commission": commission,
         "commission_status": commissionStatus,
+      };
+}
+
+class VendorImage {
+  VendorImage({
+    required this.image,
+  });
+
+  String image;
+
+  factory VendorImage.fromJson(String str) => VendorImage.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory VendorImage.fromMap(Map<String, dynamic> json) => VendorImage(
+        image: json["image"] == null ? null : json["image"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "image": image == null ? null : image,
       };
 }

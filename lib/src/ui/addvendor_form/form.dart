@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:employee/model/custome_textfeild.dart';
+import 'package:employee/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 typedef OnDelete();
@@ -39,6 +40,7 @@ class _UserFormState extends State<UserForm> {
                 Padding(
                   padding: EdgeInsets.only(left: 16, right: 16, top: 16),
                   child: TextFormField(
+                    cursorColor: ColorPrimary,
                     initialValue: widget.user.title,
                     maxLength: 20,
                     onChanged: (val) {
@@ -51,14 +53,17 @@ class _UserFormState extends State<UserForm> {
                       counterText: "",
                       contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                       filled: true,
-                      fillColor: Color.fromRGBO(242, 242, 242, 1),
+                      fillColor: Colors.white,
                       hintText: 'Enter title',
                       hintStyle:
                           TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: ColorPrimary, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                     ),
                   ),
                 ),
@@ -72,19 +77,23 @@ class _UserFormState extends State<UserForm> {
                       widget.user.description = val;
                       log("===>${widget.user.description}");
                     },
+                    cursorColor: ColorPrimary,
                     validator: (val) => val!.length > 10 ? null : 'Enter proper description',
                     decoration: InputDecoration(
                       counterText: "",
                       contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                       filled: true,
-                      fillColor: Color.fromRGBO(242, 242, 242, 1),
+                      fillColor: Colors.white,
                       hintText: 'Enter description',
                       hintStyle:
                           TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: ColorPrimary, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                     ),
                   ),
                 )

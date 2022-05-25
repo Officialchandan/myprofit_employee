@@ -118,7 +118,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                   ),
                   contentPadding: const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: ColorPrimary, width: 2),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
@@ -231,7 +231,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                 },
                 icon: Icon(Icons.arrow_back_ios),
               ),
-              backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+              backgroundColor: ColorPrimary,
               title: Text('User Register', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
               centerTitle: true,
             ),
@@ -247,6 +247,8 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _name,
+
+                      cursorColor: ColorPrimary,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
                       ],
@@ -257,12 +259,15 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                         counterText: "",
                         contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here',
+                        fillColor: Colors.white,
+                        hintText: '',
                         hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
                         ),
                       ),
                     ),
@@ -273,6 +278,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _mobile,
+                      cursorColor: ColorPrimary,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       maxLength: 10,
@@ -283,13 +289,16 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                         counterText: "",
                         contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here',
+                        fillColor: Colors.white,
+                        hintText: '',
                         hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -299,6 +308,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _emailaddress,
+                      cursorColor: ColorPrimary,
                       validator: (numb) => Validator.emailValidator(numb!),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       // inputFormatters: [
@@ -310,13 +320,16 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                         counterText: "",
                         contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here',
+                        fillColor: Colors.white,
+                        hintText: '',
                         hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -326,7 +339,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _address,
-
+                      cursorColor: ColorPrimary,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       //autovalidate: true,
                       maxLength: 25,
@@ -337,13 +350,16 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                         counterText: "",
                         contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here',
+                        fillColor: Colors.white,
+                        hintText: '',
                         hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -353,6 +369,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _pincode,
+                      cursorColor: ColorPrimary,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -362,141 +379,198 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                         counterText: "",
                         contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
-                        fillColor: Color.fromRGBO(242, 242, 242, 1),
-                        hintText: 'Enter here',
+                        fillColor: Colors.white,
+                        hintText: '',
                         hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text('Which Phone Customer have *',
+                    Text('Phone Type *',
                         style:
                             TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                    // Row(
+                    //   children: [
+                    //     Container(
+                    //       width: MediaQuery.of(context).size.width * 0.30,
+                    //       child: ListTile(
+                    //         contentPadding: EdgeInsets.all(0),
+                    //         title: const Text('Smart Phone'),
+                    //         leading: Container(
+                    //           height: 20,
+                    //           width: 20,
+                    //           child: Radio<int>(
+                    //             value: 1,
+                    //             groupValue: _character,
+                    //             onChanged: (value) {
+                    //               log("===>$_character");
+                    //               setState(() {
+                    //                 _character = value!;
+                    //               });
+                    //             },
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     Container(
+                    //       width: MediaQuery.of(context).size.width * 0.40,
+                    //       child: ListTile(
+                    //         title: const Text('Feature Phone'),
+                    //         contentPadding: EdgeInsets.all(0),
+                    //         leading: Radio<int>(
+                    //           value: 0,
+                    //           groupValue: _character,
+                    //           onChanged: (value) {
+                    //             log("===>$_character");
+                    //             setState(() {
+                    //               _character = value!;
+                    //             });
+                    //           },
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.40,
-                          child: ListTile(
-                            title: const Text('Smart Phone'),
-                            leading: Radio<int>(
-                              value: 1,
-                              groupValue: _character,
-                              onChanged: (value) {
-                                log("===>$_character");
-                                setState(() {
-                                  _character = value!;
-                                });
-                              },
-                            ),
+                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                          Radio<int>(
+                            activeColor: ColorPrimary,
+                            value: 1,
+                            groupValue: _character,
+                            onChanged: (value) {
+                              log("===>$_character");
+                              setState(() {
+                                _character = value!;
+                              });
+                            },
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.40,
-                          child: ListTile(
-                            title: const Text('normal Phone'),
-                            contentPadding: EdgeInsets.all(0),
-                            leading: Radio<int>(
-                              value: 0,
-                              groupValue: _character,
-                              onChanged: (value) {
-                                log("===>$_character");
-                                setState(() {
-                                  _character = value!;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Text('Is gift given *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
-                    Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.40,
-                          child: ListTile(
-                            title: const Text('YES'),
-                            leading: Radio<int>(
-                              value: 1,
-                              groupValue: _gift,
-                              onChanged: (value) {
-                                log("===>$_gift");
-                                setState(() {
-                                  _gift = value!;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.40,
-                          child: ListTile(
-                            title: const Text('NO'),
-                            contentPadding: EdgeInsets.all(0),
-                            leading: Radio<int>(
-                              value: 0,
-                              groupValue: _gift,
-                              onChanged: (value) {
-                                log("===>$_gift");
-                                setState(() {
-                                  _gift = value!;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (contex) => UserNotInterested(
-                                          location: areaId,
-                                        )));
-                          },
-                          child: Text(
-                            "User Not Interested",
+                          Text(
+                            'Smart Phone',
                             style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.underline,
-                                color: ColorTextPrimary,
-                                fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                            ),
                           ),
-                        )),
-                    SizedBox(
-                      height: 40,
+                        ]),
+                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                          Radio<int>(
+                            activeColor: ColorPrimary,
+                            value: 0,
+                            groupValue: _character,
+                            onChanged: (value) {
+                              log("===>$_character");
+                              setState(() {
+                                _character = value!;
+                              });
+                            },
+                          ),
+                          Text(
+                            'Feature Phone  ',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          )
+                        ]),
+                      ],
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ButtonTheme(
-                        minWidth: 240,
-                        // ignore: deprecated_member_use
-                        child: RaisedButton(
-                          padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                          color: Color.fromRGBO(102, 87, 244, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                    SizedBox(height: 20),
+                    Text('Gift Given? *',
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                          Radio<int>(
+                            activeColor: ColorPrimary,
+                            value: 1,
+                            groupValue: _character,
+                            onChanged: (value) {
+                              log("===>$_gift");
+                              setState(() {
+                                _gift = value!;
+                              });
+                            },
                           ),
-                          onPressed: () {
-                            log("kai kai---->");
-                            addUser();
-                            log(" location: areaId,${areaId}");
-                          },
-                          child: Text(
-                            "REGISTER",
-                            style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                          Text(
+                            'Yes',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
+                        ]),
+                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                          Radio<int>(
+                            activeColor: ColorPrimary,
+                            value: 0,
+                            groupValue: _character,
+                            onChanged: (value) {
+                              log("===>$_gift");
+                              setState(() {
+                                _gift = value!;
+                              });
+                            },
+                          ),
+                          Text(
+                            'No',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          )
+                        ]),
+                        SizedBox()
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    ButtonTheme(
+                      // ignore: deprecated_member_use
+                      minWidth: MediaQuery.of(context).size.width,
+                      child: RaisedButton(
+                        padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                        color: ColorPrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        onPressed: () {
+                          log("kai kai---->");
+                          addUser();
+                          log(" location: areaId,${areaId}");
+                        },
+                        child: Text(
+                          "REGISTER",
+                          style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (contex) => UserNotInterested(
+                                        location: areaId,
+                                      )));
+                        },
+                        child: Text(
+                          "User Not Interested",
+                          style: TextStyle(
+                              fontSize: 18,
+                              decoration: TextDecoration.underline,
+                              color: ColorTextPrimary,
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),

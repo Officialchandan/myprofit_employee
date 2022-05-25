@@ -330,7 +330,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+          backgroundColor: ColorPrimary,
           leading: Builder(
             builder: (BuildContext context) {
               return IconButton(
@@ -366,13 +366,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                   counterText: "",
                   contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  fillColor: Colors.white,
                   hintText: 'Enter here',
                   hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                 ),
               ),
               SizedBox(height: 15),
@@ -391,13 +394,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                   counterText: "",
                   contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  fillColor: Colors.white,
                   hintText: 'Enter here',
                   hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                 ),
               ),
               SizedBox(height: 15),
@@ -416,13 +422,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                   counterText: "",
                   contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  fillColor: Colors.white,
                   hintText: 'Enter here',
                   hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                 ),
               ),
               SizedBox(height: 15),
@@ -443,13 +452,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                   // ),
                   contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  fillColor: Colors.white,
                   hintText: 'Enter here shop Address',
                   hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                 ),
               ),
               SizedBox(height: 10),
@@ -463,13 +475,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  fillColor: Colors.white,
                   hintText: 'landmark was not given by Vendor',
                   hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                 ),
               ),
               SizedBox(height: 10),
@@ -483,13 +498,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  fillColor: Colors.white,
                   hintText: 'Enter here Landmark (optional)',
                   hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                 ),
               ),
               SizedBox(height: 10),
@@ -503,13 +521,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  fillColor: Colors.white,
                   hintText: 'Enter here Landmark (optional)',
                   hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                 ),
               ),
               SizedBox(height: 10),
@@ -523,13 +544,16 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   filled: true,
-                  fillColor: Color.fromRGBO(242, 242, 242, 1),
+                  fillColor: Colors.white,
                   hintText: 'Enter here Landmark (optional)',
                   hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                 ),
               ),
               // TextFormField(
@@ -539,7 +563,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               //     contentPadding:
               //         EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
               //     filled: true,
-              //     fillColor: Color.fromRGBO(242, 242, 242, 1),
+              //     fillColor: Colors.white,
               //     hintText: 'Enter here pincode',
               //     hintStyle: TextStyle(
               //         color: Color.fromRGBO(85, 85, 85, 1),
@@ -559,7 +583,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               //     contentPadding:
               //         EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
               //     filled: true,
-              //     fillColor: Color.fromRGBO(242, 242, 242, 1),
+              //     fillColor: Colors.white,
               //     hintText: 'Enter here Your City/village',
               //     hintStyle: TextStyle(
               //         color: Color.fromRGBO(85, 85, 85, 1),
@@ -579,7 +603,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               //     contentPadding:
               //         EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
               //     filled: true,
-              //     fillColor: Color.fromRGBO(242, 242, 242, 1),
+              //     fillColor: Colors.white,
               //     hintText: 'Enter here State',
               //     hintStyle: TextStyle(
               //         color: Color.fromRGBO(85, 85, 85, 1),
@@ -612,7 +636,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               //             buttonIcon: Icon(Icons.keyboard_arrow_down,
               //                 color: Color.fromRGBO(85, 85, 85, 1)),
               //             decoration: BoxDecoration(
-              //               color: Color.fromRGBO(242, 242, 242, 1),
+              //               color: Colors.white,
               //               borderRadius: BorderRadius.circular(10),
               //             ),
               //             key: _multiSelectKey,
@@ -720,7 +744,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               //                   contentPadding: EdgeInsets.only(
               //                       left: 14.0, bottom: 8.0, top: 8.0),
               //                   filled: true,
-              //                   fillColor: Color.fromRGBO(242, 242, 242, 1),
+              //                   fillColor: Colors.white,
               //                   hintText:
               //                       'Please Enter ${subcatlist[index].subCat.categoryName} Commision',
               //                   hintStyle: TextStyle(
@@ -743,7 +767,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               //     // ignore: deprecated_member_use
               //     child: RaisedButton(
               //       padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-              //       color: Color.fromRGBO(102, 87, 244, 1),
+              //       color: ColorPrimary,
               //       shape: RoundedRectangleBorder(
               //         borderRadius: BorderRadius.circular(10),
               //       ),

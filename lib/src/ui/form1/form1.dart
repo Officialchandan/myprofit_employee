@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:employee/src/ui/form2/form2.dart';
+import 'package:employee/utils/colors.dart';
 import 'package:employee/utils/validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -170,7 +171,7 @@ class _Form1State extends State<Form1> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+          backgroundColor: ColorPrimary,
           leading: Builder(
             builder: (BuildContext context) {
               return IconButton(
@@ -275,7 +276,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaAvailabilityRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaAvailabilityRadioFunc(value as int);
                         }),
@@ -284,7 +285,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaAvailabilityRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaAvailabilityRadioFunc(value as int);
                         }),
@@ -368,7 +369,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaIdeaRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaIdeaRadioFunc(value as int);
                         }),
@@ -384,7 +385,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaIdeaRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaIdeaRadioFunc(value as int);
                         }),
@@ -400,7 +401,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 3,
                         groupValue: dhabaIdeaRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaIdeaRadioFunc(value as int);
                         }),
@@ -420,7 +421,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaWillingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaWillingRadioFunc(value as int);
                         }),
@@ -429,7 +430,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaWillingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaWillingRadioFunc(value as int);
                         }),
@@ -449,7 +450,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaRulesRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaRulesRadioFunc(value as int);
                         }),
@@ -458,7 +459,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaRulesRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaRulesRadioFunc(value as int);
                         }),
@@ -522,7 +523,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaSeatingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaSeatingRadioFunc(value as int);
                         }),
@@ -531,7 +532,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaSeatingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaSeatingRadioFunc(value as int);
                         }),
@@ -729,7 +730,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaLodgingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLodgingRadioFunc(value as int);
                         }),
@@ -738,7 +739,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaLodgingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLodgingRadioFunc(value as int);
                         }),
@@ -748,7 +749,7 @@ class _Form1State extends State<Form1> {
               ),
               SizedBox(height: 15),
               Text('Main mrp of dishes :',
-                  style: TextStyle(color: Color.fromRGBO(102, 87, 244, 1), fontSize: 16, fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: ColorPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
               SizedBox(height: 15),
               Text('Dal',
                   style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
@@ -857,7 +858,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaLandRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLandRadioFunc(value as int);
                         }),
@@ -866,7 +867,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaLandRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLandRadioFunc(value as int);
                         }),
@@ -886,7 +887,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaLegalRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLegalRadioFunc(value as int);
                         }),
@@ -895,7 +896,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaLegalRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLegalRadioFunc(value as int);
                         }),
@@ -915,7 +916,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaUPIRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaUPIRadioFunc(value as int);
                         }),
@@ -924,7 +925,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaUPIRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaUPIRadioFunc(value as int);
                         }),
@@ -963,7 +964,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaParkingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaParkingRadioFunc(value as int);
                         }),
@@ -972,7 +973,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaParkingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaParkingRadioFunc(value as int);
                         }),
@@ -981,7 +982,7 @@ class _Form1State extends State<Form1> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 3,
                         groupValue: dhabaParkingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaParkingRadioFunc(value as int);
                         }),
@@ -1144,7 +1145,7 @@ class _Form1State extends State<Form1> {
                   // ignore: deprecated_member_use
                   child: RaisedButton(
                     padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                    color: Color.fromRGBO(102, 87, 244, 1),
+                    color: ColorPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

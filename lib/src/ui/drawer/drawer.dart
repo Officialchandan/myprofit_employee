@@ -100,7 +100,7 @@ class _AppDrawerState extends State<AppDrawer> {
               Container(
                 padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                 child: Column(children: [
-                  Image.asset("images/logo.png", width: 170, height: 170),
+                  Image.asset("images/logo.png", width: 170, height: 170,),
                   SizedBox(
                     height: 15,
                   ),

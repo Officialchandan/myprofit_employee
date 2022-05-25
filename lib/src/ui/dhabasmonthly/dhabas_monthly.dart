@@ -37,7 +37,7 @@ class _DhabasMonthlyState extends State<DhabasMonthly> {
     double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+        backgroundColor: ColorPrimary,
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(

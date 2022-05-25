@@ -21,7 +21,7 @@ class _AddDhabaState extends State<AddDhaba> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+          backgroundColor: ColorPrimary,
           leading: Builder(
             builder: (BuildContext context) {
               return IconButton(
@@ -114,7 +114,7 @@ class _AddDhabaState extends State<AddDhaba> {
                         margin: EdgeInsets.all(8),
                         padding: EdgeInsets.only(right: 65, left: 20),
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(102, 87, 244, 1),
+                          color: ColorPrimary,
                           borderRadius: BorderRadius.circular(50),
                         ),
                         child: Align(

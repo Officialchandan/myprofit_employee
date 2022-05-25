@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:employee/localization/app_translations.dart';
-import 'package:employee/src/ui/splash/splash.dart';
+import 'package:employee/src/ui/splash/splash_screen.dart';
 import 'package:employee/utils/colors.dart';
 import 'package:employee/utils/sharedpref.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,7 @@ class _ChangeLanGuageState extends State<ChangeLanGuage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+        backgroundColor: ColorPrimary,
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(

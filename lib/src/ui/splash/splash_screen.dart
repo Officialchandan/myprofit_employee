@@ -14,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
   @override
   void initState() {
     // TODO: implement initState
@@ -115,24 +117,52 @@ class _SplashState extends State<Splash> {
     // EasyLoading.showError("Your session has been expired! Please login again",);
   }
 
+  refresh() {
+    log("refresh hua");
+    validApp();
+    _refreshController.refreshCompleted();
+
+    //setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Image.asset('images/splash-top.png', width: 130),
-            ),
-            Image.asset('images/logo.png', width: 150),
-            Image.asset('images/splash-bottom.png', width: double.infinity),
-          ],
-        ),
-      ),
-    );
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
+    return SmartRefresher(
+        controller: _refreshController,
+        enablePullDown: true,
+        enablePullUp: false,
+        onRefresh: () {
+          refresh();
+        },
+        child: SafeArea(
+          child: Container(
+            color: Colors.white,
+            height: MediaQuery.of(context).size.height,
+            child: Stack(children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Image.asset('images/splash-top.png'),
+                  ),
+                  Align(
+                      alignment: Alignment.bottomRight,
+                      child: Image.asset('images/splash-bottom.png', width: MediaQuery.of(context).size.width * 0.7)),
+                ],
+              ),
+              Positioned(
+                  child: Center(
+                child: Image.asset(
+                  'images/logo.png',
+                  height: deviceHeight * 0.40,
+                ),
+              )),
+            ]),
+          ),
+        ));
   }
 
   void startTimer() async {

@@ -45,7 +45,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+          backgroundColor: ColorPrimary,
           leading: Builder(
             builder: (BuildContext context) {
               return InkWell(
@@ -59,7 +59,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
               );
             },
           ),
-          title: Text('Performance Tracker', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+          title: Text('Performance Tracker', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           centerTitle: true,
         ),
         body: tracker == null
@@ -74,7 +74,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                       width: MediaQuery.of(context).size.width,
                       // margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: ListTile(
@@ -82,7 +82,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                           "No of Vendors ",
                           style: GoogleFonts.openSans(
                             fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         subtitle: Padding(
@@ -119,7 +119,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                       width: MediaQuery.of(context).size.width,
                       // margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: ListTile(
@@ -127,7 +127,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                           "No of Customer",
                           style: GoogleFonts.openSans(
                             fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         subtitle: Padding(
@@ -164,7 +164,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                       width: MediaQuery.of(context).size.width,
                       // margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: ListTile(
@@ -172,7 +172,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                           "No of not Intrested Customer",
                           style: GoogleFonts.openSans(
                             fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         subtitle: Padding(
@@ -231,7 +231,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                 //       //         " Day",
                 //       //         style: GoogleFonts.openSans(
                 //       //             fontSize: 15,
-                //       //             fontWeight: FontWeight.w600,
+                //       //             fontWeight: FontWeight.bold,
                 //       //             decoration: TextDecoration.none),
                 //       //       ),
                 //       //     ),
@@ -260,7 +260,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                 //       //         "Week",
                 //       //         style: GoogleFonts.openSans(
                 //       //             fontSize: 15,
-                //       //             fontWeight: FontWeight.w600,
+                //       //             fontWeight: FontWeight.bold,
                 //       //             decoration: TextDecoration.none),
                 //       //       ),
                 //       //     ),
@@ -289,7 +289,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                 //       //         "Monthly",
                 //       //         style: GoogleFonts.openSans(
                 //       //             fontSize: 15,
-                //       //             fontWeight: FontWeight.w600,
+                //       //             fontWeight: FontWeight.bold,
                 //       //             decoration: TextDecoration.none),
                 //       //       ),
                 //       //     ),
@@ -302,7 +302,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                 //       //   "(||) No of Driver",
                 //       //   style: GoogleFonts.openSans(
                 //       //     fontSize: 16,
-                //       //     fontWeight: FontWeight.w600,
+                //       //     fontWeight: FontWeight.bold,
                 //       //   ),
                 //       // ),
                 //       // SizedBox(
@@ -336,7 +336,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                 //       //         " Day",
                 //       //         style: GoogleFonts.openSans(
                 //       //             fontSize: 15,
-                //       //             fontWeight: FontWeight.w600,
+                //       //             fontWeight: FontWeight.bold,
                 //       //             decoration: TextDecoration.none),
                 //       //       ),
                 //       //     ),
@@ -365,7 +365,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                 //       //         "Week",
                 //       //         style: GoogleFonts.openSans(
                 //       //             fontSize: 15,
-                //       //             fontWeight: FontWeight.w600,
+                //       //             fontWeight: FontWeight.bold,
                 //       //             decoration: TextDecoration.none),
                 //       //       ),
                 //       //     ),
@@ -394,7 +394,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                 //       //         "Monthly",
                 //       //         style: GoogleFonts.openSans(
                 //       //             fontSize: 15,
-                //       //             fontWeight: FontWeight.w600,
+                //       //             fontWeight: FontWeight.bold,
                 //       //             decoration: TextDecoration.none),
                 //       //       ),
                 //       //     ),

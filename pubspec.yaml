@@ -32,7 +32,7 @@ dependencies:
   shared_preferences: 
   multi_select_flutter:
   rxdart:
-
+  pull_to_refresh:
 
   #use for toast massages
   fluttertoast: 

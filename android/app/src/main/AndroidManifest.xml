@@ -12,7 +12,7 @@
    <application
 
 
-        android:label="Employee"
+        android:label="MyProfit \nEmployee"
         android:icon="@mipmap/app_icon"
        android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"

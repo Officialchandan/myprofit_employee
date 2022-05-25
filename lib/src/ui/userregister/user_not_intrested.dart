@@ -60,7 +60,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
       child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+            backgroundColor: ColorPrimary,
             leading: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -82,6 +82,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                           TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),
                   TextFormField(
+                    cursorColor: ColorPrimary,
                     controller: _name,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
@@ -93,13 +94,16 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                       counterText: "",
                       contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                       filled: true,
-                      fillColor: Color.fromRGBO(242, 242, 242, 1),
-                      hintText: 'Enter here',
+                      fillColor: Colors.white,
+                      hintText: '',
                       hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -108,6 +112,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                           TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),
                   TextFormField(
+                    cursorColor: ColorPrimary,
                     controller: _address,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r"[A-Za-z0-9'\.\-\s\,\\\/]")),
@@ -119,13 +124,16 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                       counterText: "",
                       contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                       filled: true,
-                      fillColor: Color.fromRGBO(242, 242, 242, 1),
-                      hintText: 'Enter here',
+                      fillColor: Colors.white,
+                      hintText: '',
                       hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -134,6 +142,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                           TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),
                   TextFormField(
+                    cursorColor: ColorPrimary,
                     controller: _pincode,
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -144,13 +153,16 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                       counterText: "",
                       contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                       filled: true,
-                      fillColor: Color.fromRGBO(242, 242, 242, 1),
-                      hintText: 'Enter here',
+                      fillColor: Colors.white,
+                      hintText: '',
                       hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -160,9 +172,9 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                   SizedBox(height: 10),
                   TextFormField(
                     controller: _reason,
-
+                    cursorColor: ColorPrimary,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+                      FilteringTextInputFormatter.allow(RegExp(r"[A-Za-z0-9'\.\-\s\,\\\/]")),
                     ],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     //autovalidate: true,
@@ -173,37 +185,37 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                       counterText: "",
                       contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                       filled: true,
-                      fillColor: Color.fromRGBO(242, 242, 242, 1),
-                      hintText: 'Enter here',
+                      fillColor: Colors.white,
+                      hintText: '',
                       hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                     ),
                   ),
                   SizedBox(
                     height: 40,
                   ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: ButtonTheme(
-                      minWidth: 240,
-                      // ignore: deprecated_member_use
-                      child: RaisedButton(
-                        padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                        color: Color.fromRGBO(102, 87, 244, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        onPressed: () {
-                          log("kai kai----> ${widget.location}");
-                          addUser();
-                        },
-                        child: Text(
-                          "SUBMIT",
-                          style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
-                        ),
+                  ButtonTheme(
+                    minWidth: MediaQuery.of(context).size.width,
+                    // ignore: deprecated_member_use
+                    child: RaisedButton(
+                      padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                      color: ColorPrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      onPressed: () {
+                        log("kai kai----> ${widget.location}");
+                        addUser();
+                      },
+                      child: Text(
+                        "SUBMIT",
+                        style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),

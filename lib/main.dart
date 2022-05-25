@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:employee/provider/NavigationService.dart';
 import 'package:employee/src/ui/home/home.dart';
-import 'package:employee/src/ui/splash/splash.dart';
+import 'package:employee/src/ui/splash/splash_screen.dart';
 import 'package:employee/utils/colors.dart';
 import 'package:employee/utils/sharedpref.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -114,25 +114,27 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    const MaterialColor themeColor = const MaterialColor(
-      0xFF6657f4,
-      const <int, Color>{
-        50: const Color(0xFF6657f4),
-        100: const Color(0xFF6657f4),
-        200: const Color(0xFF6657f4),
-        300: const Color(0xFF6657f4),
-        400: const Color(0xFF6657f4),
-        500: const Color(0xFF6657f4),
-        600: const Color(0xFF6657f4),
-        700: const Color(0xFF6657f4),
-        800: const Color(0xFF6657f4),
-        900: const Color(0xFF6657f4),
+    colorScheme:
+    ColorScheme.fromSwatch(
+        primarySwatch: MaterialColor(
+      ColorPrimary.value,
+      <int, Color>{
+        50: Color(0xFFFFFFFF),
+        100: Color(0xFFD4D1FD),
+        200: Color(0xFFABA2F6),
+        300: Color(0xFF887BFC),
+        400: Color(0xFF796AFF),
+        500: Color(ColorPrimary.value),
+        600: Color(0xFF5344F8),
+        700: Color(0xFF4530FC),
+        800: Color(0xFF2C17FF),
+        900: Color(0xFF1500F5),
       },
-    );
+    )).copyWith(secondary: ColorPrimary).copyWith(secondary: ColorPrimary);
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
       // statusBarColor is used to set Status bar color in Android devices.
-      statusBarColor: Color(0xff493ad6),
+      statusBarColor: Color(0xff844cc6),
 
       // To make Status bar icons color white in Android devices.
       statusBarIconBrightness: Brightness.light,
@@ -148,12 +150,37 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
-        primarySwatch: themeColor,
+        primaryColor: ColorPrimary,
+        primaryColorDark: ColorPrimary,
+
+        bottomSheetTheme: BottomSheetThemeData(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(topRight: Radius.circular(25), topLeft: Radius.circular(25)))),
+        iconTheme: IconThemeData(
+          color: ColorPrimary,
+          opacity: 1,
+        ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: GoogleFonts.roboto().fontFamily,
+
         // fontFamily: TextStyle().fontFamily,
         appBarTheme: AppBarTheme(
+          elevation: 1,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: ColorPrimary,
+            // statusBarIconBrightness: Brightness.light,
+          ),
           brightness: Brightness.dark,
+          backgroundColor: ColorPrimary,
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+          centerTitle: true,
+          actionsIconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+          // toolbarTextStyle: Theme.of(context).textTheme.headline6!.merge(TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          // titleTextStyle: Theme.of(context).textTheme.headline6!.merge(TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         ),
       ),
 

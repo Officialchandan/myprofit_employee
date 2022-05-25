@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:developer';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:employee/model/categories_respnse.dart';
 import 'package:employee/model/getvenordbyid_response.dart';
@@ -201,7 +200,6 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(102, 87, 244, 1),
           leading: Builder(
             builder: (BuildContext context) {
               return InkWell(
@@ -365,7 +363,7 @@ class _HomeState extends State<Home> {
             // padding: EdgeInsets.all(10),
             margin: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Color(0xfff4f4f4),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
             child: ListTile(
@@ -375,8 +373,8 @@ class _HomeState extends State<Home> {
                 imageBuilder: (context, imageProvider) {
                   return Container(
                     padding: EdgeInsets.all(5),
-                    height: 30,
-                    width: 30,
+                    height: 40,
+                    width: 40,
                     decoration: BoxDecoration(
                       color: Colors.white,
                     ),
@@ -398,11 +396,9 @@ class _HomeState extends State<Home> {
               // Image.network('${result!.data![index].image}', width: 20),
               title: Container(
                 transform: Matrix4.translationValues(0, -2, 0),
-                child: AutoSizeText(
+                child: Text(
                   "${category[index].categoryName}",
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-                  minFontSize: 12,
-                  maxFontSize: 14,
+                  style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
               trailing: ButtonTheme(
@@ -411,7 +407,7 @@ class _HomeState extends State<Home> {
                 // ignore: deprecated_member_use
                 child: RaisedButton(
                   padding: EdgeInsets.all(0),
-                  color: Color.fromRGBO(102, 87, 244, 1),
+                  color: ColorPrimary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(7),
                   ),
@@ -428,8 +424,8 @@ class _HomeState extends State<Home> {
                     }
                   },
                   child: Text(
-                    "Add Form",
-                    style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                    "Add",
+                    style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

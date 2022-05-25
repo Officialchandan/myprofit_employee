@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:employee/model/getvenordbyid_response.dart';
 import 'package:employee/provider/api_provider.dart';
 import 'package:employee/src/ui/addvendor_form/vendor_form.dart';
@@ -92,7 +91,7 @@ class _AddedVendorState extends State<AddedVendor> {
           child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+                backgroundColor: ColorPrimary,
                 leading: Builder(
                   builder: (BuildContext context) {
                     return IconButton(
@@ -129,31 +128,30 @@ class _AddedVendorState extends State<AddedVendor> {
 
                                         height: 30,
                                         margin: EdgeInsets.all(8),
-                                        padding: EdgeInsets.only(right: 35, left: 10),
+                                        padding: EdgeInsets.only(right: 10, left: 10),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(50),
+                                          borderRadius: BorderRadius.circular(5),
                                         ),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: AutoSizeText(
-                                            'Add ${widget.title}',
-                                            style: TextStyle(
-                                              color: ColorPrimary,
-                                              fontWeight: FontWeight.w600,
+                                        child: Center(
+                                          child: Row(children: [
+                                            Text(
+                                              'Add ',
+                                              style: TextStyle(
+                                                color: ColorPrimary,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 1,
                                             ),
-                                            minFontSize: 12,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                          ),
+                                            Icon(
+                                              Icons.add,
+                                              color: ColorPrimary,
+                                            )
+                                          ]),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Positioned(
-                                    top: -2,
-                                    right: -5,
-                                    child: Image.asset('images/w-plus.png', width: 40, fit: BoxFit.cover),
                                   ),
                                 ],
                               ),
@@ -199,7 +197,7 @@ class _AddedVendorState extends State<AddedVendor> {
                                                 margin: EdgeInsets.all(8),
                                                 padding: EdgeInsets.only(right: 65, left: 20),
                                                 decoration: BoxDecoration(
-                                                  color: Color.fromRGBO(102, 87, 244, 1),
+                                                  color: ColorPrimary,
                                                   borderRadius: BorderRadius.circular(50),
                                                 ),
                                                 child: Align(
@@ -234,10 +232,8 @@ class _AddedVendorState extends State<AddedVendor> {
                                     ),
                                   ),
                                 )
-                              : Container(
-                                  height: 50,
-                                  padding: EdgeInsets.only(top: 5),
-                                  color: Colors.grey.shade300,
+                              : Padding(
+                                  padding: const EdgeInsets.only(top: 10.0, left: 16, right: 16),
                                   child: TextFormField(
                                     controller: _searchController,
                                     autofocus: false,
@@ -247,19 +243,19 @@ class _AddedVendorState extends State<AddedVendor> {
                                         color: ColorPrimary,
                                         size: 25,
                                       ),
-                                      isCollapsed: true,
-                                      contentPadding: EdgeInsets.fromLTRB(10, 8, 5, 8),
-                                      filled: true,
-                                      fillColor: Colors.transparent,
+                                      contentPadding: EdgeInsets.fromLTRB(12, 8, 5, 8),
                                       hintText: 'Search Shops',
                                       hintStyle: TextStyle(
                                           color: Color.fromRGBO(85, 85, 85, 1),
-                                          fontSize: 12,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.w600),
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(7),
-                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                                     ),
                                     onChanged: (text) {
                                       searchList.clear();
@@ -324,7 +320,7 @@ class _AddedVendorState extends State<AddedVendor> {
                                                         fit: BoxFit.cover,
                                                       )
                                                     : Image.network(
-                                                        "${searchList[index].vendorImage}",
+                                                        "${searchList[index].vendorImage.first.image}",
                                                         width: 65,
                                                         height: 65,
                                                         fit: BoxFit.cover,
@@ -337,23 +333,30 @@ class _AddedVendorState extends State<AddedVendor> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
+                                                    child: Text(searchList[index].name,
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 18,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            fontWeight: FontWeight.w600)),
+                                                  ),
+                                                  SizedBox(height: 5),
+                                                  Container(
                                                     width: MediaQuery.of(context).size.width * 0.68,
                                                     child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        Text(searchList[index].name,
-                                                            style: TextStyle(
-                                                                color: Colors.black,
-                                                                fontSize: 16,
-                                                                fontWeight: FontWeight.w600)),
-                                                        Container(
-                                                          height: 18,
-                                                          child: Center(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Text('+91 ${searchList[index].ownerMobile}',
+                                                              style: TextStyle(
+                                                                color: Color(0xff555555),
+                                                                fontSize: 14,
+                                                              )),
+                                                          Center(
                                                               child: searchList[index].isActive == 2
                                                                   ? Text(
                                                                       "  Pending  ",
                                                                       style: TextStyle(
-                                                                        fontSize: 12,
+                                                                        fontSize: 15,
                                                                         fontWeight: FontWeight.bold,
                                                                         color: PendingTextColor,
                                                                       ),
@@ -362,7 +365,7 @@ class _AddedVendorState extends State<AddedVendor> {
                                                                       ? Text(
                                                                           "  Approved  ",
                                                                           style: TextStyle(
-                                                                            fontSize: 12,
+                                                                            fontSize: 15,
                                                                             fontWeight: FontWeight.bold,
                                                                             color: ApproveTextColor,
                                                                           ),
@@ -371,7 +374,7 @@ class _AddedVendorState extends State<AddedVendor> {
                                                                           ? Text(
                                                                               "  Rejected  ",
                                                                               style: TextStyle(
-                                                                                fontSize: 12,
+                                                                                fontSize: 15,
                                                                                 fontWeight: FontWeight.bold,
                                                                                 color: RejectedBoxTextColor,
                                                                               ),
@@ -379,30 +382,13 @@ class _AddedVendorState extends State<AddedVendor> {
                                                                           : Text(
                                                                               "  Rejected  ",
                                                                               style: TextStyle(
-                                                                                fontSize: 12,
+                                                                                fontSize: 15,
                                                                                 fontWeight: FontWeight.bold,
                                                                                 color: RejectedBoxTextColor,
                                                                               ),
                                                                             )),
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(15),
-                                                              color: searchList[index].isActive == 0
-                                                                  ? RejectedTextBgColor
-                                                                  : searchList[index].isActive == 1
-                                                                      ? ApproveTextBgColor
-                                                                      : searchList[index].isActive == 2
-                                                                          ? RejectedBoxBgColor
-                                                                          : RejectedBoxBgColor),
-                                                        )
-                                                      ],
-                                                    ),
+                                                        ]),
                                                   ),
-                                                  SizedBox(height: 5),
-                                                  Text('+91 ${searchList[index].ownerMobile}',
-                                                      style: TextStyle(
-                                                          color: Color(0xff555555),
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight.w600)),
                                                   SizedBox(height: 5),
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -410,9 +396,9 @@ class _AddedVendorState extends State<AddedVendor> {
                                                       Image.asset('images/g-pin.png', width: 13),
                                                       Text(' ${searchList[index].address}',
                                                           style: TextStyle(
-                                                              color: Color(0xff555555),
-                                                              fontSize: 14,
-                                                              fontWeight: FontWeight.w600)),
+                                                            color: Color(0xff555555),
+                                                            fontSize: 14,
+                                                          )),
                                                     ],
                                                   ),
                                                 ],

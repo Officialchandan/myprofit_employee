@@ -1,4 +1,5 @@
 import 'package:employee/src/ui/login/login.dart';
+import 'package:employee/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -53,7 +54,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       // ignore: deprecated_member_use
                       child: RaisedButton(
                         padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                        color: Color.fromRGBO(102, 87, 244, 1),
+                        color: ColorPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

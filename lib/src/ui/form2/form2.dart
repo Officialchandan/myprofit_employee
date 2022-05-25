@@ -1,10 +1,12 @@
 import 'dart:io';
+
+import 'package:employee/src/ui/add_dhaba/add_dhaba.dart';
+import 'package:employee/utils/colors.dart';
+import 'package:employee/utils/validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:employee/src/ui/add_dhaba/add_dhaba.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:employee/utils/validator.dart';
 
 class Form2 extends StatefulWidget {
   @override
@@ -131,7 +133,8 @@ class _Form2State extends State<Form2> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                             child: Align(
-                              child: Text('Terms & Conditions', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
+                              child: Text('Terms & Conditions',
+                                  style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
                               alignment: Alignment.center,
                             ),
                           ),
@@ -168,7 +171,7 @@ class _Form2State extends State<Form2> {
                           alignment: Alignment.center,
                           padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(102, 87, 244, 1),
+                            color: ColorPrimary,
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(7),
                               bottomRight: Radius.circular(7),
@@ -258,9 +261,12 @@ class _Form2State extends State<Form2> {
                         textAlign: TextAlign.center,
                         text: TextSpan(
                             text: 'Shukriya sir! Humari',
-                            style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600),
                             children: [
-                              TextSpan(text: ' Myprofit ', style: TextStyle(color: Color.fromRGBO(102, 87, 244, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                              TextSpan(
+                                  text: ' Myprofit ',
+                                  style: TextStyle(color: ColorPrimary, fontSize: 15, fontWeight: FontWeight.w600)),
                               TextSpan(text: 'team jald hi aapke sampark mai aaegi!'),
                             ]),
                       ),
@@ -270,7 +276,7 @@ class _Form2State extends State<Form2> {
                         // ignore: deprecated_member_use
                         child: RaisedButton(
                           padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                          color: Color.fromRGBO(102, 87, 244, 1),
+                          color: ColorPrimary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -343,9 +349,8 @@ class _Form2State extends State<Form2> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(102, 87, 244, 1),
+          backgroundColor: ColorPrimary,
           leading: Builder(
             builder: (BuildContext context) {
               return IconButton(
@@ -360,7 +365,6 @@ class _Form2State extends State<Form2> {
           title: Text('Form 2', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
           centerTitle: true,
         ),
-
         body: SingleChildScrollView(
           padding: EdgeInsets.fromLTRB(16, 14, 16, 14),
           child: Column(
@@ -385,7 +389,8 @@ class _Form2State extends State<Form2> {
                 controller: _dhabaIDController,
               ),
               SizedBox(height: 15),
-              Text('Dhaba name', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Dhaba name',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -404,7 +409,8 @@ class _Form2State extends State<Form2> {
                 controller: _dhabaNameController,
               ),
               SizedBox(height: 15),
-              Text('Owner name', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Owner name',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -423,10 +429,12 @@ class _Form2State extends State<Form2> {
                 controller: _dhabaOwnerNameController,
               ),
               SizedBox(height: 15),
-              Text('Aadhar number of Owner', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Aadhar number of Owner',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Align(
                 alignment: Alignment.topLeft,
-                child: Text('(or any other form of ID)', style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 14, fontWeight: FontWeight.w500)),
+                child: Text('(or any other form of ID)',
+                    style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 14, fontWeight: FontWeight.w500)),
               ),
               SizedBox(height: 10),
               TextFormField(
@@ -450,7 +458,8 @@ class _Form2State extends State<Form2> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Mobile no. of Dhaba owner', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Mobile no. of Dhaba owner',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -473,7 +482,8 @@ class _Form2State extends State<Form2> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Parking area of Dhaba', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Parking area of Dhaba',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -483,7 +493,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaAreaRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaAreaRadioFunc(value as int);
                         }),
@@ -492,7 +502,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaAreaRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaAreaRadioFunc(value as int);
                         }),
@@ -501,7 +511,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 3,
                         groupValue: dhabaAreaRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaAreaRadioFunc(value as int);
                         }),
@@ -510,7 +520,8 @@ class _Form2State extends State<Form2> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('No of working staff in dhaba', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('No of working staff in dhaba',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -523,7 +534,8 @@ class _Form2State extends State<Form2> {
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Morning slot',
-                        hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                        hintStyle:
+                            TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -546,7 +558,8 @@ class _Form2State extends State<Form2> {
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Evening slot',
-                        hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                        hintStyle:
+                            TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -602,7 +615,8 @@ class _Form2State extends State<Form2> {
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Opening timing',
-                        hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                        hintStyle:
+                            TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -629,7 +643,8 @@ class _Form2State extends State<Form2> {
                         filled: true,
                         fillColor: Color.fromRGBO(242, 242, 242, 1),
                         hintText: 'Closing timing',
-                        hintStyle: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                        hintStyle:
+                            TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -649,7 +664,8 @@ class _Form2State extends State<Form2> {
                 ],
               ),
               SizedBox(height: 15),
-              Text('Internet availability at Dhaba', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Internet availability at Dhaba',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -659,7 +675,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaAvailabilityRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaAvailabilityRadioFunc(value as int);
                         }),
@@ -668,7 +684,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaAvailabilityRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaAvailabilityRadioFunc(value as int);
                         }),
@@ -699,10 +715,12 @@ class _Form2State extends State<Form2> {
                 controller: _netSpeedtestController,
               ),
               SizedBox(height: 15),
-              Text('Distance from bank', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Distance from bank',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Align(
                 alignment: Alignment.topLeft,
-                child: Text('(approximate distance in km)', style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 14, fontWeight: FontWeight.w500)),
+                child: Text('(approximate distance in km)',
+                    style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 14, fontWeight: FontWeight.w500)),
               ),
               SizedBox(height: 10),
               TextFormField(
@@ -726,7 +744,8 @@ class _Form2State extends State<Form2> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('IFSC Code of that bank', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('IFSC Code of that bank',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -745,7 +764,8 @@ class _Form2State extends State<Form2> {
                 controller: _ifscCodeController,
               ),
               SizedBox(height: 15),
-              Text('Distance of nearest village with name', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Distance of nearest village with name',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -775,7 +795,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaLodgingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLodgingRadioFunc(value as int);
                         }),
@@ -784,7 +804,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaLodgingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLodgingRadioFunc(value as int);
                         }),
@@ -793,7 +813,8 @@ class _Form2State extends State<Form2> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Land owned by the Dhaba owner or not?', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Land owned by the Dhaba owner or not?',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -803,7 +824,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaLandRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLandRadioFunc(value as int);
                         }),
@@ -812,7 +833,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaLandRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLandRadioFunc(value as int);
                         }),
@@ -821,10 +842,12 @@ class _Form2State extends State<Form2> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Land is legal or not?', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Land is legal or not?',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Align(
                 alignment: Alignment.topLeft,
-                child: Text('(see documents)', style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 14, fontWeight: FontWeight.w500)),
+                child: Text('(see documents)',
+                    style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 14, fontWeight: FontWeight.w500)),
               ),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
@@ -835,7 +858,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaLegalRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLegalRadioFunc(value as int);
                         }),
@@ -844,7 +867,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaLegalRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaLegalRadioFunc(value as int);
                         }),
@@ -853,23 +876,34 @@ class _Form2State extends State<Form2> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Any Dhaba certification', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Any Dhaba certification',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               InkWell(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: dhabaCertificationImage != null
-                      ? Image(image: FileImage(dhabaCertificationImage!), width: double.infinity, height: 150, fit: BoxFit.cover)
-                      : Image(image: AssetImage('images/placeholder.png'), width: double.infinity, height: 150, fit: BoxFit.cover),
+                      ? Image(
+                          image: FileImage(dhabaCertificationImage!),
+                          width: double.infinity,
+                          height: 150,
+                          fit: BoxFit.cover)
+                      : Image(
+                          image: AssetImage('images/placeholder.png'),
+                          width: double.infinity,
+                          height: 150,
+                          fit: BoxFit.cover),
                 ),
                 onTap: () {
                   showBottomSheet(1, context);
                 },
               ),
               SizedBox(height: 15),
-              Text('Main mrp of dishes :', style: TextStyle(color: Color.fromRGBO(102, 87, 244, 1), fontSize: 16, fontWeight: FontWeight.w600)),
+              Text('Main mrp of dishes :',
+                  style: TextStyle(color: ColorPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
               SizedBox(height: 15),
-              Text('Dal', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Dal',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -892,7 +926,8 @@ class _Form2State extends State<Form2> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Sev tomato', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Sev tomato',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -915,7 +950,8 @@ class _Form2State extends State<Form2> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Rice', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Rice',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -938,7 +974,8 @@ class _Form2State extends State<Form2> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 15),
-              Text('Chapati', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Chapati',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
@@ -996,7 +1033,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaSeatingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaSeatingRadioFunc(value as int);
                         }),
@@ -1005,7 +1042,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaSeatingRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaSeatingRadioFunc(value as int);
                         }),
@@ -1014,7 +1051,8 @@ class _Form2State extends State<Form2> {
                 ),
               ),
               SizedBox(height: 15),
-              Text('Does he use UPI?', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Does he use UPI?',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -1024,7 +1062,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaUPIRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaUPIRadioFunc(value as int);
                         }),
@@ -1033,7 +1071,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaUPIRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaUPIRadioFunc(value as int);
                         }),
@@ -1061,7 +1099,8 @@ class _Form2State extends State<Form2> {
                 controller: _tryTeachHimController,
               ),
               SizedBox(height: 15),
-              Text('Does he have space to keep gifts?', style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+              Text('Does he have space to keep gifts?',
+                  style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
               Container(
                 transform: Matrix4.translationValues(-10, 0, 0),
                 child: Row(
@@ -1071,7 +1110,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 1,
                         groupValue: dhabaSpaceRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaSpaceRadioFunc(value as int);
                         }),
@@ -1080,7 +1119,7 @@ class _Form2State extends State<Form2> {
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: 2,
                         groupValue: dhabaSpaceRadio,
-                        activeColor: Color.fromRGBO(102, 87, 244, 1),
+                        activeColor: ColorPrimary,
                         onChanged: (value) {
                           dhabaSpaceRadioFunc(value as int);
                         }),
@@ -1103,10 +1142,15 @@ class _Form2State extends State<Form2> {
                     ),
                     Row(
                       children: [
-                        Text('Accept all ', style: TextStyle(color: Color(0xff303030), fontSize: 15, fontWeight: FontWeight.w600)),
+                        Text('Accept all ',
+                            style: TextStyle(color: Color(0xff303030), fontSize: 15, fontWeight: FontWeight.w600)),
                         InkWell(
                           child: Text('Terms & Conditions',
-                              style: TextStyle(color: Color(0xff6657f4), fontSize: 15, fontWeight: FontWeight.w600, decoration: TextDecoration.underline)),
+                              style: TextStyle(
+                                  color: Color(0xff6657f4),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline)),
                           onTap: () {
                             termsConditionsDialog();
                           },
@@ -1124,7 +1168,7 @@ class _Form2State extends State<Form2> {
                   // ignore: deprecated_member_use
                   child: RaisedButton(
                     padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                    color: Color.fromRGBO(102, 87, 244, 1),
+                    color: ColorPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -1164,14 +1208,16 @@ class _Form2State extends State<Form2> {
                   selectImage(2, imageType);
                   Navigator.pop(context);
                 },
-                child: Text('Gallery', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
+                child:
+                    Text('Gallery', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600)),
               ),
             ],
             cancelButton: CupertinoActionSheetAction(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel', style: TextStyle(color: Color(0xfff92d28), fontSize: 16, fontWeight: FontWeight.w600)),
+              child:
+                  Text('Cancel', style: TextStyle(color: Color(0xfff92d28), fontSize: 16, fontWeight: FontWeight.w600)),
             ),
           );
         });

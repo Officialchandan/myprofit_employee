@@ -166,9 +166,10 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
             onTap: (index) {
               if (index == 1) {
                 show();
+                getArea();
               }
             },
-            labelColor: Color.fromRGBO(102, 87, 244, 1),
+            labelColor: ColorPrimary,
             labelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             unselectedLabelColor: Color.fromRGBO(128, 128, 128, 1),
             tabs: [
@@ -233,7 +234,12 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                     SizedBox(
                       width: 5,
                     ),
-                    Container(height: 30, width: 30, child: Image.asset("images/category1.png")),
+                    Container(
+                        height: 20,
+                        width: 20,
+                        child: Icon(
+                          Icons.location_on,
+                        )),
                     Text(
                       "   Select Area",
                       style: TextStyle(
@@ -268,52 +274,77 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                         child: ListView.builder(
                             itemCount: res!.data!.length,
                             itemBuilder: (context, index) {
-                              return Column(children: [
-                                // GestureDetector(
-                                //   onTap: () {
-                                //Navigator.pop(context, res!.data![index].id);
-                                // Navigator.pushAndRemoveUntil(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => UserRegister(
-                                //               onTab: () {},
-                                //               location:
-                                //                   (res!.data![index].id)
-                                //                       .toString(),
-                                //             )),
-                                //     (Route<dynamic> route) => false);
-                                // },
-                                // child:
-                                ListTile(
-                                  title: Text(
-                                    "${res!.data![index].locationName}",
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                  ),
-                                  trailing: Checkbox(
-                                    activeColor: ColorPrimary,
-                                    value: res!.data![index].checked,
-                                    onChanged: (value) {
-                                      if (value == true) {
-                                        res!.data!.forEach((element) {
-                                          element.checked = false;
-
-                                          setState(() {});
-                                        });
-
-                                        res!.data![index].checked = value!;
-                                      }
-                                      if (value == false) {
-                                        res!.data![index].checked = value!;
-                                      }
-                                      Navigator.pop(context, res!.data![index].id);
-                                    },
-                                  ),
+                              return CheckboxListTile(
+                                title: Text(
+                                  "${res!.data![index].locationName}",
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
-                                //   ),
-                                Divider(
-                                  thickness: 1,
-                                )
-                              ]);
+                                value: res!.data![index].checked,
+                                activeColor: ColorPrimary,
+                                checkColor: Colors.white,
+                                onChanged: (value) {
+                                  if (value == true) {
+                                    res!.data!.forEach((element) {
+                                      element.checked = false;
+
+                                      setState(() {});
+                                    });
+
+                                    res!.data![index].checked = value!;
+                                  }
+                                  if (value == false) {
+                                    res!.data![index].checked = value!;
+                                  }
+                                  Navigator.pop(context, res!.data![index].id);
+                                },
+                              );
+
+                              // return Column(children: [
+                              //   // GestureDetector(
+                              //   //   onTap: () {
+                              //   //Navigator.pop(context, res!.data![index].id);
+                              //   // Navigator.pushAndRemoveUntil(
+                              //   //     context,
+                              //   //     MaterialPageRoute(
+                              //   //         builder: (context) => UserRegister(
+                              //   //               onTab: () {},
+                              //   //               location:
+                              //   //                   (res!.data![index].id)
+                              //   //                       .toString(),
+                              //   //             )),
+                              //   //     (Route<dynamic> route) => false);
+                              //   // },
+                              //   // child:
+                              //   ListTile(
+                              //     title: Text(
+                              //       "${res!.data![index].locationName}",
+                              //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              //     ),
+                              //     trailing: Checkbox(
+                              //       activeColor: ColorPrimary,
+                              //       value: res!.data![index].checked,
+                              //       onChanged: (value) {
+                              //         if (value == true) {
+                              //           res!.data!.forEach((element) {
+                              //             element.checked = false;
+                              //
+                              //             setState(() {});
+                              //           });
+                              //
+                              //           res!.data![index].checked = value!;
+                              //         }
+                              //         if (value == false) {
+                              //           res!.data![index].checked = value!;
+                              //         }
+                              //         Navigator.pop(context, res!.data![index].id);
+                              //       },
+                              //     ),
+                              //   ),
+                              //   //   ),
+                              //   Divider(
+                              //     thickness: 1,
+                              //   )
+                              // ]);
                             }),
                       )
                     : res != null
