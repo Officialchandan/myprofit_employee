@@ -72,8 +72,7 @@ class ApiProvider {
     }
   }
 
-  Future<OtpVerificationResponse> verifyOtp(mobile, otp) async {
-    String token = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
+  Future<OtpVerificationResponse> verifyOtp(mobile, otp, token) async {
     log("chl gyi ${mobile + otp + token}");
     try {
       Response res = await dio.post('$baseUrl/user/verifyOTP', data: {

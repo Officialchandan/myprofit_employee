@@ -63,7 +63,10 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
           centerTitle: true,
         ),
         body: tracker == null
-            ? Center(child: CircularProgressIndicator())
+            ? Center(
+                child: CircularProgressIndicator(
+                color: ColorPrimary,
+              ))
             : Container(
                 padding: EdgeInsets.all(15),
 
@@ -79,7 +82,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                       ),
                       child: ListTile(
                         title: Text(
-                          "No of Vendors ",
+                          "Number of Vendors ",
                           style: GoogleFonts.openSans(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -124,7 +127,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                       ),
                       child: ListTile(
                         title: Text(
-                          "No of Customer",
+                          "Number of Customer",
                           style: GoogleFonts.openSans(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -169,7 +172,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                       ),
                       child: ListTile(
                         title: Text(
-                          "No of not Intrested Customer",
+                          "Number of not Intrested Customer",
                           style: GoogleFonts.openSans(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -299,7 +302,7 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                 //       //   height: 30,
                 //       // ),
                 //       // Text(
-                //       //   "(||) No of Driver",
+                //       //   "(||) Number of Driver",
                 //       //   style: GoogleFonts.openSans(
                 //       //     fontSize: 16,
                 //       //     fontWeight: FontWeight.bold,

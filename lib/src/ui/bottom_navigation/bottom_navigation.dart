@@ -160,7 +160,7 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
             // indicatorColor: Colors.black,
             // automaticIndicatorColorAdjustment: true,
             indicator: UnderlineTabIndicator(
-              borderSide: BorderSide(width: 3, color: Color.fromRGBO(102, 87, 244, 1)),
+              borderSide: BorderSide(width: 3, color: ColorPrimary),
               insets: EdgeInsets.fromLTRB(30, 0, 30, 70),
             ),
             onTap: (index) {
@@ -351,7 +351,10 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                         ? Center(
                             child: Text("Area not allocated"),
                           )
-                        : Center(child: CircularProgressIndicator()),
+                        : Center(
+                            child: CircularProgressIndicator(
+                            color: ColorPrimary,
+                          )),
               ]));
         }).then((value) {
       if (value != null && listener != null) {

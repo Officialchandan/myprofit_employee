@@ -46,7 +46,7 @@
 //                   ? Center(
 //                       child: Text("Data Not Found"),
 //                     )
-//                   : Center(child: CircularProgressIndicator()),
+//                   : Center(child: CircularProgressIndicator(color: ColorPrimary,))),
 //           //
 //         ));
 //   }
@@ -134,31 +134,33 @@ class _AreaAlotedState extends State<AreaAloted> {
     return Scaffold(
       appBar: AppBar(),
       body: Container(
-        child: success == true && res != null
-            ? res!.data!.isEmpty
-                ? Text("")
-                : ListView.builder(
-                    itemCount: res!.data!.length,
-                    itemBuilder: (context, index) {
-                      return LinkedLabelRadio(
-                        label: '${res!.data![index].locationName}',
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        index: index,
-                        value: res!.data![index].id,
-                        groupValue: _isRadioSelected,
-                        onChanged: (int newValue) {
-                          setState(() {
-                            _isRadioSelected = newValue;
-                          });
-                        },
-                      );
-                    })
-            : res != null
-                ? Center(
-                    child: Text("Area not allocated"),
-                  )
-                : Center(child: CircularProgressIndicator()),
-      ),
+          child: success == true && res != null
+              ? res!.data!.isEmpty
+                  ? Text("")
+                  : ListView.builder(
+                      itemCount: res!.data!.length,
+                      itemBuilder: (context, index) {
+                        return LinkedLabelRadio(
+                          label: '${res!.data![index].locationName}',
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          index: index,
+                          value: res!.data![index].id,
+                          groupValue: _isRadioSelected,
+                          onChanged: (int newValue) {
+                            setState(() {
+                              _isRadioSelected = newValue;
+                            });
+                          },
+                        );
+                      })
+              : res != null
+                  ? Center(
+                      child: Text("Area not allocated"),
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(
+                      color: ColorPrimary,
+                    ))),
     );
   }
 }

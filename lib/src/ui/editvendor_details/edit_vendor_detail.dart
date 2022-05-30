@@ -628,7 +628,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
               // SizedBox(height: 10),
               // Container(
               //   child: result == null
-              //       ? Center(child: CircularProgressIndicator())
+              //       ? Center(child: CircularProgressIndicator(color: ColorPrimary,)))
               //       : Container(
               //           // width: devicewidth - 30,
               //           child: MultiSelectBottomSheetField<

@@ -166,7 +166,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text('Reason (Optional)',
+                  Text('Reason *',
                       style:
                           TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),

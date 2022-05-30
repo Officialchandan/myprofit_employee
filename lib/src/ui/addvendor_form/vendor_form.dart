@@ -99,15 +99,26 @@ class _VendorFormState extends State<VendorForm> {
     result = await ApiProvider().getCategoriess();
     print(result);
     CategoriesResponseData? data;
+    CategoriesResponseData? data1;
     result!.data!.forEach((element) {
       if (element.id == widget.id) {
+        log("====>${element.categoryName}");
         data = element;
+        // result!.data!.remove(element);
+        // subcatlist.add(SubCat(element));
+      }
+      if (element.id == 0) {
+        log("====>${element.categoryName}");
+        data1 = element;
         // result!.data!.remove(element);
         // subcatlist.add(SubCat(element));
       }
     });
     if (data != null) {
       result!.data!.remove(data);
+    }
+    if (data != null) {
+      result!.data!.remove(data1);
     }
     setState(() {});
     // return result!.data!;
@@ -1163,7 +1174,7 @@ class _VendorFormState extends State<VendorForm> {
                             builder: (context) {
                               return IntrinsicHeight(
                                 child: Container(
-                                  height: MediaQuery.of(context).size.height * 0.60,
+                                  height: MediaQuery.of(context).size.height * 0.40,
                                   padding: EdgeInsets.only(top: 20, bottom: 0),
                                   child: Column(children: [
                                     Expanded(
@@ -1205,11 +1216,10 @@ class _VendorFormState extends State<VendorForm> {
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        height: 50,
                                         elevation: 5,
                                         child: Text(
                                           "Cancel",
-                                          style: TextStyle(color: Colors.red),
+                                          style: TextStyle(color: Colors.red, fontSize: 18),
                                         ),
                                       ),
                                     ),
@@ -1310,7 +1320,10 @@ class _VendorFormState extends State<VendorForm> {
                               )
                             : Container(
                                 child: result == null
-                                    ? Center(child: CircularProgressIndicator())
+                                    ? Center(
+                                        child: CircularProgressIndicator(
+                                        color: ColorPrimary,
+                                      ))
                                     :
                                     // GestureDetector(
                                     //     onTap: () {
@@ -1394,11 +1407,9 @@ class _VendorFormState extends State<VendorForm> {
                                                     placeholderText = "Select Category";
                                                     arr = arr + values[i]!.id.toString();
                                                   } else {
-                                                    // placeholderText = placeholderText +
-                                                    //     values[i]!.categoryName +
-                                                    //     ", ";
                                                     arr = arr + (values[i]!.id.toString()) + ",";
                                                   }
+                                                  log("arr===>$arr");
                                                   subcatlist.add(SubCat(values[i]!));
                                                 }
                                               }
@@ -1967,11 +1978,13 @@ class _VendorFormState extends State<VendorForm> {
               ),
               content: TextField(
                 controller: _otp,
+                maxLength: 4,
                 cursorColor: ColorPrimary,
                 keyboardType: TextInputType.number,
                 //inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
                   // fillColor: Colors.black,
+                  counterText: "",
                   hintText: "Enter OTP",
                   hintStyle: GoogleFonts.openSans(
                     fontWeight: FontWeight.w600,
@@ -2174,32 +2187,39 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
     return IntrinsicHeight(
       child: Container(
         padding: EdgeInsets.only(top: 20, bottom: 0),
-        height: MediaQuery.of(context).size.height * 0.60,
+        height: MediaQuery.of(context).size.height * 0.50,
         child: Column(children: [
-          TextFormField(
-            controller: edtSearch,
-            autofocus: false,
-            decoration: InputDecoration(
-              hintText: "Search your City...",
-              counterText: "",
-            ),
-            onChanged: (text) {
-              if (text.isNotEmpty) {
-                List<GetAllCityByStateResponseData> searchList = [];
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: TextFormField(
+              controller: edtSearch,
+              autofocus: false,
+              cursorColor: ColorPrimary,
+              decoration: InputDecoration(
+                hintText: "Search your City...",
+                counterText: "",
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                ),
+              ),
+              onChanged: (text) {
+                if (text.isNotEmpty) {
+                  List<GetAllCityByStateResponseData> searchList = [];
 
-                citydata.forEach((element) {
-                  if (element.cityName.toLowerCase().contains(text.trim().toLowerCase())) {
-                    searchList.add(element);
-                  }
-                });
-                subject.add(searchList);
-              } else {
-                subject.add(citydata);
-              }
-            },
+                  citydata.forEach((element) {
+                    if (element.cityName.toLowerCase().contains(text.trim().toLowerCase())) {
+                      searchList.add(element);
+                    }
+                  });
+                  subject.add(searchList);
+                } else {
+                  subject.add(citydata);
+                }
+              },
+            ),
           ),
           Container(
-              height: MediaQuery.of(context).size.height * 0.40,
+              height: MediaQuery.of(context).size.height * 0.33,
               child: StreamBuilder<List<GetAllCityByStateResponseData>>(
                   stream: subject.stream,
                   initialData: citydata,
@@ -2230,11 +2250,10 @@ class _CityBottomSheetState extends State<CityBottomSheet> {
                 edtSearch.clear();
                 Navigator.pop(context);
               },
-              height: 50,
               elevation: 5,
               child: Text(
                 "Cancel",
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: Colors.red, fontSize: 18),
               ),
             ),
           ),

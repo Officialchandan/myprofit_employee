@@ -26,6 +26,7 @@ class _LoginState extends State<Login> {
   TextEditingController mobileController = TextEditingController();
   bool _passwordVisible = true;
   bool _tap = true;
+  String token = "";
   void _toggle() {
     setState(() {
       _passwordVisible = !_passwordVisible;
@@ -91,7 +92,7 @@ class _LoginState extends State<Login> {
                 controller: _textFieldController,
                 cursorColor: ColorPrimary,
                 keyboardType: TextInputType.number,
-                maxLength: 6,
+                maxLength: 4,
                 //inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
                   filled: true,
@@ -114,7 +115,7 @@ class _LoginState extends State<Login> {
               actions: <Widget>[
                 Center(
                   child: MaterialButton(
-                    minWidth: MediaQuery.of(context).size.width * 0.60,
+                    minWidth: MediaQuery.of(context).size.width * 0.65,
                     height: 50,
                     padding: const EdgeInsets.all(8.0),
                     textColor: Colors.white,
@@ -122,19 +123,6 @@ class _LoginState extends State<Login> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     onPressed: () {
                       loginApiCall(mobileController.text, _textFieldController.text);
-                      // Navigator.pushAndRemoveUntil(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => BottomNavigation()),
-                      //     (Route<dynamic> route) => false);
-                      // status == "Registered"
-                      //     ? Navigator.pushAndRemoveUntil(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => RegistrationScreen()),
-                      //         (Route<dynamic> route) => false)
-                      //     : lSharedoginApiCall(
-                      //         mobileController.text, _textFieldController.text);
                     },
                     child: new Text(
                       "Verify",
@@ -162,6 +150,8 @@ class _LoginState extends State<Login> {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please enter Mobile Number");
       } else {
+        token = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
+        log("token====$token");
         final loginData = await ApiProvider().login(mobile);
         // SharedPref.setStringPrefe  rence(SharedPref.USERSTATUS, loginData.status);
         print("kai kroge +${loginData.message}");
@@ -191,7 +181,7 @@ class _LoginState extends State<Login> {
       if (_textFieldController.text.isEmpty) {
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OTP");
       } else {
-        final OtpVerificationResponse loginData = await ApiProvider().verifyOtp(mobile, otp);
+        final OtpVerificationResponse loginData = await ApiProvider().verifyOtp(mobile, otp, token);
         log("ooooo ${loginData}");
         if (loginData.success == true) {
           SharedPref.setBooleanPreference(SharedPref.LOGIN, true);
@@ -236,9 +226,13 @@ class _LoginState extends State<Login> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       maxLength: 10,
+      cursorColor: ColorPrimary,
       controller: mobileController,
       decoration: InputDecoration(
         counterText: "",
+        focusedBorder: UnderlineInputBorder(
+          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+        ),
         hintText: "Please Enter Mobile Number",
         prefixIcon: Row(
           mainAxisSize: MainAxisSize.min,

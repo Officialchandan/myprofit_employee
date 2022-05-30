@@ -57,7 +57,10 @@ class _DriversMonthlyState extends State<DriversMonthly> {
               future: getMonthlyDriver(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                      child: CircularProgressIndicator(
+                    color: ColorPrimary,
+                  ));
                 }
                 if (snapshot.hasError) {
                   return Center(

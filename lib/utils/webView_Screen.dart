@@ -1,3 +1,4 @@
+import 'package:employee/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -36,8 +37,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
             isLoading
                 ? Align(
                     alignment: Alignment.center,
-                    child: CircularProgressIndicator(),
-                  )
+                    child: CircularProgressIndicator(
+                      color: ColorPrimary,
+                    ))
                 : SizedBox(
                     width: 0,
                     height: 0,

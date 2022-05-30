@@ -492,7 +492,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                           Radio<int>(
                             activeColor: ColorPrimary,
                             value: 1,
-                            groupValue: _character,
+                            groupValue: _gift,
                             onChanged: (value) {
                               log("===>$_gift");
                               setState(() {
@@ -511,7 +511,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                           Radio<int>(
                             activeColor: ColorPrimary,
                             value: 0,
-                            groupValue: _character,
+                            groupValue: _gift,
                             onChanged: (value) {
                               log("===>$_gift");
                               setState(() {

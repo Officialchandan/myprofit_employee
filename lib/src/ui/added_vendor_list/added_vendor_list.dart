@@ -261,21 +261,28 @@ class _AddedVendorState extends State<AddedVendor> {
                                       searchList.clear();
                                       if (text.isNotEmpty) {
                                         print("searchText -->$text");
+                                        List<GetVendorByIdResponseData> list = [];
+                                        log("loginData ${loginData.length}");
+                                        loginData.forEach((element) {
+                                          if (element.name.toLowerCase().contains(text.toLowerCase())) {
+                                            print("text -->$text");
+                                            list.add(element);
+                                            log("element.name ${element.name}");
+                                          }
 
-                                        log("ram ${loginData.length}");
-                                        for (int i = 0; i < loginData.length; i++) {
-                                          if (loginData[i].name.toLowerCase().contains(text.toLowerCase())) {
-                                            print("Container -->$text");
-                                            searchList.add(loginData[i]);
-                                            log("ram ${loginData[i].name}");
-                                          } else {
-                                            Center(
+                                          if (list.isEmpty) {
+                                            log("==?$list");
+                                            Container(
+                                              height: 100,
+                                              color: Colors.orange,
                                               child: Image.asset("images/no_data.gif"),
                                             );
-                                            Fluttertoast.showToast(
-                                                msg: "Data Not Found", backgroundColor: ColorPrimary);
+                                          } else {
+                                            log("655757575$list");
+                                            searchList = list;
                                           }
-                                        }
+                                        });
+
                                         setState(() {});
                                       } else {
                                         searchList.addAll(loginData);
@@ -285,148 +292,154 @@ class _AddedVendorState extends State<AddedVendor> {
                                     },
                                   ),
                                 ),
-
-                          Expanded(
-                              flex: 1,
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: searchList.length,
-                                  padding: EdgeInsets.only(top: 6),
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return GestureDetector(
-                                      child: Column(children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              //  bottom: 5,
-                                              // top: 5,
-                                              //     left: 10,
-                                              //     right: 10
+                          searchList.isEmpty
+                              ? Container(
+                                  padding: EdgeInsets.only(top: 150),
+                                  child: Center(
+                                    child: Image.asset("images/no_data.gif"),
+                                  ),
+                                )
+                              : Expanded(
+                                  flex: 1,
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: searchList.length,
+                                      padding: EdgeInsets.only(top: 6),
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          child: Column(children: [
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  //  bottom: 5,
+                                                  // top: 5,
+                                                  //     left: 10,
+                                                  //     right: 10
+                                                  ),
+                                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                              decoration: BoxDecoration(
+                                                color: Colors.transparent,
+                                                borderRadius: BorderRadius.all(Radius.circular(15)),
                                               ),
-                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                                          ),
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius: BorderRadius.circular(5),
-                                                child: searchList[index].vendorImage.isEmpty
-                                                    ? Image.asset(
-                                                        "images/placeholder.png",
-                                                        width: 65,
-                                                        height: 65,
-                                                        fit: BoxFit.cover,
-                                                      )
-                                                    : Image.network(
-                                                        "${searchList[index].vendorImage.first.image}",
-                                                        width: 65,
-                                                        height: 65,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Column(
+                                              child: Row(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Container(
-                                                    child: Text(searchList[index].name,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18,
-                                                            overflow: TextOverflow.ellipsis,
-                                                            fontWeight: FontWeight.w600)),
+                                                  ClipRRect(
+                                                    borderRadius: BorderRadius.circular(5),
+                                                    child: searchList[index].vendorImage.isEmpty
+                                                        ? Image.asset(
+                                                            "images/placeholder.png",
+                                                            width: 65,
+                                                            height: 65,
+                                                            fit: BoxFit.cover,
+                                                          )
+                                                        : Image.network(
+                                                            "${searchList[index].vendorImage.first.image}",
+                                                            width: 65,
+                                                            height: 65,
+                                                            fit: BoxFit.cover,
+                                                          ),
                                                   ),
-                                                  SizedBox(height: 5),
-                                                  Container(
-                                                    width: MediaQuery.of(context).size.width * 0.68,
-                                                    child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        child: Text(searchList[index].name,
+                                                            style: TextStyle(
+                                                                color: Colors.black,
+                                                                fontSize: 18,
+                                                                overflow: TextOverflow.ellipsis,
+                                                                fontWeight: FontWeight.w600)),
+                                                      ),
+                                                      SizedBox(height: 5),
+                                                      Container(
+                                                        width: MediaQuery.of(context).size.width * 0.68,
+                                                        child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text('+91 ${searchList[index].ownerMobile}',
+                                                                  style: TextStyle(
+                                                                    color: Color(0xff555555),
+                                                                    fontSize: 14,
+                                                                  )),
+                                                              Center(
+                                                                  child: searchList[index].isActive == 2
+                                                                      ? Text(
+                                                                          "  Pending  ",
+                                                                          style: TextStyle(
+                                                                            fontSize: 15,
+                                                                            fontWeight: FontWeight.bold,
+                                                                            color: PendingTextColor,
+                                                                          ),
+                                                                        )
+                                                                      : searchList[index].isActive == 1
+                                                                          ? Text(
+                                                                              "  Approved  ",
+                                                                              style: TextStyle(
+                                                                                fontSize: 15,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: ApproveTextColor,
+                                                                              ),
+                                                                            )
+                                                                          : searchList[index].isActive == 0
+                                                                              ? Text(
+                                                                                  "  Rejected  ",
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 15,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                    color: RejectedBoxTextColor,
+                                                                                  ),
+                                                                                )
+                                                                              : Text(
+                                                                                  "  Rejected  ",
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 15,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                    color: RejectedBoxTextColor,
+                                                                                  ),
+                                                                                )),
+                                                            ]),
+                                                      ),
+                                                      SizedBox(height: 5),
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
                                                         children: [
-                                                          Text('+91 ${searchList[index].ownerMobile}',
+                                                          Image.asset('images/g-pin.png', width: 13),
+                                                          Text(' ${searchList[index].address}',
                                                               style: TextStyle(
                                                                 color: Color(0xff555555),
                                                                 fontSize: 14,
                                                               )),
-                                                          Center(
-                                                              child: searchList[index].isActive == 2
-                                                                  ? Text(
-                                                                      "  Pending  ",
-                                                                      style: TextStyle(
-                                                                        fontSize: 15,
-                                                                        fontWeight: FontWeight.bold,
-                                                                        color: PendingTextColor,
-                                                                      ),
-                                                                    )
-                                                                  : searchList[index].isActive == 1
-                                                                      ? Text(
-                                                                          "  Approved  ",
-                                                                          style: TextStyle(
-                                                                            fontSize: 15,
-                                                                            fontWeight: FontWeight.bold,
-                                                                            color: ApproveTextColor,
-                                                                          ),
-                                                                        )
-                                                                      : searchList[index].isActive == 0
-                                                                          ? Text(
-                                                                              "  Rejected  ",
-                                                                              style: TextStyle(
-                                                                                fontSize: 15,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: RejectedBoxTextColor,
-                                                                              ),
-                                                                            )
-                                                                          : Text(
-                                                                              "  Rejected  ",
-                                                                              style: TextStyle(
-                                                                                fontSize: 15,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: RejectedBoxTextColor,
-                                                                              ),
-                                                                            )),
-                                                        ]),
-                                                  ),
-                                                  SizedBox(height: 5),
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      Image.asset('images/g-pin.png', width: 13),
-                                                      Text(' ${searchList[index].address}',
-                                                          style: TextStyle(
-                                                            color: Color(0xff555555),
-                                                            fontSize: 14,
-                                                          )),
+                                                        ],
+                                                      ),
                                                     ],
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        Divider(
-                                          thickness: 1,
-                                          color: Colors.grey.shade300,
-                                        )
-                                      ]),
-                                      onTap: () {
-                                        FocusScope.of(context).requestFocus(new FocusNode());
-                                        FocusScopeNode currentFocus = FocusScope.of(context);
-                                        if (!currentFocus.hasPrimaryFocus) {
-                                          currentFocus.unfocus();
-                                        }
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => UpdateVendorDetail(
-                                                    title: widget.title,
-                                                    id: widget.id,
-                                                    vendordata: searchList[index])));
-                                      },
-                                    );
-                                  })),
+                                            ),
+                                            Divider(
+                                              thickness: 1,
+                                              color: Colors.grey.shade300,
+                                            )
+                                          ]),
+                                          onTap: () {
+                                            FocusScope.of(context).requestFocus(new FocusNode());
+                                            FocusScopeNode currentFocus = FocusScope.of(context);
+                                            if (!currentFocus.hasPrimaryFocus) {
+                                              currentFocus.unfocus();
+                                            }
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => UpdateVendorDetail(
+                                                        title: widget.title,
+                                                        id: widget.id,
+                                                        vendordata: searchList[index])));
+                                          },
+                                        );
+                                      })),
 
                           //dhaba-list
                         ]))),
