@@ -182,7 +182,7 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                       )
                     : Image.asset(
                         "images/f1.png",
-                        scale: 8,
+                        scale: 2,
                       ),
               ),
               Tab(
@@ -194,7 +194,7 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                       )
                     : Image.asset(
                         "images/f2.png",
-                        scale: 8,
+                        scale: 2,
                       ),
               ),
               Tab(
@@ -206,7 +206,7 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
                       )
                     : Image.asset(
                         "images/f3.png",
-                        scale: 8,
+                        scale: 2,
                       ),
               ),
             ],

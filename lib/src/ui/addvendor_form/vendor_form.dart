@@ -870,7 +870,7 @@ class _VendorFormState extends State<VendorForm> {
                         ),
                         Image.asset(
                           "images/percentage.png",
-                          scale: 1.5,
+                          scale: 4,
                         )
                       ]),
                       SizedBox(

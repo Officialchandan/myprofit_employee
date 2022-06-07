@@ -28,7 +28,7 @@ class UserRegister extends StatefulWidget {
 }
 
 class _UserRegisterState extends State<UserRegister> implements OnSelectListener {
-  var nameList = ['John Parker', 'George Smith', 'Devin Coinneach', 'Brayden Aaron'];
+  var nameList = ['0 - 10k', '10 - 20k', '20 - 50k', '50k +'];
   String? areaId;
 
   _UserRegisterState();
@@ -40,9 +40,15 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
   TextEditingController _mobile = TextEditingController();
   TextEditingController _address = TextEditingController();
   TextEditingController _otp = TextEditingController();
+  TextEditingController _occupation = TextEditingController();
+  TextEditingController _estIncome = TextEditingController();
+  TextEditingController _familyMembers = TextEditingController();
+  TextEditingController _placeOfBuying = TextEditingController();
   int _character = -1;
   int _gift = -1;
+  int _home = -1;
   //otp api call
+  OnSelectListener? listener;
   otpapi(userid) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
@@ -171,6 +177,18 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Address");
       } else if (_pincode.text.isEmpty) {
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Pincode");
+      } else if (_occupation.text.isEmpty) {
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Occupation");
+      } else if (_estIncome.text.isEmpty) {
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter EstIncome");
+      } else if (_familyMembers.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter FamilyMember");
+      } else if (_placeOfBuying.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Market of choice");
+      } else if (_home == -1) {
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Home type");
       } else if (_character == -1) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select On Phone Type");
@@ -179,7 +197,19 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select gift given or not");
       } else if (_emailaddress.text.isEmpty) {
         final AddIntrestedUserResponse loginData = await ApiProvider().getIntrestedUser(
-            areaId, _name.text, _mobile.text, _emailaddress.text, _address.text, _character, _pincode.text, _gift);
+            areaId,
+            _name.text,
+            _mobile.text,
+            _emailaddress.text,
+            _address.text,
+            _character,
+            _pincode.text,
+            _gift,
+            _occupation.text,
+            _estIncome.text,
+            _home,
+            _familyMembers.text,
+            _placeOfBuying.text);
 
         log("ooooo ${loginData}");
         if (loginData.success) {
@@ -190,7 +220,20 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
         }
       } else {
         final AddIntrestedUserResponse loginData = await ApiProvider().getIntrestedUser(
-            areaId, _name.text, _mobile.text, _emailaddress.text, _address.text, _character, _pincode.text, _gift);
+            areaId,
+            _name.text,
+            _mobile.text,
+            _emailaddress.text,
+            _address.text,
+            _character,
+            _pincode.text,
+            _gift,
+            _occupation.text,
+            _estIncome.text,
+            _home,
+            _familyMembers.text,
+            _placeOfBuying.text);
+        ;
 
         log("ooooo ${loginData}");
         if (loginData.success) {
@@ -391,6 +434,182 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                         enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                       ),
                     ),
+                    SizedBox(height: 20),
+                    Text('Occupation *',
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _occupation,
+
+                      cursorColor: ColorPrimary,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+                      ],
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      //autovalidate: true,
+                      maxLength: 25,
+                      decoration: InputDecoration(
+                        counterText: "",
+                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: '',
+                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text('Est Income *',
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _estIncome,
+
+                      cursorColor: ColorPrimary,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+                      ],
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      //autovalidate: true,
+                      maxLength: 25,
+                      readOnly: true,
+                      onTap: () {
+                        show();
+                      },
+                      decoration: InputDecoration(
+                        counterText: "",
+                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: '',
+                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text('Family Members *',
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _familyMembers,
+                      cursorColor: ColorPrimary,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      //autovalidate: true,
+                      maxLength: 2,
+                      decoration: InputDecoration(
+                        counterText: "",
+                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: '',
+                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text('Market Of Choice *',
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _placeOfBuying,
+
+                      cursorColor: ColorPrimary,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+                      ],
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      //autovalidate: true,
+                      maxLength: 25,
+
+                      decoration: InputDecoration(
+                        counterText: "",
+                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: '',
+                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text('House Type *',
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                          Radio<int>(
+                            activeColor: ColorPrimary,
+                            value: 1,
+                            groupValue: _home,
+                            onChanged: (value) {
+                              log("===>$_home");
+                              setState(() {
+                                _home = value!;
+                              });
+                            },
+                          ),
+                          Text(
+                            'Pakka Makaan',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ]),
+                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                          Radio<int>(
+                            activeColor: ColorPrimary,
+                            value: 0,
+                            groupValue: _home,
+                            onChanged: (value) {
+                              log("===>$_home");
+                              setState(() {
+                                _home = value!;
+                              });
+                            },
+                          ),
+                          Text(
+                            'Kaccha Makaan',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          )
+                        ]),
+                      ],
+                    ),
+
                     SizedBox(height: 20),
                     Text('Phone Type *',
                         style:
@@ -639,5 +858,81 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
   @override
   onAreaSelect(String id) {
     areaId = id;
+  }
+
+  show() {
+    showModalBottomSheet(
+        isDismissible: false,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+              padding: EdgeInsets.only(top: 10),
+              height: 250,
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              child: Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Container(
+                        height: 20,
+                        width: 20,
+                        child: Icon(
+                          Icons.currency_rupee,
+                        )),
+                    Text(
+                      "   Select Salary Range",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 60,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: nameList.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          height: 50,
+                          child: InkWell(
+                            onTap: () {
+                              _estIncome.text = nameList[index].toString();
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "   ${nameList[index]}",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        );
+                      }),
+                )
+              ]));
+        });
   }
 }

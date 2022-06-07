@@ -584,8 +584,8 @@ class ApiProvider {
     }
   }
 
-  Future<AddIntrestedUserResponse> getIntrestedUser(
-      location_id, name, mobile, email, address, phone, pincode, gift) async {
+  Future<AddIntrestedUserResponse> getIntrestedUser(location_id, name, mobile, email, address, phone, pincode, gift,
+      occupation, income, hometype, familyMembers, marketOfChoice) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${SharedPref.getStringPreference(SharedPref.VENDORID)}");
@@ -606,6 +606,11 @@ class ApiProvider {
             "is_smartphone": phone,
             "pincode": pincode,
             "is_gift_given": gift,
+            "occupation": occupation,
+            "income": income,
+            "ghar_type": hometype,
+            "family_members": familyMembers,
+            "market_choice": marketOfChoice
           }),
           options: Options(
             headers: {"Authorization": "Bearer $token"},
