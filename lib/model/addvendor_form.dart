@@ -61,7 +61,7 @@ class AddVendorResponseData {
   String shopCommission;
   String ownerName;
   String ownerSign;
-  String ownerIdProof;
+  List<String> ownerIdProof;
   String address;
   String landmark;
   String city;
@@ -84,15 +84,15 @@ class AddVendorResponseData {
         shopCommission: json["shop_commission"] == null ? null : json["shop_commission"],
         ownerName: json["owner_name"] == null ? null : json["owner_name"],
         ownerSign: json["owner_sign"] == null ? null : json["owner_sign"],
-        ownerIdProof: json["owner_id_proof"] == null ? "" : json["owner_id_proof"],
-        address: json["address"] == null ? null : json["owner_id_proof"],
-        landmark: json["landmark"] == null ? null : json["landmark"],
-        city: json["city"] == null ? null : json["city"],
-        state: json["state"] == null ? null : json["state"],
-        pin: json["pin"] == null ? null : json["pin"],
-        latitude: json["latitude"] == null ? null : json["latitude"],
-        longitude: json["longitude"] == null ? null : json["longitude"],
-        ownerMobile: json["owner_mobile"] == null ? null : json["owner_mobile"],
+        ownerIdProof: json["owner_id_proof"] == null ? [] : List<String>.from(json["owner_id_proof"].map((x) => x)),
+        address: json["address"] == null ? "" : json["address"],
+        landmark: json["landmark"] == null ? "" : json["landmark"],
+        city: json["city"] == null ? "" : json["city"],
+        state: json["state"] == null ? "" : json["state"],
+        pin: json["pin"] == null ? "" : json["pin"],
+        latitude: json["latitude"] == null ? "" : json["latitude"],
+        longitude: json["longitude"] == null ? "" : json["longitude"],
+        ownerMobile: json["owner_mobile"] == null ? "" : json["owner_mobile"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -104,7 +104,7 @@ class AddVendorResponseData {
         "shop_commission": shopCommission,
         "owner_name": ownerName,
         "owner_sign": ownerSign,
-        "owner_id_proof": ownerIdProof == null ? null : ownerIdProof,
+        "owner_id_proof": ownerIdProof == null ? null : List<String>.from(ownerIdProof.map((x) => x)),
         "address": address,
         "landmark": landmark,
         "city": city,

@@ -28,7 +28,7 @@ dependencies:
   getwidget: 
   percent_indicator: 
   google_fonts: 
-  image_picker: ^0.8.2
+  image_picker: 0.8.5
   shared_preferences: 
   multi_select_flutter:
   rxdart:

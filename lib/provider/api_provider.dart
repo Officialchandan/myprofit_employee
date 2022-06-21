@@ -301,7 +301,7 @@ class ApiProvider {
     lat,
     lng,
     ownersign,
-    File owneridproof,
+    List<File> owneridproof,
     subcat,
     subcatcommission,
     opentime,
@@ -310,63 +310,124 @@ class ApiProvider {
     List<Map<String, String>> customfield,
   ) async {
     //log("chl gyi ${mobile + otp}");
-    try {
-      Map<String, dynamic> addvendor = HashMap<String, dynamic>();
-      addvendor["category_type"] = vendor;
-      addvendor["shop_name"] = shopname;
-      addvendor["owner_name"] = ownername;
-      addvendor["vendor_commission"] = commission;
-      addvendor["owner_mobile"] = ownermobile;
-      addvendor["address"] = address;
-      addvendor["landmark"] = landmark;
-      addvendor["city"] = city;
-      addvendor["state"] = state;
-      addvendor["pin"] = pin;
-      addvendor["lat"] = lat;
-      addvendor["lng"] = lng;
-      addvendor["owner_sign"] =
-          await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
-      log("yha tak to agyy      ====>1");
-      //log("${owneridproof.length}");
-      addvendor["owner_id_proof"] = await MultipartFile.fromFile(owneridproof.path,
-          filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+    //  try {
+    Map<String, dynamic> addvendor = HashMap<String, dynamic>();
+    addvendor["category_type"] = vendor;
+    addvendor["shop_name"] = shopname;
+    addvendor["owner_name"] = ownername;
+    addvendor["vendor_commission"] = commission;
+    addvendor["owner_mobile"] = ownermobile;
+    addvendor["address"] = address;
+    addvendor["landmark"] = landmark;
+    addvendor["city"] = city;
+    addvendor["state"] = state;
+    addvendor["pin"] = pin;
+    addvendor["lat"] = lat;
+    addvendor["lng"] = lng;
+    addvendor["owner_sign"] =
+        await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+    log("yha tak to agyy      ====>1");
+    //log("${owneridproof.length}");
 
-      addvendor["sub_cat_id"] = subcat;
-      addvendor["sub_cat_commission"] = subcatcommission;
-      addvendor["opening_time"] = opentime;
-      addvendor["closing_time"] = closetime;
-      log("yha tak to agyy      ====>${await SharedPref.getStringPreference(SharedPref.DEVICETOKEN)}");
-      addvendor["device_token"] = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
-      addvendor["custom_field"] = customfield.toString();
+    List<MultipartFile> owner_id_proof = [];
 
-      String opendays = "";
-      for (int i = 0; i < openingdays.length; i++) {
-        opendays += openingdays[i] + ",";
-      }
-      addvendor["opening_days"] = opendays;
+    await Future.forEach(owneridproof, (File element) async {
+      owner_id_proof.add(await MultipartFile.fromFile(element.path,
+          filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png"));
+      log("===>lengthInBytes${(element.readAsBytesSync().lengthInBytes / 1024) / 1024}");
+    });
 
-      log("addvendor$addvendor");
-      FormData requestData = FormData.fromMap(addvendor);
-      var token = await SharedPref.getStringPreference('token');
-      Response res = await dio.post('$baseUrl/addVendorForm',
-          data: requestData,
-          options: Options(
-            headers: {"Authorization": "Bearer ${token}"},
-          ));
-      log("chl gyi 2===========>$res");
+    addvendor["owner_id_proof[]"] = owner_id_proof;
 
-      return AddVendorResponse.fromJson(res.toString());
-    } catch (error, stacktrace) {
-      String message = "";
-      if (error is DioError) {
-        ServerError e = ServerError.withError(error: error);
-        message = e.getErrorMessage();
-      } else {
-        message = "Something Went wrong";
-      }
-      print("Exception occurred: $message stackTrace: $error");
-      return AddVendorResponse(success: false, message: message);
+    addvendor["sub_cat_id"] = subcat;
+    addvendor["sub_cat_commission"] = subcatcommission;
+    addvendor["opening_time"] = opentime;
+    addvendor["closing_time"] = closetime;
+    log("yha tak to agyy      ====>${await SharedPref.getStringPreference(SharedPref.DEVICETOKEN)}");
+    addvendor["device_token"] = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
+    addvendor["custom_field"] = customfield.toString();
+
+    String opendays = "";
+    for (int i = 0; i < openingdays.length; i++) {
+      opendays += openingdays[i] + ",";
     }
+    addvendor["opening_days"] = opendays;
+
+    log("addvendor$addvendor");
+    FormData requestData = FormData.fromMap(addvendor);
+    var token = await SharedPref.getStringPreference('token');
+    Response res = await dio.post('$baseUrl/addVendorForm',
+        data: requestData,
+        options: Options(
+          headers: {"Authorization": "Bearer ${token}"},
+        ));
+    log("chl gyi 2===========>$res");
+
+    return AddVendorResponse.fromJson(res.toString());
+    // } catch (error, stacktrace) {
+    //   String message = "";
+    //   if (error is DioError) {
+    //     ServerError e = ServerError.withError(error: error);
+    //     message = e.getErrorMessage();
+    //   } else {
+    //     message = "Something Went wrong";
+    //   }
+    //   print("Exception occurred: $message stackTrace: $error");
+    //   return AddVendorResponse(success: false, message: message);
+    // }
+  }
+
+  Future<ChatPapdiResponse> addChatPapdi(category, shopname, ownername, commission, ownermobile, address, landmark,
+      city, state, pin, lat, lng, ownersign, List<File> document) async {
+    //log("chl gyi ${mobile + otp}");
+    // try {
+    Map<String, dynamic> addvendor = HashMap<String, dynamic>();
+    addvendor["category_type"] = category;
+    addvendor["shop_name"] = shopname;
+    addvendor["owner_name"] = ownername;
+    addvendor["vendor_commission"] = commission;
+    addvendor["owner_mobile"] = ownermobile;
+    addvendor["address"] = address;
+    addvendor["landmark"] = landmark;
+    addvendor["city"] = city;
+    addvendor["state"] = state;
+    addvendor["pin"] = pin;
+    addvendor["lat"] = lat;
+    addvendor["lng"] = lng;
+    addvendor["owner_sign"] =
+        await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+    List<MultipartFile> owner_id_proof = [];
+
+    await Future.forEach(document, (File element) async {
+      owner_id_proof.add(await MultipartFile.fromFile(element.path,
+          filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png"));
+      log("===>lengthInBytes${(element.readAsBytesSync().lengthInBytes / 1024) / 1024}");
+    });
+
+    addvendor["owner_id_proof[]"] = owner_id_proof;
+
+    log("addvendor$addvendor");
+    FormData requestData = FormData.fromMap(addvendor);
+    var token = await SharedPref.getStringPreference('token');
+    Response res = await dio.post('$baseUrl/chatPapdiRegistration',
+        data: requestData,
+        options: Options(
+          headers: {"Authorization": "Bearer ${token}"},
+        ));
+    log("chl gyi 2===========>$res");
+
+    return ChatPapdiResponse.fromJson(res.toString());
+    // } catch (error, stacktrace) {
+    //   String message = "";
+    //   if (error is DioError) {
+    //     ServerError e = ServerError.withError(error: error);
+    //     message = e.getErrorMessage();
+    //   } else {
+    //     message = "Something Went wrong";
+    //   }
+    //   print("Exception occurred: $message stackTrace: $error");
+    //   return ChatPapdiResponse(success: false, message: message);
+    // }
   }
 
   Future<AddVendorOtpResponse> addVendorVerifyOtp(id, otp) async {
@@ -724,51 +785,6 @@ class ApiProvider {
       print("Exception occurred: $message stackTrace: $stacktrace");
       return UserNotIntrestedResponse(success: false, message: message);
     }
-  }
-
-  Future<ChatPapdiResponse> addChatPapdi(category, shopname, ownername, commission, ownermobile, address, landmark,
-      city, state, pin, lat, lng, ownersign, document) async {
-    //log("chl gyi ${mobile + otp}");
-    // try {
-    Map<String, dynamic> addvendor = HashMap<String, dynamic>();
-    addvendor["category_type"] = category;
-    addvendor["shop_name"] = shopname;
-    addvendor["owner_name"] = ownername;
-    addvendor["vendor_commission"] = commission;
-    addvendor["owner_mobile"] = ownermobile;
-    addvendor["address"] = address;
-    addvendor["landmark"] = landmark;
-    addvendor["city"] = city;
-    addvendor["state"] = state;
-    addvendor["pin"] = pin;
-    addvendor["lat"] = lat;
-    addvendor["lng"] = lng;
-    addvendor["owner_sign"] =
-        await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
-    addvendor["owner_id_proof"] = await MultipartFile.fromFile(document.path,
-        filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
-    log("addvendor$addvendor");
-    FormData requestData = FormData.fromMap(addvendor);
-    var token = await SharedPref.getStringPreference('token');
-    Response res = await dio.post('$baseUrl/chatPapdiRegistration',
-        data: requestData,
-        options: Options(
-          headers: {"Authorization": "Bearer ${token}"},
-        ));
-    log("chl gyi 2===========>$res");
-
-    return ChatPapdiResponse.fromJson(res.toString());
-    // } catch (error, stacktrace) {
-    //   String message = "";
-    //   if (error is DioError) {
-    //     ServerError e = ServerError.withError(error: error);
-    //     message = e.getErrorMessage();
-    //   } else {
-    //     message = "Something Went wrong";
-    //   }
-    //   print("Exception occurred: $message stackTrace: $error");
-    //   return ChatPapdiResponse(success: false, message: message);
-    // }
   }
 
   Future<GetEmployeTrackerResponse> getEmployeTracker() async {

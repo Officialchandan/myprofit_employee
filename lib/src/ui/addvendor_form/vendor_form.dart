@@ -133,7 +133,7 @@ class _VendorFormState extends State<VendorForm> {
 
   //image-picker
   File? myProfitBoardImage;
-  File? validationShopImage;
+  List<File> validationShopImage = [];
   //image-picker
   List<double> sub = [];
   //checkbox
@@ -167,7 +167,7 @@ class _VendorFormState extends State<VendorForm> {
     DayInWeek(
       "Sun",
     ),
-    DayInWeek("Mon", isSelected: true),
+    DayInWeek("Mon"),
     DayInWeek(
       "Tue",
     ),
@@ -222,7 +222,7 @@ class _VendorFormState extends State<VendorForm> {
       } else if (valuesecond == false) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Term and Condition");
-      } else if (validationShopImage == null) {
+      } else if (validationShopImage.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Upload Document First");
       } else if (imageData == null) {
@@ -243,7 +243,7 @@ class _VendorFormState extends State<VendorForm> {
             lat,
             lng,
             data,
-            validationShopImage!);
+            validationShopImage);
         log("ooooo ${loginData}");
         log("ooooo ${comiisionarray}");
         log("ooooo ${arr}");
@@ -255,7 +255,7 @@ class _VendorFormState extends State<VendorForm> {
           //     context,
           //     MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
           //     (Route<dynamic> route) => false);
-          Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Added Sucsessfully");
+          // Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Added Sucsessfully");
         } else {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
@@ -293,6 +293,9 @@ class _VendorFormState extends State<VendorForm> {
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please select opening time");
       } else if (_closingtime.text.isEmpty) {
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please select close time");
+      } else if (selecteddays == null) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please select opening shop days");
       } else if (selecteddays!.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please select opening shop days");
@@ -319,7 +322,7 @@ class _VendorFormState extends State<VendorForm> {
       } else if (imageData == null) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please do Signature in Terms and Condition");
-      } else if (validationShopImage == null) {
+      } else if (validationShopImage.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Upload Document First");
       } else if (subcatlist.isNotEmpty) {
@@ -333,8 +336,15 @@ class _VendorFormState extends State<VendorForm> {
             break;
           } else {
             if (i == subcatlist.length - 1) {
-              log("comiision====>${double.parse(subcatlist[i].subController.text.trim().toString())}");
-              savelist = savelist + subcatlist[i].subController.text.trim();
+              if (double.parse(subcatlist[i].subController.text) >= 50) {
+                Fluttertoast.showToast(
+                    backgroundColor: ColorPrimary,
+                    textColor: Colors.white,
+                    msg: "The vendor commission must be less than or equal 50.");
+              } else {
+                log("comiision====>${double.parse(subcatlist[i].subController.text.trim().toString())}");
+                savelist = savelist + subcatlist[i].subController.text.trim();
+              }
             } else {
               log("comiision====>${subcatlist[i].subController.text.trim()}");
               savelist = savelist + subcatlist[i].subController.text.trim() + ",";
@@ -358,7 +368,7 @@ class _VendorFormState extends State<VendorForm> {
               lat,
               lng,
               data,
-              validationShopImage!,
+              validationShopImage,
               arr,
               savelist,
               _openingtime.text,
@@ -398,7 +408,7 @@ class _VendorFormState extends State<VendorForm> {
             lat,
             lng,
             data,
-            validationShopImage!,
+            validationShopImage,
             arr,
             comiisionarray,
             _openingtime.text,
@@ -416,7 +426,7 @@ class _VendorFormState extends State<VendorForm> {
           //     context,
           //     MaterialPageRoute(builder: (context) => AddedVendor(title: widget.title!, id: widget.id!)),
           //     (Route<dynamic> route) => false);
-          Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Added Sucsessfully");
+          //Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Added Sucsessfully");
         } else {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
@@ -1492,31 +1502,75 @@ class _VendorFormState extends State<VendorForm> {
                       //   },
                       // ),
                       // SizedBox(height: 15),
+
                       Text('Documents for validation of Shop *',
                           style: TextStyle(
                               color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 10),
-                      InkWell(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: validationShopImage != null
-                                ? Image(
-                                    image: FileImage(validationShopImage!),
-                                    width: double.infinity,
-                                    height: 250,
-                                    fit: BoxFit.contain)
-                                : Image(
-                                    image: AssetImage('images/placeholder.png'),
-                                    width: double.infinity,
-                                    height: 150,
-                                    fit: BoxFit.cover),
-                          ),
-                          onTap: () {
-                            FocusScope.of(context).unfocus();
-                            log("$validationShopImage");
 
-                            showBottomSheet(2, context);
-                          }),
+                      Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: InkWell(
+                            onTap: () {
+                              FocusScope.of(context).unfocus();
+
+                              showBottomSheet(2, context);
+                            },
+                            child: Image(
+                                image: AssetImage('images/placeholder.png'), width: 80, height: 80, fit: BoxFit.cover),
+                          ),
+                        ),
+                        validationShopImage.isNotEmpty
+                            ? Expanded(
+                                child: Container(
+                                    height: 80,
+                                    width: 80,
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: validationShopImage.length,
+                                        itemBuilder: (context, index) {
+                                          return Stack(children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(5),
+                                                  child: Image(
+                                                      image: FileImage(validationShopImage[index].absolute),
+                                                      width: 80,
+                                                      height: 80,
+                                                      fit: BoxFit.cover)),
+                                            ),
+                                            Positioned(
+                                              right: 0,
+                                              top: 0,
+                                              child: InkWell(
+                                                child: Container(
+                                                    width: 25,
+                                                    padding: EdgeInsets.all(3),
+                                                    decoration:
+                                                        BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                                    child: Icon(
+                                                      Icons.delete,
+                                                      color: Colors.white,
+                                                      size: 15,
+                                                    )),
+                                                onTap: () {
+                                                  debugPrint("index $index");
+
+                                                  setState(() {
+                                                    validationShopImage.removeAt(index);
+                                                  });
+                                                  debugPrint("index ${validationShopImage.length}");
+                                                },
+                                              ),
+                                            )
+                                          ]);
+                                        })),
+                              )
+                            : Container(),
+                      ]),
+
                       //     Container(
                       //       child: Column(
                       // mainAxisAlignment: MainAxisAlignment.center,
@@ -1754,6 +1808,7 @@ class _VendorFormState extends State<VendorForm> {
                             ),
                             onPressed: () {
                               customedata.clear();
+                              _otp.clear();
                               for (int i = 0; users.length > i; i++) {
                                 log("'name kai---->${users[i]!.user.title}");
                                 log("value kai---->${users[i]!.user.description}");
@@ -1920,7 +1975,7 @@ class _VendorFormState extends State<VendorForm> {
         myProfitBoardImage = File(pickedFile.path);
         break;
       case 2:
-        validationShopImage = File(pickedFile.path);
+        validationShopImage.add(File(pickedFile.path));
         break;
     }
     log("$imageType");

@@ -61,7 +61,7 @@ class ChatPapdiData {
   String shopCommission;
   String ownerName;
   String ownerSign;
-  String ownerIdProof;
+  List<String> ownerIdProof;
 
   String ownerMobile;
   String address;
@@ -85,7 +85,7 @@ class ChatPapdiData {
         shopCommission: json["shop_commission"] == null ? "" : json["shop_commission"].toString(),
         ownerName: json["owner_name"] == null ? "" : json["owner_name"].toString(),
         ownerSign: json["owner_sign"] == null ? "" : json["owner_sign"].toString(),
-        ownerIdProof: json["owner_id_proof"] == null ? null : json["owner_id_proof"],
+        ownerIdProof: json["owner_id_proof"] == null ? [] : List<String>.from(json["owner_id_proof"].map((x) => x)),
         ownerMobile: json["owner_mobile"] == null ? "" : json["owner_mobile"].toString(),
         address: json["address"] == null ? "" : json["address"].toString(),
         landmark: json["landmark"] == null ? "" : json["landmark"].toString(),

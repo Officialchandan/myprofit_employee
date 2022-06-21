@@ -39,7 +39,7 @@ class _ScriptsState extends State<Scripts> {
                   labelStyle: TextStyle(fontWeight: FontWeight.w600),
                   unselectedLabelColor: Color.fromRGBO(48, 48, 48, 1),
                   indicator: UnderlineTabIndicator(
-                    borderSide: BorderSide(width: 55, color: Color.fromRGBO(102, 87, 244, 1)),
+                    borderSide: BorderSide(width: 55, color: ColorPrimary),
                   ),
                   tabs: [
                     Text('First'),
