@@ -33,7 +33,7 @@ class _SplashState extends State<Splash> {
 
   void getLogin() async {
     var logs = await SharedPref.getBooleanPreference(SharedPref.LOGIN);
-    log("${logs}");
+    log("$logs");
     var permission = await Permission.location.request();
     if (permission.isGranted) {
       if (logs == true) {
@@ -81,7 +81,7 @@ class _SplashState extends State<Splash> {
                       );
                     },
                     child: Text("Update")),
-                mandotory == 1
+                mandotory == 2
                     ? Container()
                     : TextButton(
                         onPressed: () async {

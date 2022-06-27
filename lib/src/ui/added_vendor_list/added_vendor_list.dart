@@ -54,14 +54,14 @@ class _AddedVendorState extends State<AddedVendor> {
   Future<List<GetVendorByIdResponseData>> getVendorId(id) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
-      print("kai kroge +${id}");
+      print("kai kroge +$id");
       GetVendorByIdResponse getVendor = await ApiProvider().getVendorId(id);
       loading = false;
       if (getVendor.success) {
         loginData = getVendor.data!;
         searchList.addAll(loginData);
         // subject.add(loginData);
-        log("ggg ${loginData}");
+        log("ggg $loginData");
 
         setState(() {});
       } else {
@@ -113,47 +113,43 @@ class _AddedVendorState extends State<AddedVendor> {
                           padding: const EdgeInsets.only(right: 10),
                           child: GestureDetector(
                             child: Center(
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    height: 35,
-                                    color: Colors.transparent,
-                                    child: FittedBox(
-                                      //height: 55,
-                                      // constraints: BoxConstraints(
-                                      //   minWidth: 150,
-                                      // ),
-                                      child: Container(
-                                        //width: 150,
+                              child: Container(
+                                height: 35,
+                                color: Colors.transparent,
+                                child: FittedBox(
+                                  //height: 55,
+                                  // constraints: BoxConstraints(
+                                  //   minWidth: 150,
+                                  // ),
+                                  child: Container(
+                                    //width: 150,
 
-                                        height: 30,
-                                        margin: EdgeInsets.all(8),
-                                        padding: EdgeInsets.only(right: 10, left: 10),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(5),
+                                    height: 30,
+                                    margin: EdgeInsets.all(8),
+                                    padding: EdgeInsets.only(right: 10, left: 10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Center(
+                                      child: Row(children: [
+                                        Text(
+                                          'Add ',
+                                          style: TextStyle(
+                                            color: ColorPrimary,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          maxLines: 1,
                                         ),
-                                        child: Center(
-                                          child: Row(children: [
-                                            Text(
-                                              'Add ',
-                                              style: TextStyle(
-                                                color: ColorPrimary,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              maxLines: 1,
-                                            ),
-                                            Icon(
-                                              Icons.add,
-                                              color: ColorPrimary,
-                                            )
-                                          ]),
-                                        ),
-                                      ),
+                                        Icon(
+                                          Icons.add,
+                                          color: ColorPrimary,
+                                        )
+                                      ]),
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
                             ),
                             onTap: () {
@@ -170,279 +166,276 @@ class _AddedVendorState extends State<AddedVendor> {
                         ),
                 ],
               ),
-              body: loading
-                  ? Center(
-                      child: CircularProgressIndicator(color: ColorPrimary),
-                    )
-                  : Column(
-                      //height: 400,
-                      children: [
-                          loginData.isEmpty
-                              ? Container(
-                                  height: MediaQuery.of(context).size.height * 0.80,
-                                  child: Center(
-                                    child: GestureDetector(
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            height: 56,
-                                            child: FittedBox(
-                                              //height: 55,
-                                              // constraints: BoxConstraints(
-                                              //   minWidth: 150,
-                                              // ),
-                                              child: Container(
-                                                //width: 150,
-                                                height: 50,
-                                                margin: EdgeInsets.all(8),
-                                                padding: EdgeInsets.only(right: 65, left: 20),
-                                                decoration: BoxDecoration(
-                                                  color: ColorPrimary,
-                                                  borderRadius: BorderRadius.circular(50),
-                                                ),
-                                                child: Align(
-                                                  alignment: Alignment.centerLeft,
-                                                  child: Text(
-                                                    'Add ${widget.title} ',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 17,
-                                                      fontWeight: FontWeight.w600,
-                                                    ),
-                                                    maxLines: 1,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: -15,
-                                            right: -15,
-                                            child: Image.asset('images/p-plus.png', width: 80, fit: BoxFit.cover),
-                                          ),
-                                        ],
-                                      ),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => VendorForm(id: widget.id, title: widget.title)),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(top: 10.0, left: 16, right: 16),
-                                  child: TextFormField(
-                                    controller: _searchController,
-                                    autofocus: false,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.search,
-                                        color: ColorPrimary,
-                                        size: 25,
-                                      ),
-                                      contentPadding: EdgeInsets.fromLTRB(12, 8, 5, 8),
-                                      hintText: 'Search Shops',
-                                      hintStyle: TextStyle(
-                                          color: Color.fromRGBO(85, 85, 85, 1),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(color: ColorPrimary, width: 2),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                                    ),
-                                    onChanged: (text) {
-                                      searchList.clear();
-                                      if (text.isNotEmpty) {
-                                        print("searchText -->$text");
-                                        List<GetVendorByIdResponseData> list = [];
-                                        log("loginData ${loginData.length}");
-                                        loginData.forEach((element) {
-                                          if (element.name.toLowerCase().contains(text.toLowerCase())) {
-                                            print("text -->$text");
-                                            list.add(element);
-                                            log("element.name ${element.name}");
-                                          }
-
-                                          if (list.isEmpty) {
-                                            log("==?$list");
-                                            Container(
-                                              height: 100,
-                                              color: Colors.orange,
-                                              child: Image.asset("images/no_data.gif"),
-                                            );
-                                          } else {
-                                            log("655757575$list");
-                                            searchList = list;
-                                          }
-                                        });
-
-                                        setState(() {});
-                                      } else {
-                                        searchList.addAll(loginData);
-
-                                        setState(() {});
-                                      }
-                                    },
-                                  ),
-                                ),
-                          searchList.isEmpty
-                              ? Container(
-                                  padding: EdgeInsets.only(top: 150),
-                                  child: Center(
-                                    child: Image.asset("images/no_data.gif"),
-                                  ),
-                                )
-                              : Expanded(
-                                  flex: 1,
-                                  child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: searchList.length,
-                                      padding: EdgeInsets.only(top: 6),
-                                      itemBuilder: (BuildContext context, int index) {
-                                        return GestureDetector(
-                                          child: Column(children: [
-                                            Container(
-                                              margin: const EdgeInsets.only(
-                                                  //  bottom: 5,
-                                                  // top: 5,
-                                                  //     left: 10,
-                                                  //     right: 10
-                                                  ),
-                                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              body: SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: loading
+                      ? Center(
+                          child: CircularProgressIndicator(color: ColorPrimary),
+                        )
+                      : Column(
+                          //height: 400,
+                          children: [
+                              loginData.isEmpty
+                                  ? Center(
+                                      child: Padding(
+                                          padding: const EdgeInsets.only(right: 10, top: 300),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => VendorForm(
+                                                          id: widget.id,
+                                                          title: widget.title,
+                                                        )),
+                                              );
+                                            },
+                                            child: Container(
+                                              width: 150,
+                                              height: 40,
+                                              margin: EdgeInsets.all(8),
+                                              padding: EdgeInsets.only(right: 10, left: 10),
                                               decoration: BoxDecoration(
-                                                color: Colors.transparent,
-                                                borderRadius: BorderRadius.all(Radius.circular(15)),
-                                              ),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  ClipRRect(
-                                                    borderRadius: BorderRadius.circular(5),
-                                                    child: searchList[index].vendorImage.isEmpty
-                                                        ? Image.asset(
-                                                            "images/placeholder.png",
-                                                            width: 65,
-                                                            height: 65,
-                                                            fit: BoxFit.cover,
-                                                          )
-                                                        : Image.network(
-                                                            "${searchList[index].vendorImage.first.image}",
-                                                            width: 65,
-                                                            height: 65,
-                                                            fit: BoxFit.cover,
-                                                          ),
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.circular(5),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors.grey.shade300, spreadRadius: 1, blurRadius: 0),
+                                                  ]),
+                                              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                                Text(
+                                                  'Add ',
+                                                  style: TextStyle(
+                                                    color: ColorPrimary,
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                  SizedBox(
-                                                    width: 10,
+                                                  maxLines: 1,
+                                                ),
+                                                Icon(
+                                                  Icons.add,
+                                                  color: ColorPrimary,
+                                                )
+                                              ]),
+                                            ),
+                                          )),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(top: 10.0, left: 16, right: 16),
+                                      child: TextFormField(
+                                        controller: _searchController,
+                                        autofocus: false,
+                                        decoration: InputDecoration(
+                                          prefixIcon: Icon(
+                                            Icons.search,
+                                            color: ColorPrimary,
+                                            size: 25,
+                                          ),
+                                          contentPadding: EdgeInsets.fromLTRB(12, 8, 5, 8),
+                                          hintText: 'Search Shops',
+                                          hintStyle: TextStyle(
+                                              color: Color.fromRGBO(85, 85, 85, 1),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                                        ),
+                                        onChanged: (text) {
+                                          searchList.clear();
+                                          if (text.isNotEmpty) {
+                                            print("searchText -->$text");
+                                            List<GetVendorByIdResponseData> list = [];
+                                            log("loginData ${loginData.length}");
+                                            loginData.forEach((element) {
+                                              if (element.name.toLowerCase().contains(text.toLowerCase())) {
+                                                print("text -->$text");
+                                                list.add(element);
+                                                log("element.name ${element.name}");
+                                              }
+
+                                              if (list.isEmpty) {
+                                                log("==?$list");
+                                                Container(
+                                                  height: 100,
+                                                  color: Colors.orange,
+                                                  child: Image.asset("images/no_data.gif"),
+                                                );
+                                              } else {
+                                                log("655757575$list");
+                                                searchList = list;
+                                              }
+                                            });
+
+                                            setState(() {});
+                                          } else {
+                                            searchList.addAll(loginData);
+
+                                            setState(() {});
+                                          }
+                                        },
+                                      ),
+                                    ),
+                              searchList.isEmpty
+                                  ? loginData.isNotEmpty
+                                      ? Container(
+                                          padding: EdgeInsets.only(top: 300),
+                                          child: Center(
+                                            child: Image.asset("images/no_data.gif"),
+                                          ),
+                                        )
+                                      : Container()
+                                  : Expanded(
+                                      flex: 1,
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: searchList.length,
+                                          padding: EdgeInsets.only(top: 6),
+                                          itemBuilder: (BuildContext context, int index) {
+                                            return GestureDetector(
+                                              child: Column(children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      //  bottom: 5,
+                                                      // top: 5,
+                                                      //     left: 10,
+                                                      //     right: 10
+                                                      ),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    borderRadius: BorderRadius.all(Radius.circular(15)),
                                                   ),
-                                                  Column(
+                                                  child: Row(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Container(
-                                                        child: Text(searchList[index].name,
-                                                            style: TextStyle(
-                                                                color: Colors.black,
-                                                                fontSize: 18,
-                                                                overflow: TextOverflow.ellipsis,
-                                                                fontWeight: FontWeight.w600)),
+                                                      ClipRRect(
+                                                        borderRadius: BorderRadius.circular(5),
+                                                        child: searchList[index].vendorImage.isEmpty
+                                                            ? Image.asset(
+                                                                "images/placeholder.png",
+                                                                width: 65,
+                                                                height: 65,
+                                                                fit: BoxFit.cover,
+                                                              )
+                                                            : Image.network(
+                                                                "${searchList[index].vendorImage.first.image}",
+                                                                width: 65,
+                                                                height: 65,
+                                                                fit: BoxFit.cover,
+                                                              ),
                                                       ),
-                                                      SizedBox(height: 5),
-                                                      Container(
-                                                        width: MediaQuery.of(context).size.width * 0.68,
-                                                        child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(searchList[index].name,
+                                                                style: TextStyle(
+                                                                    color: Colors.black,
+                                                                    fontSize: 18,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    fontWeight: FontWeight.w600)),
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                          Container(
+                                                            width: MediaQuery.of(context).size.width * 0.68,
+                                                            child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                  Text('+91 ${searchList[index].ownerMobile}',
+                                                                      style: TextStyle(
+                                                                        color: Color(0xff555555),
+                                                                        fontSize: 14,
+                                                                      )),
+                                                                  Center(
+                                                                      child: searchList[index].isActive == 2
+                                                                          ? Text(
+                                                                              "  Pending  ",
+                                                                              style: TextStyle(
+                                                                                fontSize: 15,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: PendingTextColor,
+                                                                              ),
+                                                                            )
+                                                                          : searchList[index].isActive == 1
+                                                                              ? Text(
+                                                                                  "  Approved  ",
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 15,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                    color: ApproveTextColor,
+                                                                                  ),
+                                                                                )
+                                                                              : searchList[index].isActive == 0
+                                                                                  ? Text(
+                                                                                      "  Rejected  ",
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 15,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: RejectedBoxTextColor,
+                                                                                      ),
+                                                                                    )
+                                                                                  : Text(
+                                                                                      "  Rejected  ",
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 15,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: RejectedBoxTextColor,
+                                                                                      ),
+                                                                                    )),
+                                                                ]),
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
                                                             children: [
-                                                              Text('+91 ${searchList[index].ownerMobile}',
+                                                              Image.asset('images/g-pin.png', width: 13),
+                                                              Text(' ${searchList[index].address}',
                                                                   style: TextStyle(
                                                                     color: Color(0xff555555),
                                                                     fontSize: 14,
                                                                   )),
-                                                              Center(
-                                                                  child: searchList[index].isActive == 2
-                                                                      ? Text(
-                                                                          "  Pending  ",
-                                                                          style: TextStyle(
-                                                                            fontSize: 15,
-                                                                            fontWeight: FontWeight.bold,
-                                                                            color: PendingTextColor,
-                                                                          ),
-                                                                        )
-                                                                      : searchList[index].isActive == 1
-                                                                          ? Text(
-                                                                              "  Approved  ",
-                                                                              style: TextStyle(
-                                                                                fontSize: 15,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: ApproveTextColor,
-                                                                              ),
-                                                                            )
-                                                                          : searchList[index].isActive == 0
-                                                                              ? Text(
-                                                                                  "  Rejected  ",
-                                                                                  style: TextStyle(
-                                                                                    fontSize: 15,
-                                                                                    fontWeight: FontWeight.bold,
-                                                                                    color: RejectedBoxTextColor,
-                                                                                  ),
-                                                                                )
-                                                                              : Text(
-                                                                                  "  Rejected  ",
-                                                                                  style: TextStyle(
-                                                                                    fontSize: 15,
-                                                                                    fontWeight: FontWeight.bold,
-                                                                                    color: RejectedBoxTextColor,
-                                                                                  ),
-                                                                                )),
-                                                            ]),
-                                                      ),
-                                                      SizedBox(height: 5),
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        children: [
-                                                          Image.asset('images/g-pin.png', width: 13),
-                                                          Text(' ${searchList[index].address}',
-                                                              style: TextStyle(
-                                                                color: Color(0xff555555),
-                                                                fontSize: 14,
-                                                              )),
+                                                            ],
+                                                          ),
                                                         ],
                                                       ),
                                                     ],
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            Divider(
-                                              thickness: 1,
-                                              color: Colors.grey.shade300,
-                                            )
-                                          ]),
-                                          onTap: () {
-                                            FocusScope.of(context).requestFocus(new FocusNode());
-                                            FocusScopeNode currentFocus = FocusScope.of(context);
-                                            if (!currentFocus.hasPrimaryFocus) {
-                                              currentFocus.unfocus();
-                                            }
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => UpdateVendorDetail(
-                                                        title: widget.title,
-                                                        id: widget.id,
-                                                        vendordata: searchList[index])));
-                                          },
-                                        );
-                                      })),
+                                                ),
+                                                Divider(
+                                                  thickness: 1,
+                                                  color: Colors.grey.shade300,
+                                                )
+                                              ]),
+                                              onTap: () {
+                                                FocusScope.of(context).requestFocus(new FocusNode());
+                                                FocusScopeNode currentFocus = FocusScope.of(context);
+                                                if (!currentFocus.hasPrimaryFocus) {
+                                                  currentFocus.unfocus();
+                                                }
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => UpdateVendorDetail(
+                                                            title: widget.title,
+                                                            id: widget.id,
+                                                            vendordata: searchList[index])));
+                                              },
+                                            );
+                                          })),
 
-                          //dhaba-list
-                        ]))),
+                              //dhaba-list
+                            ]),
+                ),
+              ))),
     );
   }
 }

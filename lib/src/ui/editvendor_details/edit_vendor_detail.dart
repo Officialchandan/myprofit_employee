@@ -238,7 +238,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
     final ByteData? bytes = await imageData.toByteData(format: ui.ImageByteFormat.png);
     if (bytes != null) {
       data = bytes.buffer.asUint8List();
-      log("data   ${data}");
+      log("data   $data");
       image = File.fromRawPath(data!);
       log("patj>>>${image!.path}");
       log("name   ${image!.length()}");
@@ -289,12 +289,12 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   Future<List<GetAllStateResponseData>> getStateId(id) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
-      print("kai kroge +${id}");
+      print("kai kroge +$id");
       GetAllStateResponse getData = await ApiProvider().getState(id);
       if (getData.success) {
         stateData = getData.data!;
 
-        log("ggg ${stateData}");
+        log("ggg $stateData");
       }
     } else {
       Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
@@ -307,12 +307,12 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   Future<List<GetAllCityByStateResponseData>> getCityId(id) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
-      print("kai kroge +${id}");
+      print("kai kroge +$id");
       GetAllCityByStateResponse getData = await ApiProvider().getCityByState(id);
       if (getData.success) {
         citydata = getData.data!;
 
-        log("ggg ${citydata}");
+        log("ggg $citydata");
       }
     } else {
       Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");

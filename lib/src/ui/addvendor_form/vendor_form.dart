@@ -244,9 +244,9 @@ class _VendorFormState extends State<VendorForm> {
             lng,
             data,
             validationShopImage);
-        log("ooooo ${loginData}");
-        log("ooooo ${comiisionarray}");
-        log("ooooo ${arr}");
+        log("ooooo $loginData");
+        log("ooooo $comiisionarray");
+        log("ooooo $arr");
         if (loginData.success == true) {
           savechatdetail = loginData;
           // Fluttertoast.showToast(msg: "${saveVendordetail!.message}");
@@ -415,9 +415,9 @@ class _VendorFormState extends State<VendorForm> {
             _closingtime.text,
             selecteddays!,
             customedata);
-        log("ooooo ${loginData}");
-        log("ooooo ${comiisionarray}");
-        log("ooooo ${arr}");
+        log("ooooo $loginData");
+        log("ooooo $comiisionarray");
+        log("ooooo $arr");
         if (loginData.success == true) {
           saveVendordetail = loginData;
           // Fluttertoast.showToast(msg: "${saveVendordetail!.message}");
@@ -701,12 +701,12 @@ class _VendorFormState extends State<VendorForm> {
   Future<List<GetAllStateResponseData>> getStateId(id) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
-      print("kai kroge +${id}");
+      print("kai kroge +$id");
       getData = await ApiProvider().getState(id);
       if (getData!.success) {
         stateData = getData!.data!;
 
-        log("ggg ${stateData}");
+        log("ggg $stateData");
       }
     } else {
       Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
@@ -718,7 +718,7 @@ class _VendorFormState extends State<VendorForm> {
   Future<List<GetAllStateCityByPincodeData>> getStateCityIdByPincode(pincode) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
-      print("kai kroge +${pincode}");
+      print("kai kroge +$pincode");
       getcitystate = await ApiProvider().getStatebypincode(pincode);
 
       if (getcitystate!.success) {
@@ -728,7 +728,7 @@ class _VendorFormState extends State<VendorForm> {
         _state.text = statePincodeData[0].stateName.toString();
         stateid = statePincodeData[0].stateId.toString();
 
-        log("ggg ${statePincodeData}");
+        log("ggg $statePincodeData");
         setState(() {});
       } else {
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "${getcitystate!.message}");
@@ -744,12 +744,12 @@ class _VendorFormState extends State<VendorForm> {
   Future<List<GetAllCityByStateResponseData>> getCityId(id) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
-      print("kai kroge +${id}");
+      print("kai kroge +$id");
       GetAllCityByStateResponse getData = await ApiProvider().getCityByState(id);
       if (getData.success) {
         citydata = getData.data!;
 
-        log("ggg ${citydata}");
+        log("ggg $citydata");
       }
     } else {
       Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
@@ -1078,13 +1078,13 @@ class _VendorFormState extends State<VendorForm> {
                                   }
                                   result1 = await Navigator.push(
                                       context, MaterialPageRoute(builder: (context) => GoogleMapScreen()));
-                                  log("result ${result1}");
+                                  log("result $result1");
                                   if (result1 != null) {
                                     //Map location = result as Map;
                                     lat = result1["lat"];
                                     lng = result1["long"];
                                     //  Fluttertoast.showToast(msg: "$lat");
-                                    log("result1---->${lat}");
+                                    log("result1---->$lat");
                                   }
                                 },
                                 icon: Icon(
@@ -1434,7 +1434,7 @@ class _VendorFormState extends State<VendorForm> {
                                               }
                                               setState(() {
                                                 _selectedCategory3.remove(item);
-                                                log("dddd ${item}");
+                                                log("dddd $item");
                                               });
                                               _multiSelectKey.currentState!.validate();
                                             },
@@ -1784,7 +1784,7 @@ class _VendorFormState extends State<VendorForm> {
                                           fontWeight: FontWeight.w600,
                                           decoration: TextDecoration.underline)),
                                   onTap: () {
-                                    log("img ${data}");
+                                    log("img $data");
                                     FocusScope.of(context).unfocus();
                                     termsConditionsDialog();
                                   },
@@ -2021,7 +2021,7 @@ class _VendorFormState extends State<VendorForm> {
                   ),
                   children: [
                     TextSpan(
-                      text: "Please verify your OTP on ${mobile}",
+                      text: "Please verify your OTP on $mobile",
                       style: GoogleFonts.openSans(
                         fontSize: 14.0,
                         color: ColorTextPrimary,
@@ -2098,7 +2098,7 @@ class _VendorFormState extends State<VendorForm> {
         log("ooooo $vendorid");
         log("ooooo $otp");
         final AddVendorOtpResponse loginData = await ApiProvider().addVendorVerifyOtp(vendorid, otp);
-        log("ooooo ${loginData}");
+        log("ooooo $loginData");
 
         if (loginData.success == true) {
           Navigator.pushAndRemoveUntil(

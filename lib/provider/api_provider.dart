@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:employee/main.dart';
 import 'package:employee/model/add_chat_papdi.dart';
 import 'package:employee/model/add_intrested_user.dart';
 import 'package:employee/model/add_vendor_otp.dart';
@@ -80,7 +81,7 @@ class ApiProvider {
         "otp": otp,
         "device_token": token,
       });
-      log("chl gyi 2${res}");
+      log("chl gyi 2$res");
 
       return OtpVerificationResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -126,7 +127,7 @@ class ApiProvider {
     try {
       Response res = await dio.post('$baseUrl/user/logout',
           options: Options(
-            headers: {"Authorization": "Bearer ${token}"},
+            headers: {"Authorization": "Bearer $token"},
           ));
       log("sss${res.data}");
 
@@ -266,11 +267,11 @@ class ApiProvider {
             "sub_cat_commission": subcat,
           },
           options: Options(
-            headers: {"Authorization": "Bearer ${token}"},
+            headers: {"Authorization": "Bearer $token"},
           ));
       log("${res.requestOptions.data}");
 
-      log("chl gyi 2${res}");
+      log("chl gyi 2$res");
 
       return UpdateVendorResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -325,26 +326,26 @@ class ApiProvider {
     addvendor["lat"] = lat;
     addvendor["lng"] = lng;
     addvendor["owner_sign"] =
-        await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+        MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
     log("yha tak to agyy      ====>1");
     //log("${owneridproof.length}");
 
-    List<MultipartFile> owner_id_proof = [];
+    List<MultipartFile> ownerIdProof = [];
 
     await Future.forEach(owneridproof, (File element) async {
-      owner_id_proof.add(await MultipartFile.fromFile(element.path,
+      ownerIdProof.add(await MultipartFile.fromFile(element.path,
           filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png"));
       log("===>lengthInBytes${(element.readAsBytesSync().lengthInBytes / 1024) / 1024}");
     });
 
-    addvendor["owner_id_proof[]"] = owner_id_proof;
+    addvendor["owner_id_proof[]"] = ownerIdProof;
 
     addvendor["sub_cat_id"] = subcat;
     addvendor["sub_cat_commission"] = subcatcommission;
     addvendor["opening_time"] = opentime;
     addvendor["closing_time"] = closetime;
-    log("yha tak to agyy      ====>${await SharedPref.getStringPreference(SharedPref.DEVICETOKEN)}");
-    addvendor["device_token"] = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
+    log("yha tak to agyy      ====>${await firebaseMessaging.getToken()}");
+    addvendor["device_token"] = await firebaseMessaging.getToken();
     addvendor["custom_field"] = customfield.toString();
 
     String opendays = "";
@@ -359,7 +360,7 @@ class ApiProvider {
     Response res = await dio.post('$baseUrl/addVendorForm',
         data: requestData,
         options: Options(
-          headers: {"Authorization": "Bearer ${token}"},
+          headers: {"Authorization": "Bearer $token"},
         ));
     log("chl gyi 2===========>$res");
 
@@ -395,16 +396,16 @@ class ApiProvider {
     addvendor["lat"] = lat;
     addvendor["lng"] = lng;
     addvendor["owner_sign"] =
-        await MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
-    List<MultipartFile> owner_id_proof = [];
+        MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+    List<MultipartFile> ownerIdProof = [];
 
     await Future.forEach(document, (File element) async {
-      owner_id_proof.add(await MultipartFile.fromFile(element.path,
+      ownerIdProof.add(await MultipartFile.fromFile(element.path,
           filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png"));
       log("===>lengthInBytes${(element.readAsBytesSync().lengthInBytes / 1024) / 1024}");
     });
 
-    addvendor["owner_id_proof[]"] = owner_id_proof;
+    addvendor["owner_id_proof[]"] = ownerIdProof;
 
     log("addvendor$addvendor");
     FormData requestData = FormData.fromMap(addvendor);
@@ -412,7 +413,7 @@ class ApiProvider {
     Response res = await dio.post('$baseUrl/chatPapdiRegistration',
         data: requestData,
         options: Options(
-          headers: {"Authorization": "Bearer ${token}"},
+          headers: {"Authorization": "Bearer $token"},
         ));
     log("chl gyi 2===========>$res");
 
@@ -433,14 +434,14 @@ class ApiProvider {
   Future<AddVendorOtpResponse> addVendorVerifyOtp(id, otp) async {
     log("chl gyi ${id + otp}");
     var token = await SharedPref.getStringPreference('token');
-    var dtoken = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
+    var dtoken = (await firebaseMessaging.getToken())!;
     try {
       Response res = await dio.post('$baseUrl/addVendorForm_verifyOTP',
           data: {"vendor_id": id, "otp": otp, "device_token": dtoken},
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ));
-      log("chl gyi 2${res}");
+      log("chl gyi 2$res");
 
       return AddVendorOtpResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -463,10 +464,10 @@ class ApiProvider {
     try {
       Response res = await dio.get(
         '$baseUrl/performance/driver/daily',
-        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("d");
-      log("${res}");
+      log("$res");
 
       return DriverDailyResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -490,10 +491,10 @@ class ApiProvider {
     try {
       Response res = await dio.get(
         '$baseUrl/performance/driver/weekly',
-        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("d");
-      log("${res}");
+      log("$res");
 
       return DriverWeeklyResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -517,10 +518,10 @@ class ApiProvider {
     try {
       Response res = await dio.get(
         '$baseUrl/performance/driver/monthly',
-        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("d");
-      log("${res}");
+      log("$res");
 
       return DriverMonthlyResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -544,10 +545,10 @@ class ApiProvider {
     try {
       Response res = await dio.get(
         '$baseUrl/performance/dhaba/daily',
-        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("d");
-      log("${res}");
+      log("$res");
 
       return DhabasDailyResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -571,10 +572,10 @@ class ApiProvider {
     try {
       Response res = await dio.get(
         '$baseUrl/performance/dhaba/weekly',
-        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("d");
-      log("${res}");
+      log("$res");
 
       return DhabasWeeklyResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -598,10 +599,10 @@ class ApiProvider {
     try {
       Response res = await dio.get(
         '$baseUrl/performance/dhaba/monthly',
-        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("d");
-      log("${res}");
+      log("$res");
 
       return DhabasMonthlyResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -625,7 +626,7 @@ class ApiProvider {
     try {
       Response res = await dio.get(
         '$baseUrl/getCategories',
-        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("====${res.data}");
 
@@ -645,12 +646,12 @@ class ApiProvider {
     }
   }
 
-  Future<AddIntrestedUserResponse> getIntrestedUser(location_id, name, mobile, email, address, phone, pincode, gift,
+  Future<AddIntrestedUserResponse> getIntrestedUser(locationId, name, mobile, email, address, phone, pincode, gift,
       occupation, income, hometype, familyMembers, marketOfChoice) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${SharedPref.getStringPreference(SharedPref.VENDORID)}");
-    log("parameter $location_id");
+    log("parameter $locationId");
     log("parameter $name");
     log("parameter $mobile");
     log("parameter $email");
@@ -659,7 +660,7 @@ class ApiProvider {
       Response res = await dio.post('$baseUrl/registerInterestedUser',
           data: ({
             "employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID),
-            "location_id": location_id,
+            "location_id": locationId,
             "name": name,
             "mobile": mobile,
             "email": email,
@@ -693,7 +694,7 @@ class ApiProvider {
   }
 
   Future<GetLocationrOtpResponse> getOtpIntrestedUser(
-    user_id,
+    userId,
     otp,
   ) async {
     log("chl gyi");
@@ -701,7 +702,7 @@ class ApiProvider {
 
     try {
       Response res = await dio.post('$baseUrl/confirmInterestedUserByOTP',
-          data: ({"user_id": user_id, "otp": otp}),
+          data: ({"user_id": userId, "otp": otp}),
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ));
@@ -729,7 +730,7 @@ class ApiProvider {
       Response res = await dio.post(
         '$baseUrl/getCampaignLocation',
         data: ({"employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID)}),
-        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("====${res.data}");
 
@@ -749,7 +750,7 @@ class ApiProvider {
     }
   }
 
-  Future<UserNotIntrestedResponse> getUnIntrestedUser(location_id, name, address, pincode, reason) async {
+  Future<UserNotIntrestedResponse> getUnIntrestedUser(locationId, name, address, pincode, reason) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${await SharedPref.getStringPreference(SharedPref.VENDORID)}");
@@ -762,7 +763,7 @@ class ApiProvider {
       Response res = await dio.post('$baseUrl/registerNotInterestedUser',
           data: ({
             "employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID),
-            "location_id": location_id,
+            "location_id": locationId,
             "name": name,
             "address": address,
             "pincode": pincode,
@@ -794,10 +795,10 @@ class ApiProvider {
     try {
       Response res = await dio.get(
         '$baseUrl/getEmployeeTracker',
-        options: Options(headers: {"Authorization": "Bearer ${token}"}),
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("d");
-      log("${res}");
+      log("$res");
 
       return GetEmployeTrackerResponse.fromJson(res.toString());
     } catch (error, stacktrace) {
@@ -818,7 +819,7 @@ class ApiProvider {
     // try {
     var token = await SharedPref.getStringPreference('token');
     Response res = await dio.post('$baseUrl/getEmployeeSendNotificatonList',
-        data: input, options: Options(headers: {"Authorization": "Bearer ${token}"}));
+        data: input, options: Options(headers: {"Authorization": "Bearer $token"}));
 
     return VendorNotificationResponse.fromJson(res.toString());
     // } catch (error) {
@@ -838,7 +839,7 @@ class ApiProvider {
     try {
       var token = await SharedPref.getStringPreference('token');
       Response res = await dio.post('$baseUrl/updateSendNotificationStatus',
-          data: input, options: Options(headers: {"Authorization": "Bearer ${token}"}));
+          data: input, options: Options(headers: {"Authorization": "Bearer $token"}));
 
       return UpdateNotificationStatus.fromJson(res.toString());
     } catch (error) {

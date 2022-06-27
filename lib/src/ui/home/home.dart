@@ -86,8 +86,8 @@ class _HomeState extends State<Home> {
 
         log("=======>$notificationList");
         notifiicationlistlength = response.data!.length;
-        log("=====>${isReadCount}");
-        log("====>${count}");
+        log("=====>$isReadCount");
+        log("====>$count");
 
         response.data!.forEach((element) {
           log("=====>${element.isRead}");

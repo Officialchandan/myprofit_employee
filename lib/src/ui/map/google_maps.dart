@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:employee/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 class GoogleMapScreen extends StatefulWidget {
   final int? id;
@@ -18,7 +18,7 @@ class GoogleMapScreen extends StatefulWidget {
 class _GoogleMapScreenState extends State<GoogleMapScreen> {
   Set<Marker> _marker = {};
   GoogleMapController? mapcontroller;
-
+  final Location location = Location();
   void onMapCreated(GoogleMapController controller) {
     // setState(() {
     mapcontroller = controller;
@@ -33,11 +33,11 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
   void getAddress(double lati, double long) {}
   getPosition() async {
-    Position p = await Geolocator.getCurrentPosition();
+    var p = await location.getLocation();
     //_address =
     latitude = p.latitude;
     longitude = p.longitude;
-    log("getPosition---->${latitude}");
+    log("getPosition---->$latitude");
     mapcontroller!.animateCamera(CameraUpdate.newLatLng(
       LatLng(latitude, longitude),
     ));
@@ -105,13 +105,13 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             onTap: (latlng) {
               latitude = latlng.latitude;
               longitude = latlng.longitude;
-              log("${latitude}");
-              log("${longitude}");
+              log("$latitude");
+              log("$longitude");
               setState(() {
                 _marker.add(Marker(
                     markerId: MarkerId('id-1'),
                     position: LatLng(latitude, longitude),
-                    infoWindow: InfoWindow(title: "house of titans")));
+                    infoWindow: InfoWindow(title: "")));
                 CameraPosition(target: LatLng(latitude, longitude), zoom: 10);
               });
             },

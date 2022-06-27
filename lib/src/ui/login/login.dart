@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:employee/main.dart';
 import 'package:employee/model/otp_response.dart';
 import 'package:employee/provider/api_provider.dart';
 import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
@@ -78,7 +79,7 @@ class _LoginState extends State<Login> {
                   ),
                   children: [
                     TextSpan(
-                      text: "Please verify your OTP on ${mobile}",
+                      text: "Please verify your OTP on $mobile",
                       style: GoogleFonts.openSans(
                         fontSize: 14.0,
                         color: ColorTextPrimary,
@@ -150,7 +151,7 @@ class _LoginState extends State<Login> {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please enter Mobile Number");
       } else {
-        token = await SharedPref.getStringPreference(SharedPref.DEVICETOKEN);
+        token = (await firebaseMessaging.getToken())!;
         log("token====$token");
         final loginData = await ApiProvider().login(mobile);
         // SharedPref.setStringPrefe  rence(SharedPref.USERSTATUS, loginData.status);
@@ -182,7 +183,7 @@ class _LoginState extends State<Login> {
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OTP");
       } else {
         final OtpVerificationResponse loginData = await ApiProvider().verifyOtp(mobile, otp, token);
-        log("ooooo ${loginData}");
+        log("ooooo $loginData");
         if (loginData.success == true) {
           SharedPref.setBooleanPreference(SharedPref.LOGIN, true);
           SharedPref.setStringPreference(SharedPref.TOKEN, loginData.data!.token);

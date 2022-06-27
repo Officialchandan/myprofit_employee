@@ -57,7 +57,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OTP");
       } else {
         final GetLocationrOtpResponse loginData = await ApiProvider().getOtpIntrestedUser(userid, _otp.text);
-        log("ooooo ${loginData}");
+        log("ooooo $loginData");
         if (loginData.success == true) {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
@@ -89,9 +89,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
   }
 
 //otp dialog box
-  _displayDialog(
-    BuildContext context,
-  ) async {
+  _displayDialog(BuildContext context, mobile) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -107,6 +105,26 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
+                  children: [
+                    TextSpan(
+                      text: "${"Please verify your OTP on"}\n",
+                      style: GoogleFonts.openSans(
+                        fontSize: 14.0,
+                        height: 1.5,
+                        color: ColorTextPrimary,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "+91 $mobile",
+                      style: GoogleFonts.openSans(
+                        fontSize: 14.0,
+                        height: 1.5,
+                        color: ColorTextPrimary,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )
+                  ],
                 ),
               ),
               content: TextField(
@@ -171,7 +189,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Name");
       } else if (_mobile.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Mobile Number 10 digits");
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter 10 digits Mobile number");
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Address");
@@ -211,10 +229,13 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
             _familyMembers.text,
             _placeOfBuying.text);
 
-        log("ooooo ${loginData}");
+        log("ooooo $loginData");
         if (loginData.success) {
           userid = loginData.data!.userId;
-          _displayDialog(context);
+          _displayDialog(
+            context,
+            _mobile.text,
+          );
         } else {
           Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: loginData.message);
         }
@@ -233,12 +254,14 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
             _home,
             _familyMembers.text,
             _placeOfBuying.text);
-        ;
 
-        log("ooooo ${loginData}");
+        log("ooooo $loginData");
         if (loginData.success) {
           userid = loginData.data!.userId;
-          _displayDialog(context);
+          _displayDialog(
+            context,
+            _mobile.text,
+          );
         } else {
           Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: loginData.message);
         }
@@ -761,7 +784,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                         onPressed: () {
                           log("kai kai---->");
                           addUser();
-                          log(" location: areaId,${areaId}");
+                          log(" location: areaId,$areaId");
                         },
                         child: Text(
                           "REGISTER",

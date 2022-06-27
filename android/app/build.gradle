@@ -41,7 +41,7 @@ android {
             keyPassword '123456'
         }
     }
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -51,7 +51,7 @@ android {
 
         applicationId "com.myprofit.employee"
         minSdkVersion 20
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 1
         versionName '1.0'
         signingConfig signingConfigs.release
@@ -70,7 +70,7 @@ android {
             multiDexEnabled true
         }
     }
-    buildToolsVersion '30.0.2'
+    buildToolsVersion '30.0.3'
 
 }
 

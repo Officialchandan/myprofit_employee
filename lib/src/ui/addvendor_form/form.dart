@@ -44,7 +44,7 @@ class _UserFormState extends State<UserForm> {
                     initialValue: widget.user.title,
                     maxLength: 20,
                     onChanged: (val) {
-                      log("===>${val}");
+                      log("===>$val");
                       widget.user.title = val;
                       log("===>${widget.user.title}");
                     },
@@ -73,7 +73,7 @@ class _UserFormState extends State<UserForm> {
                     initialValue: widget.user.description,
                     maxLength: 50,
                     onChanged: (val) {
-                      log("===>${val}");
+                      log("===>$val");
                       widget.user.description = val;
                       log("===>${widget.user.description}");
                     },

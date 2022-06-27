@@ -39,7 +39,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
         final UserNotIntrestedResponse loginData = await ApiProvider()
             .getUnIntrestedUser(widget.location, _name.text, _address.text, _pincode.text, _reason.text);
 
-        log("ooooo ${loginData}");
+        log("ooooo $loginData");
         if (loginData.success) {
           Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: loginData.message);
           Navigator.pushAndRemoveUntil(

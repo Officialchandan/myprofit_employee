@@ -30,7 +30,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 fcmToken() async {
   try {
-    log("device token${await firebaseMessaging.getToken()}");
     String? tok = await firebaseMessaging.getToken();
     log("====>$tok");
     SharedPref.setStringPreference(SharedPref.DEVICETOKEN, tok!);
@@ -40,6 +39,7 @@ fcmToken() async {
 }
 
 Future<void> main() async {
+  await fcmToken();
   dio.interceptors.add(LogInterceptor(
       responseBody: true,
       responseHeader: false,
@@ -52,7 +52,7 @@ Future<void> main() async {
       }));
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await fcmToken();
+
   FirebaseMessaging.onBackgroundMessage((_firebaseMessagingBackgroundHandler));
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -147,6 +147,12 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'My Profit Employee',
       navigatorKey: navigationService.navigatorKey,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+          child: child!,
+        );
+      },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
@@ -170,7 +176,6 @@ class _MyAppState extends State<MyApp> {
             statusBarColor: ColorPrimary,
             // statusBarIconBrightness: Brightness.light,
           ),
-          brightness: Brightness.dark,
           backgroundColor: ColorPrimary,
           iconTheme: IconThemeData(
             color: Colors.white,
