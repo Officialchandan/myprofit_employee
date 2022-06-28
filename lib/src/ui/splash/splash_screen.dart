@@ -6,7 +6,6 @@ import 'package:employee/model/validate_app_version.dart';
 import 'package:employee/provider/api_provider.dart';
 import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
 import 'package:employee/src/ui/login/login.dart';
-import 'package:employee/src/ui/store_redirect.dart';
 import 'package:employee/utils/colors.dart';
 import 'package:employee/utils/network.dart';
 import 'package:employee/utils/sharedpref.dart';
@@ -15,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:store_redirect/store_redirect.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -22,7 +22,8 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   @override
   void initState() {
     // TODO: implement initState
@@ -37,11 +38,15 @@ class _SplashState extends State<Splash> {
     var permission = await Permission.location.request();
     if (permission.isGranted) {
       if (logs == true) {
-        Timer(Duration(seconds: 3),
-            () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation())));
+        Timer(
+            Duration(seconds: 3),
+            () => Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => BottomNavigation())));
       } else {
-        Timer(Duration(seconds: 3),
-            () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login())));
+        Timer(
+            Duration(seconds: 3),
+            () => Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Login())));
       }
     } else {
       await openAppSettings();
@@ -51,14 +56,16 @@ class _SplashState extends State<Splash> {
 
   Future<void> validApp() async {
     if (await Network.isConnected()) {
-      ValidateAppVersionResponse result = await ApiProvider().validateAppVersion();
+      ValidateAppVersionResponse result =
+          await ApiProvider().validateAppVersion();
       if (result.success) {
         getLogin();
       } else {
         validateAppAlert(result.data!.isMandatory);
       }
     } else {
-      Fluttertoast.showToast(msg: "Please Turn On the Internet", backgroundColor: ColorPrimary);
+      Fluttertoast.showToast(
+          msg: "Please Turn On the Internet", backgroundColor: ColorPrimary);
       //internetDialog();
     }
   }
@@ -70,7 +77,8 @@ class _SplashState extends State<Splash> {
         barrierDismissible: false,
         context: navigationService.navigatorKey.currentContext!,
         builder: (context) => AlertDialog(
-              content: Text("You are using older Version of Vendor App, \n Please Update App For Better Performance."),
+              content: Text(
+                  "You are using older Version of Employee App Please Update App For Better Performance."),
               contentPadding: EdgeInsets.all(15),
               actions: [
                 TextButton(
@@ -150,7 +158,8 @@ class _SplashState extends State<Splash> {
                   ),
                   Align(
                       alignment: Alignment.bottomRight,
-                      child: Image.asset('images/splash-bottom.png', width: MediaQuery.of(context).size.width * 0.7)),
+                      child: Image.asset('images/splash-bottom.png',
+                          width: MediaQuery.of(context).size.width * 0.7)),
                 ],
               ),
               Positioned(

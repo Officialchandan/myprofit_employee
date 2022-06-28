@@ -78,6 +78,7 @@ dependencies:
   cached_network_image:
 
   package_info_plus: 1.4.0
+  store_redirect:
   #day picker
   day_picker:
 dev_dependencies:
