@@ -22,8 +22,7 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
   @override
   void initState() {
     // TODO: implement initState
@@ -38,15 +37,11 @@ class _SplashState extends State<Splash> {
     var permission = await Permission.location.request();
     if (permission.isGranted) {
       if (logs == true) {
-        Timer(
-            Duration(seconds: 3),
-            () => Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => BottomNavigation())));
+        Timer(Duration(seconds: 3),
+            () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation())));
       } else {
-        Timer(
-            Duration(seconds: 3),
-            () => Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => Login())));
+        Timer(Duration(seconds: 3),
+            () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login())));
       }
     } else {
       await openAppSettings();
@@ -56,16 +51,14 @@ class _SplashState extends State<Splash> {
 
   Future<void> validApp() async {
     if (await Network.isConnected()) {
-      ValidateAppVersionResponse result =
-          await ApiProvider().validateAppVersion();
+      ValidateAppVersionResponse result = await ApiProvider().validateAppVersion();
       if (result.success) {
         getLogin();
       } else {
         validateAppAlert(result.data!.isMandatory);
       }
     } else {
-      Fluttertoast.showToast(
-          msg: "Please Turn On the Internet", backgroundColor: ColorPrimary);
+      Fluttertoast.showToast(msg: "Please Turn On the Internet", backgroundColor: ColorPrimary);
       //internetDialog();
     }
   }
@@ -77,8 +70,7 @@ class _SplashState extends State<Splash> {
         barrierDismissible: false,
         context: navigationService.navigatorKey.currentContext!,
         builder: (context) => AlertDialog(
-              content: Text(
-                  "You are using older Version of Employee App Please Update App For Better Performance."),
+              content: Text("You are using older Version of Employee App Please Update App For Better Performance."),
               contentPadding: EdgeInsets.all(15),
               actions: [
                 TextButton(
@@ -158,8 +150,7 @@ class _SplashState extends State<Splash> {
                   ),
                   Align(
                       alignment: Alignment.bottomRight,
-                      child: Image.asset('images/splash-bottom.png',
-                          width: MediaQuery.of(context).size.width * 0.7)),
+                      child: Image.asset('images/splash-bottom.png', width: MediaQuery.of(context).size.width * 0.7)),
                 ],
               ),
               Positioned(

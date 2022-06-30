@@ -1348,6 +1348,7 @@ class _VendorFormState extends State<VendorForm> {
                                         // width: devicewidth - 30,
                                         child: MultiSelectDialogField<CategoriesResponseData?>(
                                           buttonIcon: Icon(Icons.keyboard_arrow_down, color: ColorPrimary),
+                                          selectedColor: ColorPrimary,
                                           decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius: BorderRadius.circular(5),
@@ -1361,7 +1362,7 @@ class _VendorFormState extends State<VendorForm> {
                                               FocusManager.instance.primaryFocus?.unfocus();
                                               Navigator.pop(context);
                                             },
-                                            child: Text('Other categories',
+                                            child: Text('Search Categories',
                                                 style: TextStyle(
                                                     color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600)),
                                           ),
@@ -1411,6 +1412,12 @@ class _VendorFormState extends State<VendorForm> {
                                               subcatlist.clear();
                                               if (values.length == 0) {
                                                 placeholderText = "Select Category";
+                                                Center(
+                                                  child: Image(
+                                                    image: AssetImage("images/no_search.gif"),
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                );
                                               } else {
                                                 for (int i = 0; i < values.length; i++) {
                                                   if (i == values.length - 1) {
