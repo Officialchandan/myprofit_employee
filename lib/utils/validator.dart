@@ -40,6 +40,7 @@ class Validator {
     return null;
   }
 
+//
   static String? validateMobile(String value, BuildContext context) {
     String patttern = r'(^[0-9]*$)';
     RegExp regExp = new RegExp(patttern);
@@ -49,6 +50,19 @@ class Validator {
       return "Mobile number must 10 digits";
     } else if (!regExp.hasMatch(value)) {
       return "Mobile number must be digits";
+    }
+    return null;
+  }
+
+  static String? validateAccountNumber(String value, BuildContext context) {
+    String patttern = r'(^[0-9]*$)';
+    RegExp regExp = new RegExp(patttern);
+    if (value.length == 0) {
+      return "please enter Account number";
+    } else if (value.length != 16) {
+      return "Account number must 16 digits";
+    } else if (!regExp.hasMatch(value)) {
+      return "Account number must be digits";
     }
     return null;
   }
@@ -98,6 +112,18 @@ class Validator {
       return "Please enter aadhar number";
     } else if (!regExp.hasMatch(value)) {
       return "Aadhar number must be digits";
+    }
+    return null;
+  }
+
+  //aadhar-number-validator
+  static String? validateIFSC(String value, BuildContext context) {
+    String patttern = r'^[A-Za-z]{4}[a-zA-Z0-9]{7}$';
+    RegExp regExp = new RegExp(patttern);
+    if (value.length == 0) {
+      return "Please enter IFSC number";
+    } else if (!regExp.hasMatch(value)) {
+      return "IFSC number must be in proper Formate";
     }
     return null;
   }

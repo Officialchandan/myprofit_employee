@@ -157,6 +157,10 @@ class _VendorFormState extends State<VendorForm> {
 
   TextEditingController _state = TextEditingController();
   TextEditingController edtSearch = TextEditingController();
+  TextEditingController _ifsc = TextEditingController();
+
+  TextEditingController _accountno = TextEditingController();
+  TextEditingController _accountholdername = TextEditingController();
 
   List<UserForm?> users = [];
   User user = User();
@@ -1282,6 +1286,91 @@ class _VendorFormState extends State<VendorForm> {
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           counterText: "",
                           hintText: 'Select Your City/Village',
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          ),
+                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        ),
+                      ),
+
+                      SizedBox(height: 15),
+                      AutoSizeText(
+                        'Bank Details *',
+                        style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontWeight: FontWeight.w600),
+                        maxFontSize: 15,
+                        minFontSize: 10,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        cursorColor: ColorPrimary,
+                        controller: _accountholdername,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+                        ],
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        //autovalidate: true,
+                        maxLength: 40,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          hintText: "Account Holder Name",
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          ),
+                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        cursorColor: ColorPrimary,
+                        controller: _ifsc,
+                        keyboardType: TextInputType.text,
+                        validator: (numb) => Validator.validateIFSC(numb!, context),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        maxLength: 11,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          hintText: "Bank IFSC",
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          ),
+                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        cursorColor: ColorPrimary,
+                        controller: _accountno,
+                        keyboardType: TextInputType.number,
+                        validator: (numb) => Validator.validateAccountNumber(numb!, context),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        maxLength: 16,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          hintText: "Acoount Number",
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintStyle: TextStyle(
                               color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
                           border: OutlineInputBorder(

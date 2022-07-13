@@ -139,7 +139,7 @@ class _SplashState extends State<Splash> {
         child: SafeArea(
           child: Container(
             color: Colors.white,
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height * 0.96,
             child: Stack(children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
