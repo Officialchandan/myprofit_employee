@@ -223,6 +223,14 @@ class _VendorFormState extends State<VendorForm> {
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Shop State");
       } else if (_city.text.isEmpty) {
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Shop City");
+      } else if (_accountholdername.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Account Holder Name");
+      } else if (_ifsc.text.isEmpty) {
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter IFSC Code");
+      } else if (_accountno.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Account Number");
       } else if (valuesecond == false) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Term and Condition");
@@ -247,6 +255,9 @@ class _VendorFormState extends State<VendorForm> {
             lat,
             lng,
             data,
+            _accountholdername.text,
+            _ifsc.text,
+            _accountno.text,
             validationShopImage);
         log("ooooo $loginData");
         log("ooooo $comiisionarray");
@@ -306,6 +317,14 @@ class _VendorFormState extends State<VendorForm> {
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Shop Address");
+      } else if (_accountholdername.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Account Holder Name");
+      } else if (_ifsc.text.isEmpty) {
+        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter IFSC Code");
+      } else if (_accountno.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Account Number");
       } else if (lat == null) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
@@ -372,6 +391,9 @@ class _VendorFormState extends State<VendorForm> {
               lat,
               lng,
               data,
+              _accountholdername.text,
+              _ifsc.text,
+              _accountno.text,
               validationShopImage,
               arr,
               savelist,
@@ -412,6 +434,9 @@ class _VendorFormState extends State<VendorForm> {
             lat,
             lng,
             data,
+            _accountholdername.text,
+            _ifsc.text,
+            _accountno.text,
             validationShopImage,
             arr,
             comiisionarray,

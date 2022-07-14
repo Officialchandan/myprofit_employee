@@ -302,6 +302,9 @@ class ApiProvider {
     lat,
     lng,
     ownersign,
+    accountholdername,
+    bankifsc,
+    accountnumber,
     List<File> owneridproof,
     subcat,
     subcatcommission,
@@ -327,6 +330,9 @@ class ApiProvider {
     addvendor["lng"] = lng;
     addvendor["owner_sign"] =
         MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+    addvendor["acc_holder_name"] = accountholdername;
+    addvendor["ifsc"] = bankifsc;
+    addvendor["account_no"] = accountnumber;
     log("yha tak to agyy      ====>1");
     //log("${owneridproof.length}");
 
@@ -379,7 +385,7 @@ class ApiProvider {
   }
 
   Future<ChatPapdiResponse> addChatPapdi(category, shopname, ownername, commission, ownermobile, address, landmark,
-      city, state, pin, lat, lng, ownersign, List<File> document) async {
+      city, state, pin, lat, lng, ownersign, accountholdername, bankifsc, accountnumber, List<File> document) async {
     //log("chl gyi ${mobile + otp}");
     // try {
     Map<String, dynamic> addvendor = HashMap<String, dynamic>();
@@ -397,6 +403,7 @@ class ApiProvider {
     addvendor["lng"] = lng;
     addvendor["owner_sign"] =
         MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+
     List<MultipartFile> ownerIdProof = [];
 
     await Future.forEach(document, (File element) async {
@@ -404,7 +411,9 @@ class ApiProvider {
           filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png"));
       log("===>lengthInBytes${(element.readAsBytesSync().lengthInBytes / 1024) / 1024}");
     });
-
+    addvendor["acc_holder_name"] = accountholdername;
+    addvendor["ifsc"] = bankifsc;
+    addvendor["account_no"] = accountnumber;
     addvendor["owner_id_proof[]"] = ownerIdProof;
 
     log("addvendor$addvendor");
