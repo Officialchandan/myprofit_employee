@@ -59,8 +59,8 @@ class Validator {
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
       return "please enter Account number";
-    } else if (value.length != 16) {
-      return "Account number must 16 digits";
+    } else if (value.length <= 10) {
+      return "Account number must 10 or more digits";
     } else if (!regExp.hasMatch(value)) {
       return "Account number must be digits";
     }
@@ -124,6 +124,20 @@ class Validator {
       return "Please enter IFSC number";
     } else if (!regExp.hasMatch(value)) {
       return "IFSC number must be in proper Formate";
+    }
+    return null;
+  }
+
+  //gst number
+  static String? validateGST(String value, BuildContext context) {
+    String patttern = r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$';
+    RegExp regExp = new RegExp(patttern);
+    if (value.length == 0) {
+      return "Please enter Gst number";
+    } else if (value.length != 15) {
+      return "GST number must 15 digits";
+    } else if (!regExp.hasMatch(value)) {
+      return "GST number must be in proper Formate";
     }
     return null;
   }

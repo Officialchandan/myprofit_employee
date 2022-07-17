@@ -158,6 +158,7 @@ class _VendorFormState extends State<VendorForm> {
   TextEditingController _state = TextEditingController();
   TextEditingController edtSearch = TextEditingController();
   TextEditingController _ifsc = TextEditingController();
+  TextEditingController _gstNo = TextEditingController();
 
   TextEditingController _accountno = TextEditingController();
   TextEditingController _accountholdername = TextEditingController();
@@ -258,6 +259,7 @@ class _VendorFormState extends State<VendorForm> {
             _accountholdername.text,
             _ifsc.text,
             _accountno.text,
+            _gstNo.text,
             validationShopImage);
         log("ooooo $loginData");
         log("ooooo $comiisionarray");
@@ -394,6 +396,7 @@ class _VendorFormState extends State<VendorForm> {
               _accountholdername.text,
               _ifsc.text,
               _accountno.text,
+              _gstNo.text,
               validationShopImage,
               arr,
               savelist,
@@ -437,6 +440,7 @@ class _VendorFormState extends State<VendorForm> {
             _accountholdername.text,
             _ifsc.text,
             _accountno.text,
+            _gstNo.text,
             validationShopImage,
             arr,
             comiisionarray,
@@ -1407,7 +1411,38 @@ class _VendorFormState extends State<VendorForm> {
                           enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                         ),
                       ),
-
+                      SizedBox(height: 15),
+                      AutoSizeText(
+                        'GST Details',
+                        style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontWeight: FontWeight.w600),
+                        maxFontSize: 15,
+                        minFontSize: 10,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        cursorColor: ColorPrimary,
+                        controller: _gstNo,
+                        keyboardType: TextInputType.text,
+                        validator: (numb) => Validator.validateGST(numb!, context),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        maxLength: 15,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          counterText: "",
+                          hintText: "GST Number",
+                          contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                          fillColor: Color.fromRGBO(242, 242, 242, 1),
+                          hintStyle: TextStyle(
+                              color: Color.fromRGBO(85, 85, 85, 1), fontSize: 13, fontWeight: FontWeight.w600),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          ),
+                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        ),
+                      ),
                       SizedBox(height: 15),
                       widget.id == 0
                           ? Container(

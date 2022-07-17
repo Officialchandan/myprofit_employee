@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:employee/provider/NavigationService.dart';
-import 'package:employee/src/ui/home/home.dart';
+import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
+import 'package:employee/src/ui/fcm_notification/fcm_config.dart';
 import 'package:employee/src/ui/splash/splash_screen.dart';
 import 'package:employee/utils/colors.dart';
 import 'package:employee/utils/sharedpref.dart';
@@ -26,6 +27,9 @@ final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("A bg Message showed up: ${message.messageId}");
+  print("A bg Message showed up: ${message.data}");
+  await Firebase.initializeApp();
+  print(message.notification!.title);
 }
 
 fcmToken() async {
@@ -36,6 +40,68 @@ fcmToken() async {
   } catch (e) {
     log("error");
   }
+}
+
+const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+void selectNotification(String? payload) async {
+  if (payload != null) {
+    debugPrint('notification payload: $payload');
+  }
+  Navigator.push(navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => BottomNavigation()));
+  // String grade = payload!;
+  // print("object$grade");
+  // switch (grade) {
+  //   case "MoneyDueScreen":
+  //     {
+  //       // Navigator.push(
+  //       //     navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => MoneyDueScreen(true)));
+  //       print("Excellent");
+  //     }
+  //     break;
+  //
+  //   case "DueAmountScreen":
+  //     {
+  //       // Navigator.push(
+  //       //     navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => DueAmountScreen()));
+  //       print("Good");
+  //     }
+  //     break;
+  //
+  //   case "UpiTransferHistory":
+  //     {
+  //       // Navigator.push(
+  //       //     navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => UpiTransferHistory()));
+  //       print("Fair");
+  //     }
+  //     break;
+  //
+  //   case "UpiTransferHistoryWithoutInventory":
+  //     {
+  //       // Navigator.push(navigationService.navigatorKey.currentContext!,
+  //       //     MaterialPageRoute(builder: (_) => UpiTransferHistoryWithoutInventory()));
+  //       print("Poor");
+  //     }
+  //     break;
+  //   case "SelectReportTypeScreen":
+  //     {
+  //       // Navigator.push(navigationService.navigatorKey.currentContext!,
+  //       //     MaterialPageRoute(builder: (_) => SelectReportTypeScreen()));
+  //       print("Poor");
+  //     }
+  //     break;
+  //   case "ReportTypeScreen":
+  //     {
+  //       // Navigator.push(
+  //       //     navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => ReportTypeScreen()));
+  //       print("Poor");
+  //     }
+  //     break;
+  //   default:
+  //     {
+  //       print("Invalid choice");
+  //     }
+  //     break;
+  // }
 }
 
 Future<void> main() async {
@@ -54,7 +120,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   FirebaseMessaging.onBackgroundMessage((_firebaseMessagingBackgroundHandler));
-
+  await FcmConfig.configNotification();
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
@@ -62,15 +128,24 @@ Future<void> main() async {
     log("notification title ${message.notification!.title}");
     log("notification body ${message.notification!.body}");
     log("===>$android");
+    var data = message.data;
+    print("notification route==>${data["route"]}");
     if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.initialize(
+          InitializationSettings(
+            android: initializationSettingsAndroid,
+          ),
+          onSelectNotification: selectNotification);
       flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(channel.id, channel.name,
-                color: ColorPrimary, playSound: true, icon: "logo"),
-          ));
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android:
+              AndroidNotificationDetails(channel.id, channel.name, color: ColorPrimary, playSound: true, icon: "logo"),
+        ),
+        payload: data["route"],
+      );
     }
     // Navigator.push(navigationService.navigatorKey.currentContext!,
     //     MaterialPageRoute(builder: (_) => MoneyDueScreen()));
@@ -80,12 +155,80 @@ Future<void> main() async {
     print("a new on message");
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
+    var data = message.data;
+
+    print("notification data==>$data");
+
+    print("notification route==>${data["route"]}");
     if (notification != null && android != null) {
-      log("notification aya");
+      String grade = "${message.data["route"]}";
       Navigator.push(
-          navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => Home(onTab: () {})));
+          navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => BottomNavigation()));
+      //   print("object$grade");
+      //   switch (grade) {
+      //     case "MoneyDueScreen":
+      //       {
+      //         // Navigator.push(
+      //         //     navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => MoneyDueScreen(true)));
+      //         print("Excellent");
+      //       }
+      //       break;
+      //
+      //     case "DueAmountScreen":
+      //       {
+      //         // Navigator.push(
+      //         //     navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => DueAmountScreen()));
+      //         print("Good");
+      //       }
+      //       break;
+      //
+      //     case "UpiTransferHistory":
+      //       {
+      //         // Navigator.push(
+      //         //     navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => UpiTransferHistory()));
+      //         print("Fair");
+      //       }
+      //       break;
+      //
+      //     case "UpiTransferHistoryWithoutInventory":
+      //       {
+      //         // Navigator.push(navigationService.navigatorKey.currentContext!,
+      //         //     MaterialPageRoute(builder: (_) => UpiTransferHistoryWithoutInventory()));
+      //         print("Poor");
+      //       }
+      //       break;
+      //     case "SelectReportTypeScreen":
+      //       {
+      //         // Navigator.push(navigationService.navigatorKey.currentContext!,
+      //         //     MaterialPageRoute(builder: (_) => SelectReportTypeScreen()));
+      //         print("Poor");
+      //       }
+      //       break;
+      //     case "ReportTypeScreen":
+      //       {
+      //         // Navigator.push(
+      //         //     navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => ReportTypeScreen()));
+      //         print("Poor");
+      //       }
+      //       break;
+      //     default:
+      //       {
+      //         print("Invalid choice");
+      //       }
+      //       break;
+      //   }
     }
   });
+  checkForInitialMessage() async {
+    await Firebase.initializeApp();
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) async {});
+    ;
+    log("in terminated");
+    if (initialMessage != null) {
+      log("in terminated");
+    }
+  }
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()

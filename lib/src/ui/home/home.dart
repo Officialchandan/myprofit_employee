@@ -2,15 +2,18 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:employee/main.dart';
 import 'package:employee/model/categories_respnse.dart';
 import 'package:employee/model/getvenordbyid_response.dart';
 import 'package:employee/provider/api_provider.dart';
 import 'package:employee/src/ui/add_dhaba/add_dhaba.dart';
 import 'package:employee/src/ui/added_vendor_list/added_vendor_list.dart';
+import 'package:employee/src/ui/fcm_notification/fcm_config.dart';
 import 'package:employee/src/ui/login/login.dart';
 import 'package:employee/utils/colors.dart';
 import 'package:employee/utils/network.dart';
 import 'package:employee/utils/sharedpref.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -62,6 +65,22 @@ class _HomeState extends State<Home> {
   final PublishSubject<List<CategoriesResponseData>> subject = PublishSubject();
   List<GetVendorByIdResponseData> loginData = [];
   int count = 0, isReadCount = 0, totalnotification = 0;
+  checkInitialMessage() async {
+    // RemoteMessage? message = await firebaseMessaging.getInitialMessage();
+    firebaseMessaging.getInitialMessage().then((RemoteMessage? message) async {
+      print("checkInitialMessage--->$message");
+      if (message != null) {
+        checkInitialMessage();
+        FcmConfig.getInitialMessage(message);
+        setState(() {});
+      }
+      // if(message == null && message!.notification!.android!.clickAction == null) {
+      //   print("checkForInitialMessage-------------L>");
+      // }else if () {
+      //
+      // }
+    });
+  }
 
   @override
   void initState() {

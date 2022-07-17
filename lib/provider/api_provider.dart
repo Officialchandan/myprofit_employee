@@ -305,6 +305,7 @@ class ApiProvider {
     accountholdername,
     bankifsc,
     accountnumber,
+    gstno,
     List<File> owneridproof,
     subcat,
     subcatcommission,
@@ -333,6 +334,7 @@ class ApiProvider {
     addvendor["acc_holder_name"] = accountholdername;
     addvendor["ifsc"] = bankifsc;
     addvendor["account_no"] = accountnumber;
+    addvendor["gst_no"] = gstno;
     log("yha tak to agyy      ====>1");
     //log("${owneridproof.length}");
 
@@ -384,8 +386,25 @@ class ApiProvider {
     // }
   }
 
-  Future<ChatPapdiResponse> addChatPapdi(category, shopname, ownername, commission, ownermobile, address, landmark,
-      city, state, pin, lat, lng, ownersign, accountholdername, bankifsc, accountnumber, List<File> document) async {
+  Future<ChatPapdiResponse> addChatPapdi(
+      category,
+      shopname,
+      ownername,
+      commission,
+      ownermobile,
+      address,
+      landmark,
+      city,
+      state,
+      pin,
+      lat,
+      lng,
+      ownersign,
+      accountholdername,
+      bankifsc,
+      accountnumber,
+      gstno,
+      List<File> document) async {
     //log("chl gyi ${mobile + otp}");
     // try {
     Map<String, dynamic> addvendor = HashMap<String, dynamic>();
@@ -414,6 +433,7 @@ class ApiProvider {
     addvendor["acc_holder_name"] = accountholdername;
     addvendor["ifsc"] = bankifsc;
     addvendor["account_no"] = accountnumber;
+    addvendor["gst_no"] = gstno;
     addvendor["owner_id_proof[]"] = ownerIdProof;
 
     log("addvendor$addvendor");
