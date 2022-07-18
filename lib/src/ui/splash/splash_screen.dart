@@ -81,7 +81,7 @@ class _SplashState extends State<Splash> {
                       );
                     },
                     child: Text("Update")),
-                mandotory == 2
+                mandotory == 3
                     ? Container()
                     : TextButton(
                         onPressed: () async {
