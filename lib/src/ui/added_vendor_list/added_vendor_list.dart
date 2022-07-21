@@ -398,11 +398,15 @@ class _AddedVendorState extends State<AddedVendor> {
                                                             mainAxisAlignment: MainAxisAlignment.start,
                                                             children: [
                                                               Image.asset('images/g-pin.png', width: 13),
-                                                              Text(' ${searchList[index].address}',
-                                                                  style: TextStyle(
-                                                                    color: Color(0xff555555),
-                                                                    fontSize: 14,
-                                                                  )),
+                                                              Container(
+                                                                width: MediaQuery.of(context).size.width * 0.65,
+                                                                child: Text(' ${searchList[index].address}',
+                                                                    style: TextStyle(
+                                                                      color: Color(0xff555555),
+                                                                      overflow: TextOverflow.ellipsis,
+                                                                      fontSize: 14,
+                                                                    )),
+                                                              ),
                                                             ],
                                                           ),
                                                         ],
