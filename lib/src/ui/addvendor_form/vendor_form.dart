@@ -24,6 +24,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -96,7 +97,7 @@ class _VendorFormState extends State<VendorForm> {
   }
 
   getCategories() async {
-    result = await ApiProvider().getCategoriess();
+    result = await ApiProvider().getCategoriess(widget.id);
     print(result);
     CategoriesResponseData? data;
     CategoriesResponseData? data1;
@@ -423,6 +424,7 @@ class _VendorFormState extends State<VendorForm> {
           }
         }
       } else {
+        EasyLoading.show();
         final AddVendorResponse loginData = await ApiProvider().addVendor(
             "${widget.id}",
             _shopname.text,
@@ -452,6 +454,7 @@ class _VendorFormState extends State<VendorForm> {
         log("ooooo $comiisionarray");
         log("ooooo $arr");
         if (loginData.success == true) {
+          EasyLoading.dismiss();
           saveVendordetail = loginData;
           // Fluttertoast.showToast(msg: "${saveVendordetail!.message}");
           _displayDialog(context, _mobile.text, 1);
@@ -461,6 +464,7 @@ class _VendorFormState extends State<VendorForm> {
           //     (Route<dynamic> route) => false);
           //Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Added Sucsessfully");
         } else {
+          EasyLoading.show();
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
@@ -1343,7 +1347,7 @@ class _VendorFormState extends State<VendorForm> {
                         ],
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         //autovalidate: true,
-                        maxLength: 40,
+                        maxLength: 100,
                         autofocus: false,
                         decoration: InputDecoration(
                           counterText: "",
@@ -1397,7 +1401,7 @@ class _VendorFormState extends State<VendorForm> {
                         autofocus: false,
                         decoration: InputDecoration(
                           counterText: "",
-                          hintText: "Acoount Number",
+                          hintText: "Account Number",
                           contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                           fillColor: Color.fromRGBO(242, 242, 242, 1),
                           hintStyle: TextStyle(
@@ -1444,21 +1448,23 @@ class _VendorFormState extends State<VendorForm> {
                         ),
                       ),
                       SizedBox(height: 15),
-                      widget.id == 0
-                          ? Container(
-                              height: 0,
-                            )
-                          : AutoSizeText(
-                              'Other Categories (If exists)',
-                              style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontWeight: FontWeight.w600),
-                              maxFontSize: 15,
-                              minFontSize: 10,
-                            ),
-                      widget.id == 0
-                          ? Container(
-                              height: 0,
-                            )
-                          : SizedBox(height: 10),
+                      // widget.id == 0
+                      //     ? Container(
+                      //         height: 0,
+                      //       )
+                      //     :
+                      AutoSizeText(
+                        'Other Categories (If exists)',
+                        style: TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontWeight: FontWeight.w600),
+                        maxFontSize: 15,
+                        minFontSize: 10,
+                      ),
+                      // widget.id == 0
+                      //     ? Container(
+                      //         height: 0,
+                      //       )
+                      //     :
+                      SizedBox(height: 10),
 
                       widget.id == 0
                           ? Container(
@@ -1473,134 +1479,135 @@ class _VendorFormState extends State<VendorForm> {
                             currentFocus.unfocus();
                           }
                         },
-                        child: widget.id == 0
-                            ? Container(
-                                height: 0,
-                              )
-                            : Container(
-                                child: result == null
-                                    ? Center(
-                                        child: CircularProgressIndicator(
-                                        color: ColorPrimary,
-                                      ))
-                                    :
-                                    // GestureDetector(
-                                    //     onTap: () {
-                                    //       FocusScopeNode currentFocus =
-                                    //           FocusScope.of(context);
-                                    //       if (!currentFocus.hasPrimaryFocus) {
-                                    //         currentFocus.unfocus();
-                                    //       }
-                                    //     },
-                                    //     child:
-                                    Container(
-                                        // width: devicewidth - 30,
-                                        child: MultiSelectDialogField<CategoriesResponseData?>(
-                                          buttonIcon: Icon(Icons.keyboard_arrow_down, color: ColorPrimary),
-                                          selectedColor: ColorPrimary,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(5),
-                                              border: Border.all(width: 1, color: Colors.grey)),
+                        // child: widget.id == 0
+                        //     ? Container(
+                        //         height: 0,
+                        //       )
+                        //     :
+                        child: Container(
+                          child: result == null
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                  color: ColorPrimary,
+                                ))
+                              :
+                              // GestureDetector(
+                              //     onTap: () {
+                              //       FocusScopeNode currentFocus =
+                              //           FocusScope.of(context);
+                              //       if (!currentFocus.hasPrimaryFocus) {
+                              //         currentFocus.unfocus();
+                              //       }
+                              //     },
+                              //     child:
+                              Container(
+                                  // width: devicewidth - 30,
+                                  child: MultiSelectDialogField<CategoriesResponseData?>(
+                                    buttonIcon: Icon(Icons.keyboard_arrow_down, color: ColorPrimary),
+                                    selectedColor: ColorPrimary,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(width: 1, color: Colors.grey)),
 
-                                          key: _multiSelectKey,
-                                          // initialChildSize: 0.7,
-                                          // maxChildSize: 0.95,
-                                          title: GestureDetector(
-                                            onTap: () {
-                                              FocusManager.instance.primaryFocus?.unfocus();
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text('Search Categories',
-                                                style: TextStyle(
-                                                    color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600)),
-                                          ),
-                                          buttonText: Text(placeholderText,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  color: Color.fromRGBO(85, 85, 85, 1),
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w600)),
-                                          searchTextStyle:
-                                              TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600),
-                                          cancelText: Text('Cancel',
-                                              style: TextStyle(
-                                                  color: ColorPrimary, fontSize: 14, fontWeight: FontWeight.w600)),
-                                          confirmText: Text('Ok',
-                                              style: TextStyle(
-                                                  color: ColorPrimary, fontSize: 14, fontWeight: FontWeight.w600)),
-                                          items: result!.data!
-                                              .map((category) => MultiSelectItem<CategoriesResponseData>(
-                                                  category, category.categoryName))
-                                              .toList(),
-                                          searchable: true,
-                                          initialValue: subcatlist.map((e) => e.subCat).toList(),
+                                    key: _multiSelectKey,
+                                    // initialChildSize: 0.7,
+                                    // maxChildSize: 0.95,
+                                    title: GestureDetector(
+                                      onTap: () {
+                                        FocusManager.instance.primaryFocus?.unfocus();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('Search Categories',
+                                          style: TextStyle(
+                                              color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600)),
+                                    ),
+                                    buttonText: Text(placeholderText,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(85, 85, 85, 1),
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600)),
+                                    searchTextStyle:
+                                        TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600),
+                                    cancelText: Text('Cancel',
+                                        style:
+                                            TextStyle(color: ColorPrimary, fontSize: 14, fontWeight: FontWeight.w600)),
+                                    confirmText: Text('Ok',
+                                        style:
+                                            TextStyle(color: ColorPrimary, fontSize: 14, fontWeight: FontWeight.w600)),
+                                    items: result!.data!
+                                        .map((category) =>
+                                            MultiSelectItem<CategoriesResponseData>(category, category.categoryName))
+                                        .toList(),
+                                    searchable: true,
+                                    initialValue: subcatlist.map((e) => e.subCat).toList(),
 
-                                          validator: (values) {
-                                            if (values == null || values.isEmpty) {
-                                              return "";
-                                            }
-                                            List<String> names = values.map((e) => e!.categoryName).toList();
+                                    validator: (values) {
+                                      if (values == null || values.isEmpty) {
+                                        return "";
+                                      }
+                                      List<String> names = values.map((e) => e!.categoryName).toList();
 
-                                            if (names.contains("Frog")) {
-                                              return "Frogs are weird!";
+                                      if (names.contains("Frog")) {
+                                        return "Frogs are weird!";
+                                      }
+                                      return null;
+                                    },
+                                    onConfirm: (values) {
+                                      // SystemChannels.textInput.invokeMethod('TextInput.hide');
+                                      // SystemChannels.textInput
+                                      //     .invokeMethod('TextInput.hide');
+                                      FocusScopeNode currentFocus = FocusScope.of(context);
+                                      if (!currentFocus.hasPrimaryFocus) {
+                                        currentFocus.unfocus();
+                                      }
+                                      setState(() {
+                                        _selectedCategory3 = values;
+                                        placeholderText = "";
+                                        subcatlist.clear();
+                                        if (values.length == 0) {
+                                          placeholderText = "Select Category";
+                                          Center(
+                                            child: Image(
+                                              image: AssetImage("images/no_search.gif"),
+                                              fit: BoxFit.contain,
+                                            ),
+                                          );
+                                        } else {
+                                          for (int i = 0; i < values.length; i++) {
+                                            if (i == values.length - 1) {
+                                              placeholderText = "Select Category";
+                                              arr = arr + values[i]!.id.toString();
+                                            } else {
+                                              arr = arr + (values[i]!.id.toString()) + ",";
                                             }
-                                            return null;
-                                          },
-                                          onConfirm: (values) {
-                                            // SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                            // SystemChannels.textInput
-                                            //     .invokeMethod('TextInput.hide');
-                                            FocusScopeNode currentFocus = FocusScope.of(context);
-                                            if (!currentFocus.hasPrimaryFocus) {
-                                              currentFocus.unfocus();
-                                            }
-                                            setState(() {
-                                              _selectedCategory3 = values;
-                                              placeholderText = "";
-                                              subcatlist.clear();
-                                              if (values.length == 0) {
-                                                placeholderText = "Select Category";
-                                                Center(
-                                                  child: Image(
-                                                    image: AssetImage("images/no_search.gif"),
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                );
-                                              } else {
-                                                for (int i = 0; i < values.length; i++) {
-                                                  if (i == values.length - 1) {
-                                                    placeholderText = "Select Category";
-                                                    arr = arr + values[i]!.id.toString();
-                                                  } else {
-                                                    arr = arr + (values[i]!.id.toString()) + ",";
-                                                  }
-                                                  log("arr===>$arr");
-                                                  subcatlist.add(SubCat(values[i]!));
-                                                }
-                                              }
-                                            });
-                                            _multiSelectKey.currentState!.validate();
-                                          },
-                                          chipDisplay: MultiSelectChipDisplay(
-                                            onTap: (item) {
-                                              FocusScopeNode currentFocus = FocusScope.of(context);
-                                              if (!currentFocus.hasPrimaryFocus) {
-                                                currentFocus.unfocus();
-                                              }
-                                              setState(() {
-                                                _selectedCategory3.remove(item);
-                                                log("dddd $item");
-                                              });
-                                              _multiSelectKey.currentState!.validate();
-                                            },
-                                          )..disabled = true,
-                                          //  );
-                                          // }
-                                        ),
-                                      ),
-                                //),
-                              ),
+                                            log("arr===>$arr");
+                                            subcatlist.add(SubCat(values[i]!));
+                                          }
+                                        }
+                                      });
+                                      _multiSelectKey.currentState!.validate();
+                                    },
+                                    chipDisplay: MultiSelectChipDisplay(
+                                      onTap: (item) {
+                                        FocusScopeNode currentFocus = FocusScope.of(context);
+                                        if (!currentFocus.hasPrimaryFocus) {
+                                          currentFocus.unfocus();
+                                        }
+                                        setState(() {
+                                          _selectedCategory3.remove(item);
+                                          log("dddd $item");
+                                        });
+                                        _multiSelectKey.currentState!.validate();
+                                      },
+                                    )..disabled = true,
+                                    //  );
+                                    // }
+                                  ),
+                                ),
+                          //),
+                        ),
                       ),
                       Column(
                           children: List.generate(subcatlist.length, (index) {
@@ -1974,11 +1981,12 @@ class _VendorFormState extends State<VendorForm> {
                                 });
                               }
                               log("${imageData.toString()}");
-                              if (widget.id == 0) {
-                                addChatPapdi();
-                              } else {
-                                addVendors();
-                              }
+                              // if (widget.id == 0) {
+                              //   addChatPapdi();
+                              // } else {
+
+                              addVendors();
+                              // }
                             },
                             child: Text(
                               "SUBMIT",
@@ -2120,10 +2128,10 @@ class _VendorFormState extends State<VendorForm> {
     PickedFile pickedFile;
     if (source == 1) {
       // ignore: deprecated_member_use
-      pickedFile = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality: 70))!;
+      pickedFile = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality: 50))!;
     } else {
       // ignore: deprecated_member_use
-      pickedFile = (await ImagePicker().getImage(source: ImageSource.gallery, imageQuality: 70))!;
+      pickedFile = (await ImagePicker().getImage(source: ImageSource.gallery, imageQuality: 50))!;
     }
 
     switch (imageType) {
@@ -2221,9 +2229,9 @@ class _VendorFormState extends State<VendorForm> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     onPressed: () {
                       if (status == 1) {
-                        registerVendorOtpCall(saveVendordetail!.data!.vendorId.toString(), _otp.text);
+                        registerVendorOtpCall(saveVendordetail!.data!.vendorId.toString(), _otp.text, _mobile.text);
                       } else {
-                        registerVendorOtpCall(savechatdetail!.data!.vendorId.toString(), _otp.text);
+                        registerVendorOtpCall(savechatdetail!.data!.vendorId.toString(), _otp.text, _mobile.text);
                       }
                     },
                     child: new Text(
@@ -2244,7 +2252,7 @@ class _VendorFormState extends State<VendorForm> {
         });
   }
 
-  registerVendorOtpCall(vendorid, otp) async {
+  registerVendorOtpCall(vendorid, otp, mobile) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
@@ -2253,7 +2261,7 @@ class _VendorFormState extends State<VendorForm> {
       } else {
         log("ooooo $vendorid");
         log("ooooo $otp");
-        final AddVendorOtpResponse loginData = await ApiProvider().addVendorVerifyOtp(vendorid, otp);
+        final AddVendorOtpResponse loginData = await ApiProvider().addVendorVerifyOtp(vendorid, otp, mobile);
         log("ooooo $loginData");
 
         if (loginData.success == true) {

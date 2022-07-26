@@ -36,8 +36,8 @@ class _BottomNavigationState extends State<BottomNavigation> with TickerProvider
     res = await ApiProvider().getAlotedArea();
 
     success = res!.success;
-    log("====>${await SharedPref.setIntegerPreference(SharedPref.LOCATION, res!.data![0].id)}");
-    log("====>${await SharedPref.getIntegerPreference(SharedPref.LOCATION)}");
+    //log("====>${await SharedPref.setIntegerPreference(SharedPref.LOCATION, res!.data![0].id)}");
+    /// log("====>${await SharedPref.getIntegerPreference(SharedPref.LOCATION)}");
     await SharedPref.setIntegerPreference(SharedPref.LOCATION, res!.data![0].id);
 
     setState(() {});

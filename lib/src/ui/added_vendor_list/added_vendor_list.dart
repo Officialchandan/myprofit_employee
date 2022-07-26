@@ -399,7 +399,7 @@ class _AddedVendorState extends State<AddedVendor> {
                                                             children: [
                                                               Image.asset('images/g-pin.png', width: 13),
                                                               Container(
-                                                                width: MediaQuery.of(context).size.width * 0.65,
+                                                                width: MediaQuery.of(context).size.width * 0.60,
                                                                 child: Text(' ${searchList[index].address}',
                                                                     style: TextStyle(
                                                                       color: Color(0xff555555),

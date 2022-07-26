@@ -11,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -42,7 +43,7 @@ fcmToken() async {
   }
 }
 
-const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('ic_stat_name');
 void selectNotification(String? payload) async {
   if (payload != null) {
     debugPrint('notification payload: $payload');
@@ -104,8 +105,25 @@ void selectNotification(String? payload) async {
   // }
 }
 
+configEasyLoading() {
+  EasyLoading.instance
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.light
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..backgroundColor = Colors.transparent
+    ..progressColor = ColorPrimary
+    ..backgroundColor = ColorPrimary
+    ..indicatorColor = ColorPrimary
+    ..textColor = ColorPrimary
+    ..maskColor = ColorPrimary
+    ..userInteractions = false
+    ..dismissOnTap = false;
+}
+
 Future<void> main() async {
   await fcmToken();
+  configEasyLoading();
   dio.interceptors.add(LogInterceptor(
       responseBody: true,
       responseHeader: false,
@@ -291,6 +309,7 @@ class _MyAppState extends State<MyApp> {
       title: 'My Profit Employee',
       navigatorKey: navigationService.navigatorKey,
       builder: (context, child) {
+        child = EasyLoading.init()(context, child);
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
           child: child!,

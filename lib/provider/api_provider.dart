@@ -460,13 +460,13 @@ class ApiProvider {
     // }
   }
 
-  Future<AddVendorOtpResponse> addVendorVerifyOtp(id, otp) async {
+  Future<AddVendorOtpResponse> addVendorVerifyOtp(id, otp, mobile) async {
     log("chl gyi ${id + otp}");
     var token = await SharedPref.getStringPreference('token');
     var dtoken = (await firebaseMessaging.getToken())!;
     try {
       Response res = await dio.post('$baseUrl/addVendorForm_verifyOTP',
-          data: {"vendor_id": id, "otp": otp, "device_token": dtoken},
+          data: {"vendor_id": id, "otp": otp, "mobile": mobile, "device_token": dtoken},
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ));
@@ -648,13 +648,16 @@ class ApiProvider {
     }
   }
 
-  Future<CategoriesResponse> getCategoriess() async {
+  Future<CategoriesResponse> getCategoriess(id) async {
     log("chl gyi 2}");
     print(await SharedPref.getStringPreference('token'));
     var token = await SharedPref.getStringPreference('token');
     try {
-      Response res = await dio.get(
-        '$baseUrl/getCategories',
+      Response res = await dio.post(
+        'http://employee.tekzee.in/api/v2/getCategoryByType',
+        data: {
+          "category_id": id,
+        },
         options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("====${res.data}");

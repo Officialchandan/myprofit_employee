@@ -157,11 +157,8 @@ class _HomeState extends State<Home> {
         );
         // }
       } else {
-        if (id == 1) {
-        } else {
-          //Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddedVendor(title: title, id: id)));
-        }
+        //Navigator.pop(context);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AddedVendor(title: title, id: id)));
       }
 
       // SharedPref.setStringPreference(SharedPref.USERSTATUS, loginData.status);
@@ -199,7 +196,7 @@ class _HomeState extends State<Home> {
 
   getCategories() async {
     if (await Network.isConnected()) {
-      result = await ApiProvider().getCategoriess();
+      result = await ApiProvider().getCategoriess("");
       print(result);
       if (result!.success) {
         categorieslist = result!.data!;
@@ -391,7 +388,7 @@ class _HomeState extends State<Home> {
             child: ListTile(
               minLeadingWidth: 20,
               leading: CachedNetworkImage(
-                imageUrl: "${category[index].image}",
+                imageUrl: "${category[index].categoryImage}",
                 imageBuilder: (context, imageProvider) {
                   return Container(
                     padding: EdgeInsets.all(5),
@@ -438,11 +435,8 @@ class _HomeState extends State<Home> {
                     //int id;
                     if (_tap == true) {
                       _tap = false;
-                      if (category[index].id == 12) {
-                        getVendorId(category[index].id, category[index].categoryName);
-                      } else {
-                        getVendorId(category[index].id, category[index].categoryName);
-                      }
+
+                      getVendorId(category[index].id, category[index].categoryName);
                     }
                   },
                   child: Text(
