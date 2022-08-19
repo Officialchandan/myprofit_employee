@@ -648,16 +648,13 @@ class ApiProvider {
     }
   }
 
-  Future<CategoriesResponse> getCategoriess(id) async {
+  Future<CategoriesResponse> getCategoriess() async {
     log("chl gyi 2}");
     print(await SharedPref.getStringPreference('token'));
     var token = await SharedPref.getStringPreference('token');
     try {
-      Response res = await dio.post(
-        'http://employee.tekzee.in/api/v2/getCategoryByType',
-        data: {
-          "category_id": id,
-        },
+      Response res = await dio.get(
+        '$baseUrl/getCategories',
         options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("====${res.data}");
