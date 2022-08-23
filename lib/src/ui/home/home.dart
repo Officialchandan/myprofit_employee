@@ -196,7 +196,7 @@ class _HomeState extends State<Home> {
 
   getCategories() async {
     if (await Network.isConnected()) {
-      result = await ApiProvider().getCategoriess("");
+      result = await ApiProvider().getCategoriess();
       print(result);
       if (result!.success) {
         categorieslist = result!.data!;

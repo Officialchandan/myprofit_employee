@@ -97,7 +97,7 @@ class _VendorFormState extends State<VendorForm> {
   }
 
   getCategories() async {
-    result = await ApiProvider().getCategoriess(widget.id);
+    result = await ApiProvider().getCategoriess();
     print(result);
     CategoriesResponseData? data;
     CategoriesResponseData? data1;

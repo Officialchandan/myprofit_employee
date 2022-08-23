@@ -49,7 +49,7 @@ class _UpdateVendorDetailState extends State<UpdateVendorDetail> {
   _UpdateVendorDetailState(var data, String title, int id);
 
   getCategories() async {
-    result = await ApiProvider().getCategoriess("");
+    result = await ApiProvider().getCategoriess();
     print(result);
     // CategoriesResponseData? data;
     List<SubCategory> subcat = widget.vendordata.subCategory;
