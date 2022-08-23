@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:employee/provider/NavigationService.dart';
 import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
+import 'package:employee/src/ui/emp_status_one/emp_status.dart';
 import 'package:employee/src/ui/fcm_notification/fcm_config.dart';
 import 'package:employee/src/ui/splash/splash_screen.dart';
 import 'package:employee/utils/colors.dart';
@@ -22,7 +23,8 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
     "high_importance_channel", "High Importance Notification",
     importance: Importance.high, playSound: true);
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
@@ -43,12 +45,27 @@ fcmToken() async {
   }
 }
 
-const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('ic_stat_name');
+const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('ic_stat_name');
 void selectNotification(String? payload) async {
   if (payload != null) {
     debugPrint('notification payload: $payload');
   }
-  Navigator.push(navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => BottomNavigation()));
+
+  int empStatus = await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
+
+  if (empStatus == 1) {
+    Navigator.pushAndRemoveUntil(
+        navigationService.navigatorKey.currentContext!,
+        MaterialPageRoute(builder: (context) => EmpStatusOne()),
+        (Route<dynamic> route) => false);
+  } else {
+    Navigator.pushAndRemoveUntil(
+        navigationService.navigatorKey.currentContext!,
+        MaterialPageRoute(builder: (context) => BottomNavigation()),
+        (Route<dynamic> route) => false);
+    print((SharedPref.getStringPreference("token")));
+  }
   // String grade = payload!;
   // print("object$grade");
   // switch (grade) {
@@ -159,8 +176,8 @@ Future<void> main() async {
         notification.title,
         notification.body,
         NotificationDetails(
-          android:
-              AndroidNotificationDetails(channel.id, channel.name, color: ColorPrimary, playSound: true, icon: "logo"),
+          android: AndroidNotificationDetails(channel.id, channel.name,
+              color: ColorPrimary, playSound: true, icon: "logo"),
         ),
         payload: data["route"],
       );
@@ -169,7 +186,7 @@ Future<void> main() async {
     //     MaterialPageRoute(builder: (_) => MoneyDueScreen()));
   });
 
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
     print("a new on message");
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
@@ -180,8 +197,20 @@ Future<void> main() async {
     print("notification route==>${data["route"]}");
     if (notification != null && android != null) {
       String grade = "${message.data["route"]}";
-      Navigator.push(
-          navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => BottomNavigation()));
+      int empStatus =
+          await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
+      if (empStatus == 1) {
+        Navigator.pushAndRemoveUntil(
+            navigationService.navigatorKey.currentContext!,
+            MaterialPageRoute(builder: (context) => EmpStatusOne()),
+            (Route<dynamic> route) => false);
+      } else {
+        Navigator.pushAndRemoveUntil(
+            navigationService.navigatorKey.currentContext!,
+            MaterialPageRoute(builder: (context) => BottomNavigation()),
+            (Route<dynamic> route) => false);
+        print((SharedPref.getStringPreference("token")));
+      }
       //   print("object$grade");
       //   switch (grade) {
       //     case "MoneyDueScreen":
@@ -239,8 +268,9 @@ Future<void> main() async {
   });
   checkForInitialMessage() async {
     await Firebase.initializeApp();
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) async {});
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage? message) async {});
     ;
     log("in terminated");
     if (initialMessage != null) {
@@ -249,7 +279,8 @@ Future<void> main() async {
   }
 
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
@@ -257,7 +288,8 @@ Future<void> main() async {
     badge: true,
     sound: true,
   );
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(MyApp());
 }
@@ -323,7 +355,9 @@ class _MyAppState extends State<MyApp> {
 
         bottomSheetTheme: BottomSheetThemeData(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(topRight: Radius.circular(25), topLeft: Radius.circular(25)))),
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25),
+                    topLeft: Radius.circular(25)))),
         iconTheme: IconThemeData(
           color: ColorPrimary,
           opacity: 1,

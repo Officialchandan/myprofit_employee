@@ -12,6 +12,9 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../utils/sharedpref.dart';
+import '../emp_status_one/emp_status.dart';
+
 class AddedVendor extends StatefulWidget {
   final String title;
   final int id;
@@ -23,10 +26,17 @@ class AddedVendor extends StatefulWidget {
 
 class _AddedVendorState extends State<AddedVendor> {
   // var t = widget.title;
-  var footwearListText = ['Shoe Fly', 'Sole Mates', 'Hot Heels Boutique', 'FootCandy Shoes', 'Kickass Kicks'];
+  var footwearListText = [
+    'Shoe Fly',
+    'Sole Mates',
+    'Hot Heels Boutique',
+    'FootCandy Shoes',
+    'Kickass Kicks'
+  ];
   var datas = [];
   _AddedVendorState(String title, int id);
-  final PublishSubject<List<GetVendorByIdResponseData>> subject = PublishSubject();
+  final PublishSubject<List<GetVendorByIdResponseData>> subject =
+      PublishSubject();
 
   // GetVendorByIdResponse? loginData;
   List<GetVendorByIdResponseData> loginData = [];
@@ -37,7 +47,7 @@ class _AddedVendorState extends State<AddedVendor> {
 
   String searchText = "";
   bool searching = false;
-
+  int? empStatus;
   @override
   void dispose() {
     super.dispose();
@@ -52,6 +62,7 @@ class _AddedVendorState extends State<AddedVendor> {
   }
 
   Future<List<GetVendorByIdResponseData>> getVendorId(id) async {
+    empStatus = await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
       print("kai kroge +$id");
@@ -71,7 +82,10 @@ class _AddedVendorState extends State<AddedVendor> {
     } else {
       loading = false;
       setState(() {});
-      Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
+      Fluttertoast.showToast(
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on  internet");
     }
     return loginData;
     //_tap = true;
@@ -82,9 +96,20 @@ class _AddedVendorState extends State<AddedVendor> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {
-        Navigator.pushAndRemoveUntil(
-            context, MaterialPageRoute(builder: (BuildContext context) => BottomNavigation()), (route) => false);
+      onWillPop: () async {
+        if (empStatus == 1) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => EmpStatusOne()),
+              (route) => false);
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => BottomNavigation()),
+              (route) => false);
+        }
         return Future.value(false);
       },
       child: SafeArea(
@@ -98,13 +123,28 @@ class _AddedVendorState extends State<AddedVendor> {
                       icon: const Icon(Icons.arrow_back_ios),
                       iconSize: 20,
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(context,
-                            MaterialPageRoute(builder: (BuildContext context) => BottomNavigation()), (route) => false);
+                        if (empStatus == 1) {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      EmpStatusOne()),
+                              (route) => false);
+                        } else {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      BottomNavigation()),
+                              (route) => false);
+                        }
                       },
                     );
                   },
                 ),
-                title: Text('${widget.title}', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+                title: Text('${widget.title}',
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
                 // centerTitle: true,
                 actions: [
                   loginData.isEmpty
@@ -126,7 +166,8 @@ class _AddedVendorState extends State<AddedVendor> {
 
                                     height: 30,
                                     margin: EdgeInsets.all(8),
-                                    padding: EdgeInsets.only(right: 10, left: 10),
+                                    padding:
+                                        EdgeInsets.only(right: 10, left: 10),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(5),
@@ -179,13 +220,15 @@ class _AddedVendorState extends State<AddedVendor> {
                               loginData.isEmpty
                                   ? Center(
                                       child: Padding(
-                                          padding: const EdgeInsets.only(right: 10, top: 300),
+                                          padding: const EdgeInsets.only(
+                                              right: 10, top: 300),
                                           child: GestureDetector(
                                             onTap: () {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) => VendorForm(
+                                                    builder: (context) =>
+                                                        VendorForm(
                                                           id: widget.id,
                                                           title: widget.title,
                                                         )),
@@ -195,34 +238,44 @@ class _AddedVendorState extends State<AddedVendor> {
                                               width: 150,
                                               height: 40,
                                               margin: EdgeInsets.all(8),
-                                              padding: EdgeInsets.only(right: 10, left: 10),
+                                              padding: EdgeInsets.only(
+                                                  right: 10, left: 10),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
-                                                  borderRadius: BorderRadius.circular(5),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
                                                   boxShadow: [
                                                     BoxShadow(
-                                                        color: Colors.grey.shade300, spreadRadius: 1, blurRadius: 0),
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                        spreadRadius: 1,
+                                                        blurRadius: 0),
                                                   ]),
-                                              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                                Text(
-                                                  'Add ',
-                                                  style: TextStyle(
-                                                    color: ColorPrimary,
-                                                    fontSize: 24,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  maxLines: 1,
-                                                ),
-                                                Icon(
-                                                  Icons.add,
-                                                  color: ColorPrimary,
-                                                )
-                                              ]),
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'Add ',
+                                                      style: TextStyle(
+                                                        color: ColorPrimary,
+                                                        fontSize: 24,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      maxLines: 1,
+                                                    ),
+                                                    Icon(
+                                                      Icons.add,
+                                                      color: ColorPrimary,
+                                                    )
+                                                  ]),
                                             ),
                                           )),
                                     )
                                   : Padding(
-                                      padding: const EdgeInsets.only(top: 10.0, left: 16, right: 16),
+                                      padding: const EdgeInsets.only(
+                                          top: 10.0, left: 16, right: 16),
                                       child: TextFormField(
                                         controller: _searchController,
                                         autofocus: false,
@@ -232,28 +285,38 @@ class _AddedVendorState extends State<AddedVendor> {
                                             color: ColorPrimary,
                                             size: 25,
                                           ),
-                                          contentPadding: EdgeInsets.fromLTRB(12, 8, 5, 8),
+                                          contentPadding:
+                                              EdgeInsets.fromLTRB(12, 8, 5, 8),
                                           hintText: 'Search Shops',
                                           hintStyle: TextStyle(
-                                              color: Color.fromRGBO(85, 85, 85, 1),
+                                              color:
+                                                  Color.fromRGBO(85, 85, 85, 1),
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600),
                                           border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
                                           focusedBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                                            borderSide: const BorderSide(
+                                                color: ColorPrimary, width: 2),
                                           ),
-                                          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey)),
                                         ),
                                         onChanged: (text) {
                                           searchList.clear();
                                           if (text.isNotEmpty) {
                                             print("searchText -->$text");
-                                            List<GetVendorByIdResponseData> list = [];
+                                            List<GetVendorByIdResponseData>
+                                                list = [];
                                             log("loginData ${loginData.length}");
                                             loginData.forEach((element) {
-                                              if (element.name.toLowerCase().contains(text.toLowerCase())) {
+                                              if (element.name
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      text.toLowerCase())) {
                                                 print("text -->$text");
                                                 list.add(element);
                                                 log("element.name ${element.name}");
@@ -264,7 +327,8 @@ class _AddedVendorState extends State<AddedVendor> {
                                                 Container(
                                                   height: 100,
                                                   color: Colors.orange,
-                                                  child: Image.asset("images/no_data.gif"),
+                                                  child: Image.asset(
+                                                      "images/no_data.gif"),
                                                 );
                                               } else {
                                                 log("655757575$list");
@@ -286,7 +350,8 @@ class _AddedVendorState extends State<AddedVendor> {
                                       ? Container(
                                           padding: EdgeInsets.only(top: 300),
                                           child: Center(
-                                            child: Image.asset("images/no_data.gif"),
+                                            child: Image.asset(
+                                                "images/no_data.gif"),
                                           ),
                                         )
                                       : Container()
@@ -296,7 +361,8 @@ class _AddedVendorState extends State<AddedVendor> {
                                           shrinkWrap: true,
                                           itemCount: searchList.length,
                                           padding: EdgeInsets.only(top: 6),
-                                          itemBuilder: (BuildContext context, int index) {
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
                                             return GestureDetector(
                                               child: Column(children: [
                                                 Container(
@@ -306,57 +372,93 @@ class _AddedVendorState extends State<AddedVendor> {
                                                       //     left: 10,
                                                       //     right: 10
                                                       ),
-                                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 8),
                                                   decoration: BoxDecoration(
                                                     color: Colors.transparent,
-                                                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                15)),
                                                   ),
                                                   child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       ClipRRect(
-                                                        borderRadius: BorderRadius.circular(5),
-                                                        child: searchList[index].vendorImage.isEmpty
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        child: searchList[index]
+                                                                .vendorImage
+                                                                .isEmpty
                                                             ? Image.asset(
                                                                 "images/placeholder.png",
                                                                 width: 65,
                                                                 height: 65,
-                                                                fit: BoxFit.cover,
+                                                                fit: BoxFit
+                                                                    .cover,
                                                               )
                                                             : Image.network(
                                                                 "${searchList[index].vendorImage.first.image}",
                                                                 width: 65,
                                                                 height: 65,
-                                                                fit: BoxFit.cover,
+                                                                fit: BoxFit
+                                                                    .cover,
                                                               ),
                                                       ),
                                                       SizedBox(
                                                         width: 10,
                                                       ),
                                                       Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Container(
-                                                            child: Text(searchList[index].name,
+                                                            child: Text(
+                                                                searchList[
+                                                                        index]
+                                                                    .name,
                                                                 style: TextStyle(
-                                                                    color: Colors.black,
-                                                                    fontSize: 18,
-                                                                    overflow: TextOverflow.ellipsis,
-                                                                    fontWeight: FontWeight.w600)),
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        18,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600)),
                                                           ),
                                                           SizedBox(height: 5),
                                                           Container(
-                                                            width: MediaQuery.of(context).size.width * 0.68,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.68,
                                                             child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
                                                                 children: [
-                                                                  Text('+91 ${searchList[index].ownerMobile}',
-                                                                      style: TextStyle(
-                                                                        color: Color(0xff555555),
-                                                                        fontSize: 14,
+                                                                  Text(
+                                                                      '+91 ${searchList[index].ownerMobile}',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Color(
+                                                                            0xff555555),
+                                                                        fontSize:
+                                                                            14,
                                                                       )),
                                                                   Center(
-                                                                      child: searchList[index].isActive == 2
+                                                                      child: searchList[index].isActive ==
+                                                                              2
                                                                           ? Text(
                                                                               "  Pending  ",
                                                                               style: TextStyle(
@@ -395,16 +497,30 @@ class _AddedVendorState extends State<AddedVendor> {
                                                           ),
                                                           SizedBox(height: 5),
                                                           Row(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
                                                             children: [
-                                                              Image.asset('images/g-pin.png', width: 13),
+                                                              Image.asset(
+                                                                  'images/g-pin.png',
+                                                                  width: 13),
                                                               Container(
-                                                                width: MediaQuery.of(context).size.width * 0.60,
-                                                                child: Text(' ${searchList[index].address}',
-                                                                    style: TextStyle(
-                                                                      color: Color(0xff555555),
-                                                                      overflow: TextOverflow.ellipsis,
-                                                                      fontSize: 14,
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.60,
+                                                                child: Text(
+                                                                    ' ${searchList[index].address}',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Color(
+                                                                          0xff555555),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      fontSize:
+                                                                          14,
                                                                     )),
                                                               ),
                                                             ],
@@ -420,18 +536,26 @@ class _AddedVendorState extends State<AddedVendor> {
                                                 )
                                               ]),
                                               onTap: () {
-                                                FocusScope.of(context).requestFocus(new FocusNode());
-                                                FocusScopeNode currentFocus = FocusScope.of(context);
-                                                if (!currentFocus.hasPrimaryFocus) {
+                                                FocusScope.of(context)
+                                                    .requestFocus(
+                                                        new FocusNode());
+                                                FocusScopeNode currentFocus =
+                                                    FocusScope.of(context);
+                                                if (!currentFocus
+                                                    .hasPrimaryFocus) {
                                                   currentFocus.unfocus();
                                                 }
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                        builder: (context) => UpdateVendorDetail(
-                                                            title: widget.title,
-                                                            id: widget.id,
-                                                            vendordata: searchList[index])));
+                                                        builder: (context) =>
+                                                            UpdateVendorDetail(
+                                                                title: widget
+                                                                    .title,
+                                                                id: widget.id,
+                                                                vendordata:
+                                                                    searchList[
+                                                                        index])));
                                               },
                                             );
                                           })),

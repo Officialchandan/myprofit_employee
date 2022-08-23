@@ -3,6 +3,9 @@ import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/sharedpref.dart';
+import '../emp_status_one/emp_status.dart';
+
 class FcmConfig {
   static NotificationSettings? settings;
   static String fcmToken = "";
@@ -24,13 +27,23 @@ class FcmConfig {
   static configNotification() async {
     await FcmConfig.requestPermission();
     print("configNotification--->");
-    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) async {});
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage? message) async {});
   }
 
   static Future<void> getInitialMessage(RemoteMessage message) async {
     print("getInitialMessage--->${message.toMap()}");
-    Navigator.push(
-        navigationService.navigatorKey.currentContext!, MaterialPageRoute(builder: (_) => BottomNavigation()));
+
+    int empStatus =
+        await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
+    if (empStatus == 1) {
+      Navigator.push(navigationService.navigatorKey.currentContext!,
+          MaterialPageRoute(builder: (_) => EmpStatusOne()));
+    } else {
+      Navigator.push(navigationService.navigatorKey.currentContext!,
+          MaterialPageRoute(builder: (_) => BottomNavigation()));
+    }
     // String grade = message.data['route']!;
     // print("object$grade");
     // switch (grade) {

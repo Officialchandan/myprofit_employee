@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:employee/model/add_intrested_user.dart';
@@ -13,6 +14,10 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../utils/constant.dart';
+import '../../../utils/sharedpref.dart';
+import '../emp_status_one/emp_status.dart';
+
 abstract class OnSelectListener {
   onAreaSelect(String areaId);
 }
@@ -21,13 +26,15 @@ class UserRegister extends StatefulWidget {
   final Function(OnSelectListener listener) onTab;
 
   final String? location;
-  UserRegister({Key? key, required this.onTab, this.location}) : super(key: key);
+  UserRegister({Key? key, required this.onTab, this.location})
+      : super(key: key);
 
   @override
   _UserRegisterState createState() => _UserRegisterState();
 }
 
-class _UserRegisterState extends State<UserRegister> implements OnSelectListener {
+class _UserRegisterState extends State<UserRegister>
+    implements OnSelectListener {
   var nameList = ['0 - 10k', '10 - 20k', '20 - 50k', '50k +'];
   String? areaId;
 
@@ -49,14 +56,50 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
   int _home = -1;
   //otp api call
   OnSelectListener? listener;
+  int? empStatus;
+  Timer? countdownTimer;
+  Duration myDuration = Duration(seconds: 60);
+  bool resentOtpCheck = false;
+
+  void startTimer() {
+    print("startTimet-->");
+    countdownTimer =
+        Timer.periodic(Duration(seconds: 1), (_) => setCountDown());
+    print("countdownTimer-->$countdownTimer.");
+  }
+
+  void setCountDown() {
+    final reduceSecondsBy = 1;
+    final seconds = myDuration.inSeconds - reduceSecondsBy;
+    if (seconds < 0) {
+      countdownTimer!.cancel();
+    } else {
+      myDuration = Duration(seconds: seconds);
+      String strDigits(int n) => n.toString().padLeft(2, '0');
+      Constant.seconds.value = strDigits(myDuration.inSeconds.remainder(60));
+      // print("myDuration__${Constant.seconds.value}");
+    }
+    ifMounted();
+  }
+
+  ifMounted() {
+    if (!mounted) {
+      setState(() {});
+    }
+  }
+
   otpapi(userid) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
       if (_otp.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OTP");
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter OTP");
       } else {
-        final GetLocationrOtpResponse loginData = await ApiProvider().getOtpIntrestedUser(userid, _otp.text);
+        final GetLocationrOtpResponse loginData =
+            await ApiProvider().getOtpIntrestedUser(userid, _otp.text);
         log("ooooo $loginData");
         if (loginData.success == true) {
           Fluttertoast.showToast(
@@ -69,22 +112,33 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
           _emailaddress.clear();
           _address.clear();
           _otp.clear();
-          // Navigator.pop(context);
-
-          Navigator.pushAndRemoveUntil(
-              context, MaterialPageRoute(builder: (context) => BottomNavigation()), (Route<dynamic> route) => false);
+          if (empStatus == 1) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => EmpStatusOne()),
+                (Route<dynamic> route) => false);
+          } else {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => BottomNavigation()),
+                (Route<dynamic> route) => false);
+          }
         } else {
           Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
-            msg: loginData.success == false ? "OTP is incorrect" : "thanks for login ",
+            msg: loginData.success == false
+                ? "OTP is incorrect"
+                : "thanks for login ",
             // timeInSecForIos: 3
           );
         }
       }
     } else {
       Fluttertoast.showToast(
-          backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on the internet");
     }
   }
 
@@ -93,88 +147,132 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
     return showDialog(
         context: context,
         builder: (context) {
-          return ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 400, maxHeight: 150),
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              title: RichText(
-                text: TextSpan(
-                  text: "OTP Verification\n",
-                  style: GoogleFonts.openSans(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: "${"Please verify your OTP on"}\n",
-                      style: GoogleFonts.openSans(
-                        fontSize: 14.0,
-                        height: 1.5,
-                        color: ColorTextPrimary,
-                        fontWeight: FontWeight.w400,
-                      ),
+          return WillPopScope(
+            onWillPop: () {
+              if (Constant.seconds.value != '00') {
+                return Future.value(false);
+              } else {
+                return Future.value(true);
+              }
+            },
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 400, maxHeight: 150),
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: RichText(
+                  text: TextSpan(
+                    text: "OTP Verification\n",
+                    style: GoogleFonts.openSans(
+                      fontSize: 20.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
                     ),
-                    TextSpan(
-                      text: "+91 $mobile",
-                      style: GoogleFonts.openSans(
-                        fontSize: 14.0,
-                        height: 1.5,
-                        color: ColorTextPrimary,
-                        fontWeight: FontWeight.w400,
+                    children: [
+                      TextSpan(
+                        text: "${"Please verify your OTP on"}\n",
+                        style: GoogleFonts.openSans(
+                          fontSize: 14.0,
+                          height: 1.5,
+                          color: ColorTextPrimary,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    )
-                  ],
+                      TextSpan(
+                        text: "+91 $mobile",
+                        style: GoogleFonts.openSans(
+                          fontSize: 14.0,
+                          height: 1.5,
+                          color: ColorTextPrimary,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              content: TextField(
-                controller: _otp,
-                cursorColor: ColorPrimary,
-                keyboardType: TextInputType.number,
-                //inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                decoration: InputDecoration(
-                  filled: true,
+                content: TextField(
+                  controller: _otp,
+                  cursorColor: ColorPrimary,
+                  keyboardType: TextInputType.number,
+                  //inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(
+                    filled: true,
 
-                  // fillColor: Colors.black,
-                  hintText: "Enter OTP",
-                  hintStyle: GoogleFonts.openSans(
-                    fontWeight: FontWeight.w600,
-                  ),
-                  contentPadding: const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: ColorPrimary, width: 2),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              actions: <Widget>[
-                Center(
-                  child: MaterialButton(
-                    minWidth: MediaQuery.of(context).size.width * 0.60,
-                    height: 50,
-                    padding: const EdgeInsets.all(8.0),
-                    textColor: Colors.white,
-                    color: ColorPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    onPressed: () {
-                      otpapi(userid);
-                    },
-                    child: new Text(
-                      "Verify",
-                      style: GoogleFonts.openSans(
-                          fontSize: 17, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
+                    // fillColor: Colors.black,
+                    hintText: "Enter OTP",
+                    hintStyle: GoogleFonts.openSans(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    contentPadding: const EdgeInsets.only(
+                        left: 14.0, bottom: 8.0, top: 8.0),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: ColorPrimary, width: 2),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
-                Container(
-                  height: 20,
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  color: Colors.transparent,
-                )
-              ],
+                actions: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MaterialButton(
+                        minWidth: MediaQuery.of(context).size.width * 0.60,
+                        height: 50,
+                        padding: const EdgeInsets.all(8.0),
+                        textColor: Colors.white,
+                        color: ColorPrimary,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        onPressed: () {
+                          otpapi(userid);
+                        },
+                        child: new Text(
+                          "Verify",
+                          style: GoogleFonts.openSans(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              decoration: TextDecoration.none),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size(50, 30),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            alignment: Alignment.center),
+                        onPressed: () {
+                          if (Constant.seconds.value == '00') {
+                            resentOtpCheck = true;
+                            addUser();
+                            setState(() {});
+                          }
+                        },
+                        child: ValueListenableBuilder(
+                          valueListenable: Constant.seconds,
+                          builder: (BuildContext context, String value, _) {
+                            return Text(
+                                value == '00'
+                                    ? "Resend OTP"
+                                    : "Resend OTP after $value seconds",
+                                style: TextStyle(
+                                    color: value == '00'
+                                        ? ColorPrimary
+                                        : Colors.grey.shade400,
+                                    fontSize: 16));
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         });
@@ -186,104 +284,175 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
       if (_name.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Name");
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter User Name");
       } else if (_mobile.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter 10 digits Mobile number");
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter 10 digits Mobile number");
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Address");
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter User Address");
       } else if (_pincode.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Pincode");
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Pincode");
       } else if (_occupation.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Occupation");
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Occupation");
       } else if (_estIncome.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter EstIncome");
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter EstIncome");
       } else if (_familyMembers.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter FamilyMember");
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter FamilyMember");
       } else if (_placeOfBuying.text.isEmpty) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Market of choice");
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Enter Market of choice");
       } else if (_home == -1) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select Home type");
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Select Home type");
       } else if (_character == -1) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select On Phone Type");
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Select On Phone Type");
       } else if (_gift == -1) {
         Fluttertoast.showToast(
-            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Select gift given or not");
+            backgroundColor: ColorPrimary,
+            textColor: Colors.white,
+            msg: "Please Select gift given or not");
       } else if (_emailaddress.text.isEmpty) {
-        final AddIntrestedUserResponse loginData = await ApiProvider().getIntrestedUser(
-            areaId,
-            _name.text,
-            _mobile.text,
-            _emailaddress.text,
-            _address.text,
-            _character,
-            _pincode.text,
-            _gift,
-            _occupation.text,
-            _estIncome.text,
-            _home,
-            _familyMembers.text,
-            _placeOfBuying.text);
+        final AddIntrestedUserResponse loginData = await ApiProvider()
+            .getIntrestedUser(
+                areaId,
+                _name.text,
+                _mobile.text,
+                _emailaddress.text,
+                _address.text,
+                _character,
+                _pincode.text,
+                _gift,
+                _occupation.text,
+                _estIncome.text,
+                _home,
+                _familyMembers.text,
+                _placeOfBuying.text);
 
         log("ooooo $loginData");
         if (loginData.success) {
           userid = loginData.data!.userId;
-          _displayDialog(
-            context,
-            _mobile.text,
-          );
+          if (Constant.seconds.value == '00') {
+            if (countdownTimer != null) {
+              countdownTimer!.cancel();
+              myDuration = const Duration(seconds: 60);
+            }
+            startTimer();
+          }
+          if (!resentOtpCheck) {
+            _displayDialog(
+              context,
+              _mobile.text,
+            );
+          }
         } else {
-          Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: loginData.message);
+          Fluttertoast.showToast(
+              backgroundColor: ColorPrimary,
+              textColor: Colors.white,
+              msg: loginData.message);
         }
       } else {
-        final AddIntrestedUserResponse loginData = await ApiProvider().getIntrestedUser(
-            areaId,
-            _name.text,
-            _mobile.text,
-            _emailaddress.text,
-            _address.text,
-            _character,
-            _pincode.text,
-            _gift,
-            _occupation.text,
-            _estIncome.text,
-            _home,
-            _familyMembers.text,
-            _placeOfBuying.text);
+        final AddIntrestedUserResponse loginData = await ApiProvider()
+            .getIntrestedUser(
+                areaId,
+                _name.text,
+                _mobile.text,
+                _emailaddress.text,
+                _address.text,
+                _character,
+                _pincode.text,
+                _gift,
+                _occupation.text,
+                _estIncome.text,
+                _home,
+                _familyMembers.text,
+                _placeOfBuying.text);
 
         log("ooooo $loginData");
         if (loginData.success) {
           userid = loginData.data!.userId;
-          _displayDialog(
-            context,
-            _mobile.text,
-          );
+          if (Constant.seconds.value == '00') {
+            if (countdownTimer != null) {
+              countdownTimer!.cancel();
+              myDuration = const Duration(seconds: 60);
+            }
+            startTimer();
+          }
+          if (!resentOtpCheck) {
+            _displayDialog(
+              context,
+              _mobile.text,
+            );
+          }
         } else {
-          Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: loginData.message);
+          Fluttertoast.showToast(
+              backgroundColor: ColorPrimary,
+              textColor: Colors.white,
+              msg: loginData.message);
         }
       }
     } else {
       Fluttertoast.showToast(
-          backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on the internet");
+          backgroundColor: ColorPrimary,
+          textColor: Colors.white,
+          msg: "Please turn on the internet");
     }
   }
 
   @override
   void initState() {
+    init();
     widget.onTab(this);
     super.initState();
+  }
+
+  init() async {
+    empStatus = await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
+    print("empStatus-->$empStatus");
+    ifMounted();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        Navigator.pushAndRemoveUntil(
-            context, MaterialPageRoute(builder: (BuildContext context) => BottomNavigation()), (route) => false);
+        if (empStatus == 1) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => EmpStatusOne()),
+              (Route<dynamic> route) => false);
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => BottomNavigation()),
+              (Route<dynamic> route) => false);
+        }
         return Future.value(false);
       },
       child: SafeArea(
@@ -292,13 +461,24 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
             appBar: AppBar(
               leading: IconButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                      context, MaterialPageRoute(builder: (context) => BottomNavigation()), ModalRoute.withName("/"));
+                  if (empStatus == 1) {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => EmpStatusOne()),
+                        ModalRoute.withName("/"));
+                  } else {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BottomNavigation()),
+                        ModalRoute.withName("/"));
+                  }
                 },
-                icon: Icon(Icons.arrow_back_ios),
+                icon: empStatus != 1 ? Icon(Icons.arrow_back_ios) : Container(),
               ),
               backgroundColor: ColorPrimary,
-              title: Text('User Register', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+              title: Text('User Register',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
               centerTitle: true,
             ),
             body: SingleChildScrollView(
@@ -308,8 +488,10 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Name *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _name,
@@ -323,24 +505,32 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       maxLength: 25,
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Colors.white,
                         hintText: '',
-                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(
+                            color: ColorTextPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          borderSide:
+                              const BorderSide(color: ColorPrimary, width: 2),
                         ),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text('Mobile *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _mobile,
@@ -348,29 +538,38 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       maxLength: 10,
-                      validator: (numb) => Validator.validateMobile(numb!, context),
+                      validator: (numb) =>
+                          Validator.validateMobile(numb!, context),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       autofocus: false,
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Colors.white,
                         hintText: '',
-                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(
+                            color: ColorTextPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          borderSide:
+                              const BorderSide(color: ColorPrimary, width: 2),
                         ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text('Email Address (Optional)',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _emailaddress,
@@ -384,24 +583,32 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       maxLength: 25,
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Colors.white,
                         hintText: '',
-                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(
+                            color: ColorTextPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          borderSide:
+                              const BorderSide(color: ColorPrimary, width: 2),
                         ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text('Address *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _address,
@@ -410,28 +617,37 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       //autovalidate: true,
                       maxLength: 25,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r"[A-Za-z0-9'\.\-\s\,\\\/]")),
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r"[A-Za-z0-9'\.\-\s\,\\\/]")),
                       ],
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Colors.white,
                         hintText: '',
-                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(
+                            color: ColorTextPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          borderSide:
+                              const BorderSide(color: ColorPrimary, width: 2),
                         ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text('Pincode *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _pincode,
@@ -443,24 +659,32 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       maxLength: 6,
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Colors.white,
                         hintText: '',
-                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(
+                            color: ColorTextPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          borderSide:
+                              const BorderSide(color: ColorPrimary, width: 2),
                         ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text('Occupation *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _occupation,
@@ -474,24 +698,32 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       maxLength: 25,
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Colors.white,
                         hintText: '',
-                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(
+                            color: ColorTextPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          borderSide:
+                              const BorderSide(color: ColorPrimary, width: 2),
                         ),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text('Est Income *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _estIncome,
@@ -509,24 +741,32 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       },
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Colors.white,
                         hintText: '',
-                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(
+                            color: ColorTextPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          borderSide:
+                              const BorderSide(color: ColorPrimary, width: 2),
                         ),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text('Family Members *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _familyMembers,
@@ -538,24 +778,32 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       maxLength: 2,
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Colors.white,
                         hintText: '',
-                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(
+                            color: ColorTextPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          borderSide:
+                              const BorderSide(color: ColorPrimary, width: 2),
                         ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text('Market Of Choice *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _placeOfBuying,
@@ -570,73 +818,87 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
 
                       decoration: InputDecoration(
                         counterText: "",
-                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        contentPadding:
+                            EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                         filled: true,
                         fillColor: Colors.white,
                         hintText: '',
-                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        hintStyle: TextStyle(
+                            color: ColorTextPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey)),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                          borderSide:
+                              const BorderSide(color: ColorPrimary, width: 2),
                         ),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text('House Type *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                          Radio<int>(
-                            activeColor: ColorPrimary,
-                            value: 1,
-                            groupValue: _home,
-                            onChanged: (value) {
-                              log("===>$_home");
-                              setState(() {
-                                _home = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            'Pakka Makaan',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ]),
-                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                          Radio<int>(
-                            activeColor: ColorPrimary,
-                            value: 0,
-                            groupValue: _home,
-                            onChanged: (value) {
-                              log("===>$_home");
-                              setState(() {
-                                _home = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            'Kaccha Makaan',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          )
-                        ]),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<int>(
+                                activeColor: ColorPrimary,
+                                value: 1,
+                                groupValue: _home,
+                                onChanged: (value) {
+                                  log("===>$_home");
+                                  setState(() {
+                                    _home = value!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                'Pakka Makaan',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ]),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<int>(
+                                activeColor: ColorPrimary,
+                                value: 0,
+                                groupValue: _home,
+                                onChanged: (value) {
+                                  log("===>$_home");
+                                  setState(() {
+                                    _home = value!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                'Kaccha Makaan',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              )
+                            ]),
                       ],
                     ),
 
                     SizedBox(height: 20),
                     Text('Phone Type *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
                     // Row(
                     //   children: [
                     //     Container(
@@ -682,92 +944,102 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                          Radio<int>(
-                            activeColor: ColorPrimary,
-                            value: 1,
-                            groupValue: _character,
-                            onChanged: (value) {
-                              log("===>$_character");
-                              setState(() {
-                                _character = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            'Smart Phone',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ]),
-                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                          Radio<int>(
-                            activeColor: ColorPrimary,
-                            value: 0,
-                            groupValue: _character,
-                            onChanged: (value) {
-                              log("===>$_character");
-                              setState(() {
-                                _character = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            'Feature Phone  ',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          )
-                        ]),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<int>(
+                                activeColor: ColorPrimary,
+                                value: 1,
+                                groupValue: _character,
+                                onChanged: (value) {
+                                  log("===>$_character");
+                                  setState(() {
+                                    _character = value!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                'Smart Phone',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ]),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<int>(
+                                activeColor: ColorPrimary,
+                                value: 0,
+                                groupValue: _character,
+                                onChanged: (value) {
+                                  log("===>$_character");
+                                  setState(() {
+                                    _character = value!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                'Feature Phone  ',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              )
+                            ]),
                       ],
                     ),
                     SizedBox(height: 20),
                     Text('Gift Given? *',
-                        style:
-                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Color.fromRGBO(48, 48, 48, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                          Radio<int>(
-                            activeColor: ColorPrimary,
-                            value: 1,
-                            groupValue: _gift,
-                            onChanged: (value) {
-                              log("===>$_gift");
-                              setState(() {
-                                _gift = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            'Yes',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ]),
-                        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                          Radio<int>(
-                            activeColor: ColorPrimary,
-                            value: 0,
-                            groupValue: _gift,
-                            onChanged: (value) {
-                              log("===>$_gift");
-                              setState(() {
-                                _gift = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            'No',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          )
-                        ]),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<int>(
+                                activeColor: ColorPrimary,
+                                value: 1,
+                                groupValue: _gift,
+                                onChanged: (value) {
+                                  log("===>$_gift");
+                                  setState(() {
+                                    _gift = value!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                'Yes',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ]),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<int>(
+                                activeColor: ColorPrimary,
+                                value: 0,
+                                groupValue: _gift,
+                                onChanged: (value) {
+                                  log("===>$_gift");
+                                  setState(() {
+                                    _gift = value!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                'No',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              )
+                            ]),
                         SizedBox()
                       ],
                     ),
@@ -783,12 +1055,16 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                         ),
                         onPressed: () {
                           log("kai kai---->");
+                          resentOtpCheck = false;
                           addUser();
                           log(" location: areaId,$areaId");
                         },
                         child: Text(
                           "REGISTER",
-                          style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -887,13 +1163,15 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
     showModalBottomSheet(
         isDismissible: false,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
         builder: (BuildContext context) {
           return Container(
               padding: EdgeInsets.only(top: 10),
               height: 250,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
               child: Column(children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -924,7 +1202,10 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       child: Container(
                         child: Text(
                           "Cancel",
-                          style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -949,7 +1230,8 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                             },
                             child: Text(
                               "   ${nameList[index]}",
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
                         );

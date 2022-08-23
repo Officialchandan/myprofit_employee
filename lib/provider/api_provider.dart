@@ -49,6 +49,7 @@ class ApiProvider {
   var client = http.Client();
   //var baseUrl = "http://employee.tekzee.in/api/v1";
   var baseUrl = "http://employee.myprofitinc.com/api/v1";
+  // var baseUrl2 = "http://employee.myprofitinc.com/api/v2";
 
   Future<LoginResponse> login(mobile) async {
     log("chl gyi");
@@ -245,7 +246,8 @@ class ApiProvider {
     }
   }
 
-  Future<UpdateVendorResponse> updatedetails(id, shopname, ownername, mobile, address, landmark, city, state, pin,
+  Future<UpdateVendorResponse> updatedetails(
+      id, shopname, ownername, mobile, address, landmark, city, state, pin,
       [cat, subcat]) async {
     log("chl gyi }");
     log("chl gyi $id");
@@ -329,8 +331,8 @@ class ApiProvider {
     addvendor["pin"] = pin;
     addvendor["lat"] = lat;
     addvendor["lng"] = lng;
-    addvendor["owner_sign"] =
-        MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+    addvendor["owner_sign"] = MultipartFile.fromBytes(ownersign,
+        filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
     addvendor["acc_holder_name"] = accountholdername;
     addvendor["ifsc"] = bankifsc;
     addvendor["account_no"] = accountnumber;
@@ -420,8 +422,8 @@ class ApiProvider {
     addvendor["pin"] = pin;
     addvendor["lat"] = lat;
     addvendor["lng"] = lng;
-    addvendor["owner_sign"] =
-        MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+    addvendor["owner_sign"] = MultipartFile.fromBytes(ownersign,
+        filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
 
     List<MultipartFile> ownerIdProof = [];
 
@@ -466,7 +468,12 @@ class ApiProvider {
     var dtoken = (await firebaseMessaging.getToken())!;
     try {
       Response res = await dio.post('$baseUrl/addVendorForm_verifyOTP',
-          data: {"vendor_id": id, "otp": otp, "mobile": mobile, "device_token": dtoken},
+          data: {
+            "vendor_id": id,
+            "otp": otp,
+            "mobile": mobile,
+            "device_token": dtoken
+          },
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ));
@@ -678,8 +685,20 @@ class ApiProvider {
     }
   }
 
-  Future<AddIntrestedUserResponse> getIntrestedUser(locationId, name, mobile, email, address, phone, pincode, gift,
-      occupation, income, hometype, familyMembers, marketOfChoice) async {
+  Future<AddIntrestedUserResponse> getIntrestedUser(
+      locationId,
+      name,
+      mobile,
+      email,
+      address,
+      phone,
+      pincode,
+      gift,
+      occupation,
+      income,
+      hometype,
+      familyMembers,
+      marketOfChoice) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${SharedPref.getStringPreference(SharedPref.VENDORID)}");
@@ -691,7 +710,8 @@ class ApiProvider {
     try {
       Response res = await dio.post('$baseUrl/registerInterestedUser',
           data: ({
-            "employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID),
+            "employee_id":
+                await SharedPref.getStringPreference(SharedPref.VENDORID),
             "location_id": locationId,
             "name": name,
             "mobile": mobile,
@@ -755,13 +775,16 @@ class ApiProvider {
   }
 
   Future<GetAlotedAreaResponse> getAlotedArea() async {
-    log("chl gyi 2}");
+    log("chl gyi 1}");
     print(await SharedPref.getStringPreference('token'));
     var token = await SharedPref.getStringPreference('token');
     try {
       Response res = await dio.post(
         '$baseUrl/getCampaignLocation',
-        data: ({"employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID)}),
+        data: ({
+          "employee_id":
+              await SharedPref.getStringPreference(SharedPref.VENDORID)
+        }),
         options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       log("====${res.data}");
@@ -782,7 +805,8 @@ class ApiProvider {
     }
   }
 
-  Future<UserNotIntrestedResponse> getUnIntrestedUser(locationId, name, address, pincode, reason) async {
+  Future<UserNotIntrestedResponse> getUnIntrestedUser(
+      locationId, name, address, pincode, reason) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${await SharedPref.getStringPreference(SharedPref.VENDORID)}");
@@ -794,7 +818,8 @@ class ApiProvider {
     try {
       Response res = await dio.post('$baseUrl/registerNotInterestedUser',
           data: ({
-            "employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID),
+            "employee_id":
+                await SharedPref.getStringPreference(SharedPref.VENDORID),
             "location_id": locationId,
             "name": name,
             "address": address,
@@ -851,7 +876,8 @@ class ApiProvider {
     // try {
     var token = await SharedPref.getStringPreference('token');
     Response res = await dio.post('$baseUrl/getEmployeeSendNotificatonList',
-        data: input, options: Options(headers: {"Authorization": "Bearer $token"}));
+        data: input,
+        options: Options(headers: {"Authorization": "Bearer $token"}));
 
     return VendorNotificationResponse.fromJson(res.toString());
     // } catch (error) {
@@ -871,7 +897,8 @@ class ApiProvider {
     try {
       var token = await SharedPref.getStringPreference('token');
       Response res = await dio.post('$baseUrl/updateSendNotificationStatus',
-          data: input, options: Options(headers: {"Authorization": "Bearer $token"}));
+          data: input,
+          options: Options(headers: {"Authorization": "Bearer $token"}));
 
       return UpdateNotificationStatus.fromJson(res.toString());
     } catch (error) {

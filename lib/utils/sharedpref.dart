@@ -10,6 +10,7 @@ class SharedPref {
   static const DEVICETOKEN = "device_id";
   static const NAME = "name";
   static const MOBILE = "mobile";
+  static const EMP_STATUS = "emp_status";
 
   static Future<String> getStringPreference(String key) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
