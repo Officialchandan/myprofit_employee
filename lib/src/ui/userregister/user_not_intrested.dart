@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../utils/constant.dart';
 import '../../../utils/sharedpref.dart';
 
 class UserNotInterested extends StatefulWidget {
@@ -28,7 +29,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
   TextEditingController _reason = TextEditingController();
 
   addUser() async {
-    int empStatus =
+    Constant.empStatus =
         await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
@@ -60,7 +61,7 @@ class _UserNotInterestedState extends State<UserNotInterested> {
               textColor: Colors.white,
               msg: loginData.message);
 
-          if (empStatus == 1) {
+          if (Constant.empStatus == 1) {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => EmpStatusOne()),

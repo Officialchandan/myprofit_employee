@@ -3,6 +3,7 @@ import 'package:employee/src/ui/bottom_navigation/bottom_navigation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/constant.dart';
 import '../../../utils/sharedpref.dart';
 import '../emp_status_one/emp_status.dart';
 
@@ -35,9 +36,9 @@ class FcmConfig {
   static Future<void> getInitialMessage(RemoteMessage message) async {
     print("getInitialMessage--->${message.toMap()}");
 
-    int empStatus =
+    Constant.empStatus =
         await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
-    if (empStatus == 1) {
+    if (Constant.empStatus == 1) {
       Navigator.push(navigationService.navigatorKey.currentContext!,
           MaterialPageRoute(builder: (_) => EmpStatusOne()));
     } else {

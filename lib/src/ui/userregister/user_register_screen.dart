@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:developer';
 
 import 'package:employee/model/add_intrested_user.dart';
@@ -14,9 +15,11 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../model/vendor_send_notification.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/sharedpref.dart';
 import '../emp_status_one/emp_status.dart';
+import '../home/notification_screen/notification_screen.dart';
 
 abstract class OnSelectListener {
   onAreaSelect(String areaId);
@@ -24,9 +27,9 @@ abstract class OnSelectListener {
 
 class UserRegister extends StatefulWidget {
   final Function(OnSelectListener listener) onTab;
-
+  final Function()? onTapDr;
   final String? location;
-  UserRegister({Key? key, required this.onTab, this.location})
+  UserRegister({Key? key, required this.onTab, this.location, this.onTapDr})
       : super(key: key);
 
   @override
@@ -54,9 +57,12 @@ class _UserRegisterState extends State<UserRegister>
   int _character = -1;
   int _gift = -1;
   int _home = -1;
+
+  List<VendorNotificationData> notificationList = [];
+  int count = 0, isReadCount = 0, totalnotification = 0;
+  int? notifiicationlistlength;
   //otp api call
   OnSelectListener? listener;
-  int? empStatus;
   Timer? countdownTimer;
   Duration myDuration = Duration(seconds: 60);
   bool resentOtpCheck = false;
@@ -112,7 +118,7 @@ class _UserRegisterState extends State<UserRegister>
           _emailaddress.clear();
           _address.clear();
           _otp.clear();
-          if (empStatus == 1) {
+          if (Constant.empStatus == 1) {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => EmpStatusOne()),
@@ -427,22 +433,65 @@ class _UserRegisterState extends State<UserRegister>
 
   @override
   void initState() {
-    init();
     widget.onTab(this);
+    init();
     super.initState();
   }
 
   init() async {
-    empStatus = await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
-    print("empStatus-->$empStatus");
-    ifMounted();
+    Constant.empStatus =
+        await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
+    print("empStatus-->${Constant.empStatus}");
+    if (Constant.empStatus == 1) {
+      getNotifications();
+    }
+  }
+
+  getNotifications() async {
+    log("message");
+    String userId = await SharedPref.getStringPreference(SharedPref.VENDORID);
+    Map input = HashMap();
+    input["employee_id"] = userId;
+    log("$input");
+    if (await Network.isConnected()) {
+      VendorNotificationResponse response =
+          await ApiProvider().getNotifications(input);
+      log("=======:> ${response.message}");
+      if (response.success) {
+        notificationList = response.data!;
+        notifiicationlistlength = response.data!.length;
+        log("=====>$isReadCount");
+        log("====>$count");
+        response.data!.forEach((element) {
+          log("=====>${element.isRead}");
+          if (element.isRead == 0) {
+            isReadCount++;
+          }
+          setState(() {
+            count = isReadCount - totalnotification;
+          });
+        });
+      } else {}
+      log("=======>$notifiicationlistlength");
+      setState(() {});
+    } else {
+      _displayDialogInternet(context);
+    }
+  }
+
+  @override
+  void dispose() {
+    if (countdownTimer != null) {
+      countdownTimer!.cancel();
+    }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (empStatus == 1) {
+        if (Constant.empStatus == 1) {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => EmpStatusOne()),
@@ -459,27 +508,93 @@ class _UserRegisterState extends State<UserRegister>
         child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              leading: IconButton(
-                onPressed: () {
-                  if (empStatus == 1) {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => EmpStatusOne()),
-                        ModalRoute.withName("/"));
-                  } else {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BottomNavigation()),
-                        ModalRoute.withName("/"));
-                  }
-                },
-                icon: empStatus != 1 ? Icon(Icons.arrow_back_ios) : Container(),
-              ),
+              leading: Constant.empStatus == 1
+                  ? Builder(
+                      builder: (BuildContext context) {
+                        return InkWell(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(10, 15, 15, 15),
+                            child: Image.asset('images/@3x/w-menu.png'),
+                          ),
+                          onTap: () {
+                            widget.onTapDr!();
+                          },
+                        );
+                      },
+                    )
+                  : IconButton(
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BottomNavigation()),
+                            ModalRoute.withName("/"));
+                      },
+                      icon: Icon(Icons.arrow_back_ios),
+                    ),
               backgroundColor: ColorPrimary,
               title: Text('User Register',
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
               centerTitle: true,
+              actions: [
+                Stack(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.notifications,
+                      ),
+                      onPressed: () {
+                        notificationList.isNotEmpty
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NotificationScreen(
+                                        data: notificationList))).then((value) {
+                                setState(() {
+                                  count -= value as int;
+                                });
+                              })
+                            : Fluttertoast.showToast(
+                                msg: "No Notification!",
+                                backgroundColor: ColorPrimary);
+                      },
+                    ),
+                    notificationList.isNotEmpty
+                        ? Positioned(
+                            right: 10,
+                            top: 8,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Container(
+                                height: 14,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(50),
+                                  border:
+                                      Border.all(color: ColorPrimary, width: 1),
+                                ),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(3, 0, 3, 0),
+                                    child: Text(
+                                      count.toString(),
+                                      textDirection: TextDirection.ltr,
+                                      style: TextStyle(
+                                        color: ColorPrimary,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 8,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ))
+                        : Container()
+                  ],
+                ),
+              ],
             ),
             body: SingleChildScrollView(
               child: Container(
@@ -1238,6 +1353,66 @@ class _UserRegisterState extends State<UserRegister>
                       }),
                 )
               ]));
+        });
+  }
+
+  _displayDialogInternet(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              title: RichText(
+                text: TextSpan(
+                  text: "Check Your Internet Connectivity",
+                  style: GoogleFonts.openSans(
+                    fontSize: 14.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                Center(
+                  child: MaterialButton(
+                    minWidth: MediaQuery.of(context).size.width * 0.40,
+                    height: 50,
+                    padding: const EdgeInsets.all(8.0),
+                    textColor: Colors.white,
+                    color: ColorPrimary,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    onPressed: () async {
+                      if (await Network.isConnected()) {
+                        getNotifications();
+                        Navigator.pop(context);
+                      } else {
+                        Fluttertoast.showToast(
+                            backgroundColor: ColorPrimary,
+                            textColor: Colors.white,
+                            msg: "Please turn on  internet");
+                      }
+                    },
+                    child: new Text(
+                      "Ok",
+                      style: GoogleFonts.openSans(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.none),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  color: Colors.transparent,
+                )
+              ],
+            ),
+          );
         });
   }
 }

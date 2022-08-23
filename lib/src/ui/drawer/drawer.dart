@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../utils/constant.dart';
 import '../emp_status_one/emp_status.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -160,10 +161,10 @@ class _AppDrawerState extends State<AppDrawer> {
                           fontSize: 15,
                           fontWeight: FontWeight.w600)),
                   onTap: () async {
-                    int empStatus = await SharedPref.getIntegerPreference(
+                    Constant.empStatus = await SharedPref.getIntegerPreference(
                         SharedPref.EMP_STATUS);
                     Navigator.pop(context);
-                    if (empStatus == 1) {
+                    if (Constant.empStatus == 1) {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(

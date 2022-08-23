@@ -38,15 +38,15 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 fcmToken() async {
   try {
     String? tok = await firebaseMessaging.getToken();
-    log("====>$tok");
     SharedPref.setStringPreference(SharedPref.DEVICETOKEN, tok!);
+    log("====>$tok");
   } catch (e) {
     log("error");
   }
 }
 
 const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('ic_stat_name');
+    AndroidInitializationSettings("logo");
 void selectNotification(String? payload) async {
   if (payload != null) {
     debugPrint('notification payload: $payload');
@@ -159,6 +159,11 @@ Future<void> main() async {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
+    flutterLocalNotificationsPlugin.initialize(
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+        ),
+        onSelectNotification: selectNotification);
     log("notification data -> ${message.data}");
     log("notification title ${message.notification!.title}");
     log("notification body ${message.notification!.body}");
@@ -166,18 +171,16 @@ Future<void> main() async {
     var data = message.data;
     print("notification route==>${data["route"]}");
     if (notification != null && android != null) {
-      flutterLocalNotificationsPlugin.initialize(
-          InitializationSettings(
-            android: initializationSettingsAndroid,
-          ),
-          onSelectNotification: selectNotification);
       flutterLocalNotificationsPlugin.show(
         notification.hashCode,
         notification.title,
         notification.body,
         NotificationDetails(
           android: AndroidNotificationDetails(channel.id, channel.name,
-              color: ColorPrimary, playSound: true, icon: "logo"),
+              channelDescription: "com.myprofit.employee",
+              color: ColorPrimary,
+              playSound: true,
+              icon: "logo"),
         ),
         payload: data["route"],
       );

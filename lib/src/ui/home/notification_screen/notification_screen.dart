@@ -45,7 +45,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ),
             title: Text(
-              "notification ",
+              "Notification",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             centerTitle: true,
@@ -100,7 +100,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
-                            color: data[index].isRead == 1 ? Colors.grey : Colors.black87,
+                            color: data[index].isRead == 1
+                                ? Colors.grey
+                                : Colors.black87,
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
@@ -120,7 +122,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: TextStyle(
-                            color: data[index].isRead == 1 ? Colors.grey : Colors.black87,
+                            color: data[index].isRead == 1
+                                ? Colors.grey
+                                : Colors.black87,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
@@ -135,11 +139,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        DateFormat("dd MMM").format(DateTime.parse(data[index].createdAt)) +
+                        DateFormat("dd MMM")
+                                .format(DateTime.parse(data[index].createdAt)) +
                             " " +
-                            DateFormat.jm().format(DateTime.parse(data[index].createdAt)),
+                            DateFormat.jm()
+                                .format(DateTime.parse(data[index].createdAt)),
                         style: TextStyle(
-                            color: data[index].isRead == 1 ? Colors.grey : Colors.black54,
+                            color: data[index].isRead == 1
+                                ? Colors.grey
+                                : Colors.black54,
                             fontSize: 12,
                             fontWeight: FontWeight.bold),
                       ),
@@ -169,13 +177,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
     input["employee_id"] = userId;
 
     if (await Network.isConnected()) {
-      UpdateNotificationStatus response = await ApiProvider().markAsReadNotification(input);
+      UpdateNotificationStatus response =
+          await ApiProvider().markAsReadNotification(input);
       if (response.success) {
       } else {
         Fluttertoast.showToast(msg: "${response.message}");
       }
     } else {
-      Fluttertoast.showToast(msg: "Please Turn on  Internet", backgroundColor: ColorPrimary);
+      Fluttertoast.showToast(
+          msg: "Please Turn on  Internet", backgroundColor: ColorPrimary);
     }
   }
 }

@@ -16,6 +16,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:store_redirect/store_redirect.dart';
 
+import '../../../utils/constant.dart';
 import '../emp_status_one/emp_status.dart';
 
 class Splash extends StatefulWidget {
@@ -28,10 +29,14 @@ class _SplashState extends State<Splash> {
       RefreshController(initialRefresh: false);
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     validApp();
-    //startTimer();
+    init();
+  }
+
+  init() async {
+    Constant.empStatus =
+        await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
   }
 
   void getLogin() async {
@@ -40,10 +45,9 @@ class _SplashState extends State<Splash> {
     var permission = await Permission.location.request();
     if (permission.isGranted) {
       if (logs == true) {
-        int empStatus =
+        Constant.empStatus =
             await SharedPref.getIntegerPreference(SharedPref.EMP_STATUS);
-
-        if (empStatus == 1) {
+        if (Constant.empStatus == 1) {
           Timer(
               Duration(seconds: 3),
               () => Navigator.pushReplacement(context,

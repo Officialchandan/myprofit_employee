@@ -343,6 +343,14 @@ class _LoginState extends State<Login> {
   }
 
   @override
+  void dispose() {
+    if (countdownTimer != null) {
+      countdownTimer!.cancel();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;

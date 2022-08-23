@@ -182,9 +182,14 @@ class _EmpStatusOneState extends State<EmpStatusOne>
                 // Home(onTab: () {
                 //   _scaffoldkey.currentState!.openDrawer();
                 // }),
-                UserRegister(onTab: (OnSelectListener listener) {
-                  this.listener = listener;
-                }),
+                UserRegister(
+                  onTab: (OnSelectListener listener) {
+                    this.listener = listener;
+                  },
+                  onTapDr: () {
+                    _scaffoldkey.currentState!.openDrawer();
+                  },
+                ),
                 PerformanceTracker(onTab: () {
                   _scaffoldkey.currentState!.openDrawer();
                 }),
