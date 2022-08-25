@@ -745,13 +745,18 @@ class ApiProvider {
   Future<GetLocationrOtpResponse> getOtpIntrestedUser(
     userId,
     otp,
+    cusRegStatus,
   ) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
 
     try {
       Response res = await dio.post('$baseUrl/confirmInterestedUserByOTP',
-          data: ({"user_id": userId, "otp": otp}),
+          data: ({
+            "user_id": userId,
+            "otp": otp,
+            "cust_reg_status": cusRegStatus
+          }),
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ));

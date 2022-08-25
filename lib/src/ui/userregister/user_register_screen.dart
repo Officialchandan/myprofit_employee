@@ -97,15 +97,16 @@ class _UserRegisterState extends State<UserRegister>
   otpapi(userid) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
-
+      String cusRegStatus =
+          await SharedPref.getStringPreference(SharedPref.Cus_Reg_Status);
       if (_otp.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary,
             textColor: Colors.white,
             msg: "Please Enter OTP");
       } else {
-        final GetLocationrOtpResponse loginData =
-            await ApiProvider().getOtpIntrestedUser(userid, _otp.text);
+        final GetLocationrOtpResponse loginData = await ApiProvider()
+            .getOtpIntrestedUser(userid, _otp.text, cusRegStatus);
         log("ooooo $loginData");
         if (loginData.success == true) {
           Fluttertoast.showToast(
@@ -164,6 +165,8 @@ class _UserRegisterState extends State<UserRegister>
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 400, maxHeight: 150),
               child: AlertDialog(
+                actionsPadding: const EdgeInsets.only(
+                    left: 12, right: 12, top: 0, bottom: 18),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
                 title: RichText(
@@ -209,8 +212,10 @@ class _UserRegisterState extends State<UserRegister>
                     hintStyle: GoogleFonts.openSans(
                       fontWeight: FontWeight.w600,
                     ),
+
                     contentPadding: const EdgeInsets.only(
-                        left: 14.0, bottom: 8.0, top: 8.0),
+                        left: 14.0, bottom: 8.0, top: 8.0, right: 14),
+
                     focusedBorder: OutlineInputBorder(
                       borderSide:
                           const BorderSide(color: ColorPrimary, width: 2),
@@ -226,9 +231,9 @@ class _UserRegisterState extends State<UserRegister>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       MaterialButton(
-                        minWidth: MediaQuery.of(context).size.width * 0.60,
+                        minWidth: MediaQuery.of(context).size.width,
                         height: 50,
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
                         textColor: Colors.white,
                         color: ColorPrimary,
                         shape: RoundedRectangleBorder(
@@ -364,6 +369,8 @@ class _UserRegisterState extends State<UserRegister>
         log("ooooo $loginData");
         if (loginData.success) {
           userid = loginData.data!.userId;
+          await SharedPref.setStringPreference(
+              SharedPref.Cus_Reg_Status, loginData.data!.cusRegStatus);
           if (Constant.seconds.value == '00') {
             if (countdownTimer != null) {
               countdownTimer!.cancel();
@@ -403,6 +410,8 @@ class _UserRegisterState extends State<UserRegister>
         log("ooooo $loginData");
         if (loginData.success) {
           userid = loginData.data!.userId;
+          await SharedPref.setStringPreference(
+              SharedPref.Cus_Reg_Status, loginData.data!.cusRegStatus);
           if (Constant.seconds.value == '00') {
             if (countdownTimer != null) {
               countdownTimer!.cancel();

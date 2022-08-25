@@ -11,6 +11,7 @@ class SharedPref {
   static const NAME = "name";
   static const MOBILE = "mobile";
   static const EMP_STATUS = "emp_status";
+  static const Cus_Reg_Status = "cus_reg_status";
 
   static Future<String> getStringPreference(String key) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

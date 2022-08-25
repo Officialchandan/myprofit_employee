@@ -41,11 +41,13 @@ class AddIntrestedUserData {
     required this.employeeId,
     required this.userId,
     required this.locationId,
+    required this.cusRegStatus,
   });
 
   String employeeId;
   String userId;
   String locationId;
+  String cusRegStatus;
 
   factory AddIntrestedUserData.fromJson(String str) =>
       AddIntrestedUserData.fromMap(json.decode(str));
@@ -59,11 +61,15 @@ class AddIntrestedUserData {
         userId: json["user_id"] == null ? "" : json["user_id"].toString(),
         locationId:
             json["location_id"] == null ? "" : json["location_id"].toString(),
+        cusRegStatus: json["cust_reg_status"] == null
+            ? ""
+            : json["cust_reg_status"].toString(),
       );
 
   Map<String, dynamic> toMap() => {
         "employee_id": employeeId == null ? null : employeeId,
         "user_id": userId == null ? null : userId,
         "location_id": locationId == null ? null : locationId,
+        "cust_reg_status": cusRegStatus == null ? null : cusRegStatus,
       };
 }
