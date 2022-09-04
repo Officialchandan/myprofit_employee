@@ -11,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class UserNotInterested extends StatefulWidget {
   final String? location;
+
   UserNotInterested({Key? key, this.location}) : super(key: key);
 
   @override
@@ -18,7 +19,8 @@ class UserNotInterested extends StatefulWidget {
 }
 
 class _UserNotInterestedState extends State<UserNotInterested> {
-  TextEditingController _name = TextEditingController();
+  TextEditingController _firstname = TextEditingController();
+  TextEditingController _lastname = TextEditingController();
   TextEditingController _pincode = TextEditingController();
 
   TextEditingController _address = TextEditingController();
@@ -28,16 +30,23 @@ class _UserNotInterestedState extends State<UserNotInterested> {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
-      if (_name.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Name");
+      if (_firstname.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User First Name");
+      } else if (_firstname.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Last Name");
+      } else if (_address.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Address");
       } else if (_address.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Address");
       } else if (_pincode.text.isEmpty) {
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter Pincode");
       } else {
-        final UserNotIntrestedResponse loginData = await ApiProvider()
-            .getUnIntrestedUser(widget.location, _name.text, _address.text, _pincode.text, _reason.text);
+        final UserNotIntrestedResponse loginData = await ApiProvider().getUnIntrestedUser(
+            widget.location, _firstname.text, _lastname.text, _address.text, _pincode.text, _reason.text);
 
         log("ooooo $loginData");
         if (loginData.success) {
@@ -77,13 +86,43 @@ class _UserNotInterestedState extends State<UserNotInterested> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Name *',
+                  Text('First Name *',
                       style:
                           TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                   SizedBox(height: 10),
                   TextFormField(
                     cursorColor: ColorPrimary,
-                    controller: _name,
+                    controller: _firstname,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+                    ],
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    //autovalidate: true,
+                    maxLength: 25,
+                    decoration: InputDecoration(
+                      counterText: "",
+                      contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: '',
+                      hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text('Last Name *',
+                      style:
+                          TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    cursorColor: ColorPrimary,
+                    controller: _lastname,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
                     ],

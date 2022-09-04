@@ -15,18 +15,14 @@ class GetEmployeTrackerResponse {
   String message;
   GetEmployeTrackerData? data;
 
-  factory GetEmployeTrackerResponse.fromJson(String str) =>
-      GetEmployeTrackerResponse.fromMap(json.decode(str));
+  factory GetEmployeTrackerResponse.fromJson(String str) => GetEmployeTrackerResponse.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory GetEmployeTrackerResponse.fromMap(Map<String, dynamic> json) =>
-      GetEmployeTrackerResponse(
+  factory GetEmployeTrackerResponse.fromMap(Map<String, dynamic> json) => GetEmployeTrackerResponse(
         success: json["success"] == null ? null : json["success"],
         message: json["message"] == null ? null : json["message"],
-        data: json["data"] == null
-            ? null
-            : GetEmployeTrackerData.fromMap(json["data"]),
+        data: json["data"] == null ? null : GetEmployeTrackerData.fromMap(json["data"]),
       );
 
   Map<String, dynamic> toMap() => {
@@ -38,44 +34,37 @@ class GetEmployeTrackerResponse {
 
 class GetEmployeTrackerData {
   GetEmployeTrackerData({
-    required this.registeredCustomer,
     required this.registeredVendors,
+    required this.registeredCustomer,
     required this.giftGiven,
     required this.notInterestedCustomer,
+    required this.appDownload,
   });
 
   String registeredCustomer;
   String registeredVendors;
   String giftGiven;
   String notInterestedCustomer;
+  String appDownload;
 
-  factory GetEmployeTrackerData.fromJson(String str) =>
-      GetEmployeTrackerData.fromMap(json.decode(str));
+  factory GetEmployeTrackerData.fromJson(String str) => GetEmployeTrackerData.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory GetEmployeTrackerData.fromMap(Map<String, dynamic> json) =>
-      GetEmployeTrackerData(
-        registeredCustomer: json["Registered_customer"] == null
-            ? ""
-            : json["Registered_customer"].toString(),
-        registeredVendors: json["Registered_vendors"] == null
-            ? ""
-            : json["Registered_vendors"].toString(),
-        giftGiven:
-            json["Gift_given"] == null ? "" : json["Gift_given"].toString(),
-        notInterestedCustomer: json["Not_Interested_customer"] == null
-            ? ""
-            : json["Not_Interested_customer"].toString(),
+  factory GetEmployeTrackerData.fromMap(Map<String, dynamic> json) => GetEmployeTrackerData(
+        registeredCustomer: json["Registered_customer"] == null ? "0" : json["Registered_customer"].toString(),
+        registeredVendors: json["Registered_vendors"] == null ? "0" : json["Registered_vendors"].toString(),
+        giftGiven: json["Gift_given"] == null ? "0" : json["Gift_given"].toString(),
+        notInterestedCustomer:
+            json["Not_Interested_customer"] == null ? "0" : json["Not_Interested_customer"].toString(),
+        appDownload: json["App_Download"] == null ? "0" : json["App_Download"].toString(),
       );
 
   Map<String, dynamic> toMap() => {
-        "Registered_customer":
-            registeredCustomer == null ? null : registeredCustomer,
-        "Registered_vendors":
-            registeredVendors == null ? null : registeredVendors,
+        "Registered_customer": registeredCustomer == null ? null : registeredCustomer,
+        "Registered_vendors": registeredVendors == null ? null : registeredVendors,
         "Gift_given": giftGiven == null ? null : giftGiven,
-        "Not_Interested_customer":
-            notInterestedCustomer == null ? null : notInterestedCustomer,
+        "Not_Interested_customer": notInterestedCustomer == null ? null : notInterestedCustomer,
+        "App_Download": appDownload == null ? null : appDownload,
       };
 }

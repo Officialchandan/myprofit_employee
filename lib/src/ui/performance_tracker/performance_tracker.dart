@@ -25,11 +25,14 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
     a = tracker!.data!.registeredVendors;
     b = tracker!.data!.registeredCustomer;
     c = tracker!.data!.notInterestedCustomer;
+    d = tracker!.data!.giftGiven;
+    e = tracker!.data!.appDownload;
+
     setState(() {});
     print(tracker);
   }
 
-  String a = "0", b = "0", c = "0";
+  String a = "0", b = "0", c = "0", d = "0", e = "0";
   @override
   initState() {
     // TODO: implement initState
@@ -182,6 +185,96 @@ class _PerformanceTrackerState extends State<PerformanceTracker> {
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
                             "$c",
+                            style: GoogleFonts.openSans(
+                              fontSize: 18,
+                              color: ColorPrimary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: Container(
+                          width: 5,
+                          decoration: BoxDecoration(
+                              color: CustomColors.darkGolden.withOpacity(0.8),
+                              borderRadius:
+                                  BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),
+                        )),
+                  ]),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Stack(children: [
+                    Container(
+                      height: 70,
+                      width: MediaQuery.of(context).size.width,
+                      // margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          "Number of Gift Given",
+                          style: GoogleFonts.openSans(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Text(
+                            "$d",
+                            style: GoogleFonts.openSans(
+                              fontSize: 18,
+                              color: ColorPrimary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: Container(
+                          width: 5,
+                          decoration: BoxDecoration(
+                              color: CustomColors.darkGolden.withOpacity(0.8),
+                              borderRadius:
+                                  BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),
+                        )),
+                  ]),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Stack(children: [
+                    Container(
+                      height: 70,
+                      width: MediaQuery.of(context).size.width,
+                      // margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          "Number of Downloads ",
+                          style: GoogleFonts.openSans(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Text(
+                            "$e",
                             style: GoogleFonts.openSans(
                               fontSize: 18,
                               color: ColorPrimary,

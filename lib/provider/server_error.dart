@@ -49,7 +49,7 @@ class ServerError implements Exception {
 
         if (error.response!.statusCode == 500) {
           print("come here-->");
-          Fluttertoast.showToast(msg: "Internal Server error", backgroundColor: ColorPrimary);
+          Fluttertoast.showToast(msg: "Internal Server error,Please Try Again Later", backgroundColor: ColorPrimary);
         }
 
         break;

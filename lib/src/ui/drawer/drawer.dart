@@ -100,7 +100,11 @@ class _AppDrawerState extends State<AppDrawer> {
               Container(
                 padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                 child: Column(children: [
-                  Image.asset("images/logo.png", width: 170, height: 170,),
+                  Image.asset(
+                    "images/logo.png",
+                    width: 170,
+                    height: 170,
+                  ),
                   SizedBox(
                     height: 15,
                   ),
@@ -133,6 +137,23 @@ class _AppDrawerState extends State<AppDrawer> {
                   },
                 ),
               ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(width: 0.7, color: Color(0xffcdcdcd))),
+                ),
+                child: ListTile(
+                  leading: Container(width: 20, child: Image.asset('images/gift.png', width: 20)),
+                  title: Text("Assigned Gift",
+                      style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w600)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Scripts()),
+                    );
+                  },
+                ),
+              ),
 
               Container(
                 decoration: BoxDecoration(
@@ -151,6 +172,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   },
                 ),
               ),
+
               Container(
                 decoration: BoxDecoration(
                   border: Border(bottom: BorderSide(width: 0.7, color: Color(0xffcdcdcd))),

@@ -47,6 +47,7 @@ BaseOptions baseOptions = BaseOptions(
 
 class ApiProvider {
   var client = http.Client();
+
   //var baseUrl = "http://employee.tekzee.in/api/v1";
   var baseUrl = "http://employee.myprofitinc.com/api/v1";
 
@@ -675,13 +676,13 @@ class ApiProvider {
     }
   }
 
-  Future<AddIntrestedUserResponse> getIntrestedUser(locationId, name, mobile, email, address, phone, pincode, gift,
-      occupation, income, hometype, familyMembers, marketOfChoice) async {
+  Future<AddIntrestedUserResponse> getIntrestedUser(locationId, firstname, lastname, mobile, email, address, phone,
+      pincode, gift, occupation, income, hometype, familyMembers, marketOfChoice) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${SharedPref.getStringPreference(SharedPref.VENDORID)}");
     log("parameter $locationId");
-    log("parameter $name");
+    log("parameter $firstname");
     log("parameter $mobile");
     log("parameter $email");
     log("parameter $address");
@@ -690,7 +691,8 @@ class ApiProvider {
           data: ({
             "employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID),
             "location_id": locationId,
-            "name": name,
+            "first_name": firstname,
+            "last_name": lastname,
             "mobile": mobile,
             "email": email,
             "address": address,
@@ -779,12 +781,12 @@ class ApiProvider {
     }
   }
 
-  Future<UserNotIntrestedResponse> getUnIntrestedUser(locationId, name, address, pincode, reason) async {
+  Future<UserNotIntrestedResponse> getUnIntrestedUser(locationId, firstname, lastname, address, pincode, reason) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
     log("parameter ${await SharedPref.getStringPreference(SharedPref.VENDORID)}");
 
-    log("parameter $name");
+    log("parameter $firstname");
 
     log("parameter $address");
     log("parameter $reason");
@@ -793,7 +795,8 @@ class ApiProvider {
           data: ({
             "employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID),
             "location_id": locationId,
-            "name": name,
+            "first_name": firstname,
+            "last_name": lastname,
             "address": address,
             "pincode": pincode,
             "reason": reason,

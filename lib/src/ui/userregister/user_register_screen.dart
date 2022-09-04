@@ -21,6 +21,7 @@ class UserRegister extends StatefulWidget {
   final Function(OnSelectListener listener) onTab;
 
   final String? location;
+
   UserRegister({Key? key, required this.onTab, this.location}) : super(key: key);
 
   @override
@@ -32,8 +33,10 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
   String? areaId;
 
   _UserRegisterState();
+
   var userid;
-  TextEditingController _name = TextEditingController();
+  TextEditingController _firstname = TextEditingController();
+  TextEditingController _lastname = TextEditingController();
   TextEditingController _emailaddress = TextEditingController();
   TextEditingController _pincode = TextEditingController();
 
@@ -47,8 +50,10 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
   int _character = -1;
   int _gift = -1;
   int _home = -1;
+
   //otp api call
   OnSelectListener? listener;
+
   otpapi(userid) async {
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
@@ -64,7 +69,8 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
             textColor: Colors.white,
             msg: loginData.message,
           );
-          _name.clear();
+          _firstname.clear();
+          _lastname.clear();
           _mobile.clear();
           _emailaddress.clear();
           _address.clear();
@@ -185,8 +191,12 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
     if (await Network.isConnected()) {
       SystemChannels.textInput.invokeMethod("TextInput.hide");
 
-      if (_name.text.isEmpty) {
-        Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Name");
+      if (_firstname.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User First Name");
+      } else if (_lastname.text.isEmpty) {
+        Fluttertoast.showToast(
+            backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter User Last Name");
       } else if (_mobile.text.isEmpty) {
         Fluttertoast.showToast(
             backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter 10 digits Mobile number");
@@ -216,7 +226,8 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
       } else if (_emailaddress.text.isEmpty) {
         final AddIntrestedUserResponse loginData = await ApiProvider().getIntrestedUser(
             areaId,
-            _name.text,
+            _firstname.text,
+            _lastname.text,
             _mobile.text,
             _emailaddress.text,
             _address.text,
@@ -242,7 +253,8 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
       } else {
         final AddIntrestedUserResponse loginData = await ApiProvider().getIntrestedUser(
             areaId,
-            _name.text,
+            _firstname.text,
+            _lastname.text,
             _mobile.text,
             _emailaddress.text,
             _address.text,
@@ -307,12 +319,43 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Name *',
+                    Text('First Name *',
                         style:
                             TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(height: 10),
                     TextFormField(
-                      controller: _name,
+                      controller: _firstname,
+
+                      cursorColor: ColorPrimary,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]')),
+                      ],
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      //autovalidate: true,
+                      maxLength: 25,
+                      decoration: InputDecoration(
+                        counterText: "",
+                        contentPadding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: '',
+                        hintStyle: TextStyle(color: ColorTextPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: ColorPrimary, width: 2),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text('Last Name *',
+                        style:
+                            TextStyle(color: Color.fromRGBO(48, 48, 48, 1), fontSize: 15, fontWeight: FontWeight.w600)),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _lastname,
 
                       cursorColor: ColorPrimary,
                       inputFormatters: [
