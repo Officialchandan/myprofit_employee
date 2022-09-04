@@ -11,7 +11,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class UserNotInterested extends StatefulWidget {
   final String? location;
-
   UserNotInterested({Key? key, this.location}) : super(key: key);
 
   @override

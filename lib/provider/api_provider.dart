@@ -47,9 +47,9 @@ BaseOptions baseOptions = BaseOptions(
 
 class ApiProvider {
   var client = http.Client();
-
   //var baseUrl = "http://employee.tekzee.in/api/v1";
   var baseUrl = "http://employee.myprofitinc.com/api/v1";
+  // var baseUrl2 = "http://employee.myprofitinc.com/api/v2";
 
   Future<LoginResponse> login(mobile) async {
     log("chl gyi");
@@ -246,7 +246,8 @@ class ApiProvider {
     }
   }
 
-  Future<UpdateVendorResponse> updatedetails(id, shopname, ownername, mobile, address, landmark, city, state, pin,
+  Future<UpdateVendorResponse> updatedetails(
+      id, shopname, ownername, mobile, address, landmark, city, state, pin,
       [cat, subcat]) async {
     log("chl gyi }");
     log("chl gyi $id");
@@ -330,8 +331,8 @@ class ApiProvider {
     addvendor["pin"] = pin;
     addvendor["lat"] = lat;
     addvendor["lng"] = lng;
-    addvendor["owner_sign"] =
-        MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+    addvendor["owner_sign"] = MultipartFile.fromBytes(ownersign,
+        filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
     addvendor["acc_holder_name"] = accountholdername;
     addvendor["ifsc"] = bankifsc;
     addvendor["account_no"] = accountnumber;
@@ -421,8 +422,8 @@ class ApiProvider {
     addvendor["pin"] = pin;
     addvendor["lat"] = lat;
     addvendor["lng"] = lng;
-    addvendor["owner_sign"] =
-        MultipartFile.fromBytes(ownersign, filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
+    addvendor["owner_sign"] = MultipartFile.fromBytes(ownersign,
+        filename: DateTime.now().microsecondsSinceEpoch.toString() + ".png");
 
     List<MultipartFile> ownerIdProof = [];
 
@@ -467,7 +468,12 @@ class ApiProvider {
     var dtoken = (await firebaseMessaging.getToken())!;
     try {
       Response res = await dio.post('$baseUrl/addVendorForm_verifyOTP',
-          data: {"vendor_id": id, "otp": otp, "mobile": mobile, "device_token": dtoken},
+          data: {
+            "vendor_id": id,
+            "otp": otp,
+            "mobile": mobile,
+            "device_token": dtoken
+          },
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ));
@@ -727,13 +733,18 @@ class ApiProvider {
   Future<GetLocationrOtpResponse> getOtpIntrestedUser(
     userId,
     otp,
+    cusRegStatus,
   ) async {
     log("chl gyi");
     var token = await SharedPref.getStringPreference('token');
 
     try {
       Response res = await dio.post('$baseUrl/confirmInterestedUserByOTP',
-          data: ({"user_id": userId, "otp": otp}),
+          data: ({
+            "user_id": userId,
+            "otp": otp,
+            "cust_reg_status": cusRegStatus
+          }),
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ));
@@ -795,8 +806,7 @@ class ApiProvider {
           data: ({
             "employee_id": await SharedPref.getStringPreference(SharedPref.VENDORID),
             "location_id": locationId,
-            "first_name": firstname,
-            "last_name": lastname,
+            "name": name,
             "address": address,
             "pincode": pincode,
             "reason": reason,
@@ -851,7 +861,8 @@ class ApiProvider {
     // try {
     var token = await SharedPref.getStringPreference('token');
     Response res = await dio.post('$baseUrl/getEmployeeSendNotificatonList',
-        data: input, options: Options(headers: {"Authorization": "Bearer $token"}));
+        data: input,
+        options: Options(headers: {"Authorization": "Bearer $token"}));
 
     return VendorNotificationResponse.fromJson(res.toString());
     // } catch (error) {

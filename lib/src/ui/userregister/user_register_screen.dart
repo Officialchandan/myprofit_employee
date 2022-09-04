@@ -1001,4 +1001,64 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
               ]));
         });
   }
+
+  _displayDialogInternet(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              title: RichText(
+                text: TextSpan(
+                  text: "Check Your Internet Connectivity",
+                  style: GoogleFonts.openSans(
+                    fontSize: 14.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                Center(
+                  child: MaterialButton(
+                    minWidth: MediaQuery.of(context).size.width * 0.40,
+                    height: 50,
+                    padding: const EdgeInsets.all(8.0),
+                    textColor: Colors.white,
+                    color: ColorPrimary,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    onPressed: () async {
+                      if (await Network.isConnected()) {
+                        getNotifications();
+                        Navigator.pop(context);
+                      } else {
+                        Fluttertoast.showToast(
+                            backgroundColor: ColorPrimary,
+                            textColor: Colors.white,
+                            msg: "Please turn on  internet");
+                      }
+                    },
+                    child: new Text(
+                      "Ok",
+                      style: GoogleFonts.openSans(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.none),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  color: Colors.transparent,
+                )
+              ],
+            ),
+          );
+        });
+  }
 }
