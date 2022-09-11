@@ -46,12 +46,49 @@ class ServerError implements Exception {
 
           logout();
         }
+        if (error.response!.statusCode == 404) {
+          print("come here-->");
+          Fluttertoast.showToast(
+              msg: "Request not found. Please try again after some time.", backgroundColor: ColorPrimary);
+        }
+        if (error.response!.statusCode == 401) {
+          print("come here-->");
+          Fluttertoast.showToast(
+              msg: "Request not found. Please try again after some time.", backgroundColor: ColorPrimary);
+        }
+        if (error.response!.statusCode == 202) {
+          print("come here-->");
 
+          Fluttertoast.showToast(
+              msg: "Network congestion error. Please check your internet connection.", backgroundColor: ColorPrimary);
+        }
+        if (error.response!.statusCode == 429) {
+          print("come here-->");
+
+          Fluttertoast.showToast(
+              msg: "Network congestion error.. Please try again after some time.", backgroundColor: ColorPrimary);
+        }
         if (error.response!.statusCode == 500) {
           print("come here-->");
-          Fluttertoast.showToast(msg: "Internal Server error,Please Try Again Later", backgroundColor: ColorPrimary);
+          Fluttertoast.showToast(
+              msg: "Something went wrong. Please try again after some time.", backgroundColor: ColorPrimary);
         }
-
+        if (error.response!.statusCode == 502) {
+          print("come here-->");
+          Fluttertoast.showToast(
+              msg: "Network congestion error.. Please try again after some time.", backgroundColor: ColorPrimary);
+        }
+        if (error.response!.statusCode == 503) {
+          print("come here-->");
+          Fluttertoast.showToast(
+              msg: "The server is currently unavailable. Please try again after some time.",
+              backgroundColor: ColorPrimary);
+        }
+        if (error.response!.statusCode == 504) {
+          print("come here-->");
+          Fluttertoast.showToast(
+              msg: "Gateway timeout. Please try again after some time.", backgroundColor: ColorPrimary);
+        }
         break;
 
       case DioErrorType.sendTimeout:

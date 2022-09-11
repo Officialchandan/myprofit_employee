@@ -34,7 +34,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
 
   _UserRegisterState();
 
-  var userid;
+  var userid, cusStatus;
   TextEditingController _firstname = TextEditingController();
   TextEditingController _lastname = TextEditingController();
   TextEditingController _emailaddress = TextEditingController();
@@ -61,7 +61,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
       if (_otp.text.isEmpty) {
         Fluttertoast.showToast(backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please Enter OTP");
       } else {
-        final GetLocationrOtpResponse loginData = await ApiProvider().getOtpIntrestedUser(userid, _otp.text);
+        final GetLocationrOtpResponse loginData = await ApiProvider().getOtpIntrestedUser(userid, _otp.text, cusStatus);
         log("ooooo $loginData");
         if (loginData.success == true) {
           Fluttertoast.showToast(
@@ -243,6 +243,7 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
         log("ooooo $loginData");
         if (loginData.success) {
           userid = loginData.data!.userId;
+          cusStatus = loginData.data!.cusRegStatus;
           _displayDialog(
             context,
             _mobile.text,
@@ -999,66 +1000,6 @@ class _UserRegisterState extends State<UserRegister> implements OnSelectListener
                       }),
                 )
               ]));
-        });
-  }
-
-  _displayDialogInternet(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 400),
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              title: RichText(
-                text: TextSpan(
-                  text: "Check Your Internet Connectivity",
-                  style: GoogleFonts.openSans(
-                    fontSize: 14.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              actions: <Widget>[
-                Center(
-                  child: MaterialButton(
-                    minWidth: MediaQuery.of(context).size.width * 0.40,
-                    height: 50,
-                    padding: const EdgeInsets.all(8.0),
-                    textColor: Colors.white,
-                    color: ColorPrimary,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    onPressed: () async {
-                      if (await Network.isConnected()) {
-                        getNotifications();
-                        Navigator.pop(context);
-                      } else {
-                        Fluttertoast.showToast(
-                            backgroundColor: ColorPrimary,
-                            textColor: Colors.white,
-                            msg: "Please turn on  internet");
-                      }
-                    },
-                    child: new Text(
-                      "Ok",
-                      style: GoogleFonts.openSans(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.none),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 20,
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  color: Colors.transparent,
-                )
-              ],
-            ),
-          );
         });
   }
 }
