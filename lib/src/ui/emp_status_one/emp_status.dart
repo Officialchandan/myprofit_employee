@@ -18,7 +18,8 @@ class EmpStatusOne extends StatefulWidget {
   _EmpStatusOneState createState() => _EmpStatusOneState();
 }
 
-class _EmpStatusOneState extends State<EmpStatusOne> with TickerProviderStateMixin {
+class _EmpStatusOneState extends State<EmpStatusOne>
+    with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   // var titleList = ['Home', 'Driver List', 'Performance Tracker'];
@@ -55,7 +56,8 @@ class _EmpStatusOneState extends State<EmpStatusOne> with TickerProviderStateMix
     success = res!.success;
     //log("====>${await SharedPref.setIntegerPreference(SharedPref.LOCATION, res!.data![0].id)}");
     /// log("====>${await SharedPref.getIntegerPreference(SharedPref.LOCATION)}");
-    await SharedPref.setIntegerPreference(SharedPref.LOCATION, res!.data![0].id);
+    await SharedPref.setIntegerPreference(
+        SharedPref.LOCATION, res!.data![0].id);
     ifMounted();
   }
 
@@ -79,18 +81,29 @@ class _EmpStatusOneState extends State<EmpStatusOne> with TickerProviderStateMix
         builder: (context) {
           return AlertDialog(
             contentPadding: EdgeInsets.fromLTRB(25, 10, 0, 0),
-            title: Text("Logout", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600)),
+            title: Text("Logout",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600)),
             content: Text("Are you sure you want to logout?",
-                style: TextStyle(color: Color.fromRGBO(85, 85, 85, 1), fontSize: 15, fontWeight: FontWeight.w500)),
+                style: TextStyle(
+                    color: Color.fromRGBO(85, 85, 85, 1),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500)),
             actions: [
               MaterialButton(
-                child: Text("Cancel", style: TextStyle(color: ColorTextPrimary, fontWeight: FontWeight.w600)),
+                child: Text("Cancel",
+                    style: TextStyle(
+                        color: ColorTextPrimary, fontWeight: FontWeight.w600)),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               MaterialButton(
-                child: Text("Logout", style: TextStyle(color: Color(0xfff4511e), fontWeight: FontWeight.w600)),
+                child: Text("Logout",
+                    style: TextStyle(
+                        color: Color(0xfff4511e), fontWeight: FontWeight.w600)),
                 onPressed: () async {
                   log("ndndnd");
 
@@ -103,12 +116,16 @@ class _EmpStatusOneState extends State<EmpStatusOne> with TickerProviderStateMix
                     //     ModalRoute.withName("/"));
 
                     Fluttertoast.showToast(
-                        backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Logout Successfully"
+                        backgroundColor: ColorPrimary,
+                        textColor: Colors.white,
+                        msg: "Logout Successfully"
                         // timeInSecForIos: 3
                         );
                   } else {
                     Fluttertoast.showToast(
-                        backgroundColor: ColorPrimary, textColor: Colors.white, msg: "Please turn on  internet");
+                        backgroundColor: ColorPrimary,
+                        textColor: Colors.white,
+                        msg: "Please turn on  internet");
                   }
                   // LogOut();
                   // Navigator.push(
@@ -158,22 +175,25 @@ class _EmpStatusOneState extends State<EmpStatusOne> with TickerProviderStateMix
         child: Scaffold(
           key: _scaffoldkey,
           drawer: AppDrawer(),
-          body: TabBarView(controller: _tabController, physics: NeverScrollableScrollPhysics(), children: [
-            // Home(onTab: () {
-            //   _scaffoldkey.currentState!.openDrawer();
-            // }),
-            UserRegister(
-              onTab: (OnSelectListener listener) {
-                this.listener = listener;
-              },
-              // onTapDr: () {
-              //   _scaffoldkey.currentState!.openDrawer();
-              // },
-            ),
-            PerformanceTracker(onTab: () {
-              _scaffoldkey.currentState!.openDrawer();
-            }),
-          ]),
+          body: TabBarView(
+              controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                // Home(onTab: () {
+                //   _scaffoldkey.currentState!.openDrawer();
+                // }),
+                UserRegister(
+                  onTab: (OnSelectListener listener) {
+                    this.listener = listener;
+                  },
+                  onTapDr: () {
+                    _scaffoldkey.currentState!.openDrawer();
+                  },
+                ),
+                PerformanceTracker(onTab: () {
+                  _scaffoldkey.currentState!.openDrawer();
+                }),
+              ]),
           bottomNavigationBar: TabBar(
             controller: _tabController,
             // indicatorWeight: 10,
@@ -240,13 +260,15 @@ class _EmpStatusOneState extends State<EmpStatusOne> with TickerProviderStateMix
     showModalBottomSheet(
         isDismissible: false,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
         builder: (BuildContext context) {
           return Container(
               padding: EdgeInsets.only(top: 10),
               height: 250,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
               child: Column(children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,7 +299,10 @@ class _EmpStatusOneState extends State<EmpStatusOne> with TickerProviderStateMix
                       child: Container(
                         child: Text(
                           "Cancel",
-                          style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -297,7 +322,9 @@ class _EmpStatusOneState extends State<EmpStatusOne> with TickerProviderStateMix
                               return CheckboxListTile(
                                 title: Text(
                                   "${res!.data![index].locationName}",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 value: res!.data![index].checked,
                                 activeColor: ColorPrimary,
